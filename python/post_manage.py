@@ -49,5 +49,9 @@ if __name__ == "__main__":
 
   write_json(post)
 
+  print("Adicione o arquivo: ")
+  print("/static/images/"+file_name+"_icon.png")
+  print("/static/images/"+file_name+"_banner.png")
+
 
 
