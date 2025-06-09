@@ -19,13 +19,11 @@ Este é o repositório do meu blog pessoal, onde compartilho conteúdos relacion
 
 ```
 .
-├── css/ # Estilos do site
-│ └── style.css
-├── js/ # Scripts principais
-│ └── main.js
 ├── static/
 │ ├── images/ # Imagens ilustrativas dos posts
 │ ├── posts/ # Arquivos HTML dos posts
+│ ├── js/ # Scripts principais
+│ ├── css/ # Estilos do site
 │ └── posts.json # Lista com metadados dos posts
 ├── index.html # Página inicial com lista de posts
 └── README.md # Este arquivo
