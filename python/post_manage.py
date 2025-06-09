@@ -39,8 +39,8 @@ if __name__ == "__main__":
   resume = input("Resumo do post: ")
 
   post={
-    'icon_location': "/static/images/"+file_name+"_icon.png",
-    'file_location': "/static/posts/"+file_name,
+    'icon_location': "static/images/"+file_name+"_icon.png",
+    'file_location': "static/posts/"+file_name,
     'resume': resume,
     'name': meta[0].get('title'),
     'date': meta[0].get('date').strftime("%d/%m/%Y"),
