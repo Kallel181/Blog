@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
   print("Adicione o arquivo: ")
   print("/static/images/"+file_name+"_icon.png")
-  print("/static/images/"+file_name+"_banner.png")
+  print("/static/images/"+meta[0].get('title').replace(" ","_").lower()+"_banner.png")
 
 
 

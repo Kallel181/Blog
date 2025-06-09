@@ -14,7 +14,7 @@
         <span class="date">2024-05-10</span> —
         <span class="tags"><span class="tag">HTB</span><span class="tag">sherlock</span><span class="tag">SSH</span><span class="tag">wtmp</span></span>
       </div>
-      <img class="post-banner" src="/static/images/HTB_Brutus_Guide-10_05_2024.html_icon.png" alt="Imagem do post"/>
+      <img class="post-banner" src="/static/images/htb_brutus_guide_banner.png" alt="Imagem do post"/>
     </header>
     <article class="post-body">
       <p>Brutus is a Sherlock from Hack The Box, a challenge made for you to investigate a scenario using the files provided to answer a series of questions and solve a mystery. In this Sherlock we will use Unix auth.log and wtmp logs to find the author of a brute force attack and some of its actions on the system.</p>
@@ -40,7 +40,7 @@ Mar  6 06:19:01 ip-172-31-35-28 CRON[1367]: pam_unix(cron:session): session clos
 &lt;SNIP&gt;
 </code></pre>
 <p>As we can see here, the auth.log file is nicely separated in fields, let's take a moment to analyze those fields and understand what they mean. Let's take one line for example:
-<img alt="authlog_fields.png" src="/static/images/htb_brutus_guide_1.png"/>
+<img alt="authlog_fields.png" src="https://kallel181.github.io/Blog/static/images/htb_brutus_guide_1.png"/>
 Here we have the month for the log <strong>(1)</strong>, the day for the log <strong>(2)</strong> and the time for the log <strong>(3)</strong>. On <strong>(4)</strong> we have the name of the system, on <strong>(5)</strong> we have the daemon or the service reporting the event, there we have the PID for the service/daemon. And the last part <strong>(6)</strong> we have a description for the event, this description may be different depending on the event, on the example above, we have an invalid login on ssh, that invalid login event provide us with an IP and a port.</p>
 <h2>wtmp file</h2>
 <p>The wtmp file keeps the historical data of users who logged-in and logged out of the system. This can help us to identify users who logged in, and it's time, this is the only file on that challenge that we will need an especial program to open it, but we will get to that later on.</p>
@@ -142,7 +142,7 @@ Mar  6 06:37:24 ip-172-31-35-28 sshd[2491]: Disconnected from user root 65.2.161
 https://attack.mitre.org</p>
 </blockquote>
 <p>On the MITRE website we can see under the <strong>Persistence(1)</strong> column the technique called <strong>Create Account(2)</strong>:
-<img alt="MITRE_brutus.png" src="/static/images/htb_brutus_guide_2.png"/>
+<img alt="MITRE_brutus.png" src="https://kallel181.github.io/Blog/static/images/htb_brutus_guide_2.png"/>
 Navigating to that specific technique, we can see the sub-technique is the Local Account <a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a>.</p>
 <h2>How long did the attacker's first SSH session last based on the previously confirmed authentication time and session ending within the auth.log? (seconds)</h2>
 <p>We already have the start time, 2024-03-06 06:32:45, looking in the auth.log we can find the end of the session:</p>

@@ -58,7 +58,7 @@ def processar_imagens(md_text, titulo_slug,origem_imagem):
     else:
       print(f"Imagem não encontrada: {src_path}")
     imagem_map[nome_original] = novo_nome
-    return f'<img src="/static/images/{novo_nome}" alt="{nome_original}"/>'
+    return f'<img src="https://kallel181.github.io/Blog/static/images/{novo_nome}" alt="{nome_original}"/>'
   
   novo_md = re.sub(r'!\[\[([^\]]+)\]\]', substituir, md_text)
   return novo_md
