@@ -1,8 +1,8 @@
 {
     "posts": [
         {
-            "icon_location": "static/images/HTB_Bizness_Guide-21_04_2024.html_icon.png",
-            "file_location": "static/posts/HTB_Bizness_Guide-21_04_2024.html",
+            "icon_location": "https://kallel181.github.io/Blog/static/images/HTB_Bizness_Guide-21_04_2024.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/HTB_Bizness_Guide-21_04_2024.html",
             "resume": "Headless is a Hack The Box machine that has a website that notify us that it is under construction, by enumerating the directories we can find a directory called support, where we can send some tickets and suggestions to the page, there we can use an interesting behavior of the page to exploit a XSS vulnerability to steal some cookies. Then we will have access to an admin page called dashboard, there we can use a remote code execution to get a shell on the machine. The privilege escalation part we can use a file that we have permission to write on and the file can be executed as sudo.",
             "name": "HTB Bizness Guide",
             "date": "21/04/2024",
@@ -14,8 +14,8 @@
             ]
         },
         {
-            "icon_location": "static/images/HTB_IClean_Guide_icon.png",
-            "file_location": "static/posts/HTB_IClean_Guide-10_05_2024.html",
+            "icon_location": "https://kallel181.github.io/Blog/static/images/HTB_IClean_Guide_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/HTB_IClean_Guide-10_05_2024.html",
             "resume": "Iclean is a Hack The Box machine that involves exploring a XSS and SSTI vulnerabilities on a flask application, once we get a shell on the machine we need to do a little lateral movement to change to another user account and then get to privilege escalation using qpdf with sudo.",
             "name": "HTB IClean Guide",
             "date": "10/05/2024",
@@ -26,8 +26,8 @@
             ]
         },
         {
-            "icon_location": "static/images/HTB_Headless_Guide-17_05_2024.html_icon.png",
-            "file_location": "static/posts/HTB_Headless_Guide-17_05_2024.html",
+            "icon_location": "https://kallel181.github.io/Blog/static/images/HTB_Headless_Guide-17_05_2024.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/HTB_Headless_Guide-17_05_2024.html",
             "resume": "Headless is a Hack The Box machine that has a website that notify us that it is under construction, by enumerating the directories we can find a directory called support, where we can send some tickets and suggestions to the page, there we can use an interesting behavior of the page to exploit a XSS vulnerability to steal some cookies. Then we will have access to an admin page called dashboard, there we can use a remote code execution to get a shell on the machine. The privilege escalation part we can use a file that we have permission to write on and the file can be executed as sudo.",
             "name": "HTB Headless Guide",
             "date": "17/05/2024",

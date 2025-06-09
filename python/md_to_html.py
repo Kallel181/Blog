@@ -92,7 +92,7 @@ def gerar_html_template(md_file_path,origem_imagem):
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{titulo}</title>
-  <link rel="stylesheet" href="/static/css/styles.css"/>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
 </head>
 <body>
   <div class="container">
