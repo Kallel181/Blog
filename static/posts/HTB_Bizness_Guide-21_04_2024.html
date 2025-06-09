@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HTB Bizness Guide</title>
-  <link rel="stylesheet" href="/static/css/styles.css"/>
+  <link rel="stylesheet" href="static/css/styles.css"/>
 </head>
 <body>
   <div class="container">
@@ -14,7 +14,7 @@
         <span class="date">2024-04-21</span> —
         <span class="tags"><span class="tag">HTB</span><span class="tag">OFBiz</span><span class="tag">CVE</span><span class="tag">Derby</span></span>
       </div>
-      <img class="post-banner" src="/static/images/htb_bizness_guide_1.png" alt="Imagem do post"/>
+      <img class="post-banner" src="static/images/htb_bizness_guide_1.png" alt="Imagem do post"/>
     </header>
     <article class="post-body">
       <p>Bizness is a Hack The Box machine that involves exploiting vulnerabilities in Apache OFBiz, specifically CVE-2023-49070 and CVE-2023-51467. These vulnerabilities allow for remote code execution, granting attackers access to the system. Once inside, privilege escalation is achieved by cracking an exposed hash found in .dat files within the Derby database.</p>
@@ -48,7 +48,7 @@ ff02::2         ip6-allrouters
 </code></pre>
 <h1>Initial analysis</h1>
 <p>Looking in the site, we can see a home page for some kind of corporation:
-<img alt="General/HackTheBox/Machines/2024 Active machines/att/Bizness_homepage.png" src="/static/images/htb_bizness_guide_2.png"/>
+<img alt="General/HackTheBox/Machines/2024 Active machines/att/Bizness_homepage.png" src="static/images/htb_bizness_guide_2.png"/>
 The input forms don't seam to be vulnerable to SQL injection or something among those lines, so, let's enumerate further the web application.</p>
 <h2>FFUF (Web directory enumeration)</h2>
 <pre><code>┌──(kali㉿atropos)-[~]
@@ -91,7 +91,7 @@ ________________________________________________
 control                 [Status: 200, Size: 34636, Words: 10468, Lines: 492, Duration: 227ms]
 </code></pre>
 <p>Here we can see the control page, so let's go there and see what is there on that page:
-<img alt="ofbiz_error.png" src="/static/images/htb_bizness_guide_3.png"/>
+<img alt="ofbiz_error.png" src="static/images/htb_bizness_guide_3.png"/>
 That is a good thing, now we know that the target is running Apache OFBiz, so we can start to search for some possible vulnerability. Since this is an OFBiz we can navigate to https://bizness.htb/control/login, in the bottom right corner we can find the version of OFBiz. Searching that version, we can find 2 possible vulnerabilities:</p>
 <blockquote>
 <p>Pre-auth RCE in Apache Ofbiz 18.12.09. It's due to XML-RPC no longer maintained still present. This issue affects Apache OFBiz: before 18.12.10.  Users are recommended to upgrade to version 18.12.10
@@ -214,7 +214,7 @@ v��������Pt�
 &lt;SNIP&gt;
 </code></pre>
 <p>There we have a <code>$SHA$d$uP0_QaVBpDWFeo8-dRzDqRwXQ2I</code>, we can now try to crack that hash and get a possible password for root access. But first we need to convert that hash to a standard format. For that, we can use <a href="https://gchq.github.io/CyberChef/">CyberChef</a>, first let's pull a <code>From Base64</code> and then a <code>to Hex</code>:
-<img alt="CyberChef.png" src="/static/images/htb_bizness_guide_4.png"/>
+<img alt="CyberChef.png" src="static/images/htb_bizness_guide_4.png"/>
 Then we can proceed to hashcat to crack that hash:</p>
 <pre><code>┌──(kali㉿atropos)-[~/htb]
 └─$ hashcat -a 0 -m 120 hash /usr/share/wordlists/rockyou.txt

