@@ -3,7 +3,7 @@ let currentPage = 1;
 let allPosts = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("../posts.json")
+  fetch("./static/posts.json")
     .then(res => res.json())
     .then(data => {
       allPosts = data.posts;
