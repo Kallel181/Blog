@@ -102,7 +102,7 @@ def gerar_html_template(md_file_path,origem_imagem):
         <span class="date">{data}</span> —
         <span class="tags">{tags_html}</span>
       </div>
-      <img class="post-banner" src="/static/images/{banner_nome}" alt="Imagem do post"/>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/{banner_nome}" alt="Imagem do post"/>
     </header>
     <article class="post-body">
       {html_conteudo}
