@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Over The Wire - Bandit - Guide</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>Over The Wire - Bandit - Guide</h1>
+      <div class="post-meta">
+        <span class="date">2024-10-22</span> —
+        <span class="tags"><span class="tag">Linux</span><span class="tag">overthewire</span></span>
+      </div>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/over_the_wire_bandit_guide_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>The website <a href="https://overthewire.org/wargames/">https://overthewire.org/wargames/</a> is an online platform that offers a collection of challenges and games known as "wargames." These games are designed to help people learn and practice cybersecurity and ethical hacking skills.</p>
+<p>The wargames on the site are divided into different levels of difficulty, starting with basic challenges for beginners and progressing to more advanced ones. Each level presents a unique and challenging scenario where players need to solve a series of puzzles and uncover secrets to progress.</p>
+<p>Throughout the challenges, players are exposed to a variety of topics related to cybersecurity, such as encryption, network traffic analysis, vulnerability exploitation, and more. They are encouraged to use a combination of technical skills, analytical thinking, and creativity to solve the presented problems.</p>
+<p>An interesting feature of the site is its emphasis on active learning. Instead of providing direct solutions, OverTheWire encourages players to seek knowledge and solutions on their own. This helps promote autonomy and critical thinking, which are important elements in the field of cyber-security.</p>
+<p>Here in this page you will find a quick solution and explanations for the 33 levels.</p>
+<h2>Bandit Level  0  → Level  1</h2>
+<p>undocumented </p>
+<h2>Bandit Level  1  → Level  2</h2>
+<p>undocumented</p>
+<h2>Bandit Level  2  → Level  3</h2>
+<p>undocumented</p>
+<h2>Bandit Level  3  → Level  4</h2>
+<p>undocumented</p>
+<h2>Bandit Level  4  → Level  5</h2>
+<p>To see all the files formats use the file command to scan all the files on the current directory:</p>
+<pre><code class="language-bash">file ./*
+</code></pre>
+<h2>Bandit Level  5  → Level  6</h2>
+<p>Using the find command to find the file with the specified parameters:</p>
+<pre><code class="language-bash">find ./ -type f -size 1033c ! -executable
+</code></pre>
+<h2>Bandit Level  6  → Level  7</h2>
+<p>Can use find again to find the file (pun intended):</p>
+<pre><code class="language-bash">find ./ -type f -size 33c -user bandit7 -group bandit6
+</code></pre>
+<h2>Bandit Level  7  → Level  8</h2>
+<p>Using grep we can take the line containing the word with this command:</p>
+<pre><code class="language-bash">cat data.txt | grep -w millionth
+</code></pre>
+<h2>Bandit Level  8  → Level  9</h2>
+<p>Using uniq we can find the line that occurs just once:</p>
+<pre><code class="language-bash">sort data.txt | uniq -u
+</code></pre>
+<p><em>Note: 'uniq' does not detect repeated lines unless they are adjacent.  You may want to sort the input first, or use 'sort </em><em>-u</em><em>' without 'uniq'.</em> (this is on the man page for uniq)</p>
+<h2>Bandit Level  9  → Level  10</h2>
+<p>Using strings on the file we can find the password pretty easily, but to have a more proper output we can pipe the output to a grep filtering the lines that starts with ==========</p>
+<pre><code class="language-bash">strings data.txt | grep -e ==========
+</code></pre>
+<h2>Bandit Level  10  → Level  11</h2>
+<p>We can simply use the base64 command to decode the content of the file:</p>
+<pre><code class="language-bash">cat data.txt | base64 -d
+</code></pre>
+<h2>Bandit Level  11  → Level  12</h2>
+<p>We can use the tr command to translate the rot13:</p>
+<pre><code class="language-bash">cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+</code></pre>
+<p><em>Note: It's really helpful to see the Wikipedia page of rot13 to understand the parameters of the tr command</em> https://pt.wikipedia.org/wiki/ROT13</p>
+<h2>Bandit Level  12  → Level  13</h2>
+<p>So far this is the one that needs a little more attention, but the process is pretty straight forward. First lets take the suggestion from the over the wire web site and create a new directory on the /tmp directory (thrust me, you will need it). Once there we need to copy the data.txt from the bandit12 folder. Using cat on the file we will see the following:</p>
+<pre><code class="language-bash">cat data.txt
+</code></pre>
+<pre><code class="language-Hexdump">00000000: 1f8b 0808 2773 4564 0203 6461 7461 322e  ....'sEd..data2.
+00000010: 6269 6e00 0145 02ba fd42 5a68 3931 4159  bin..E...BZh91AY
+00000020: 2653 597b 4f96 5f00 0018 ffff fd6f e7ed  &amp;SY{O._......o..
+00000030: bff7 bef7 9fdb d7ca ffbf edff 8ded dfd7  ................
+00000040: bfe7 bbff bfdb fbff ffbf ff9f b001 3b56  ..............;V
+00000050: 0400 0068 0064 3400 d341 a000 0680 0699  ...h.d4..A......
+00000060: 0000 69a0 0000 1a00 1a0d 0034 0034 d3d4  ..i........4.4..
+00000070: d1a3 d464 6834 6403 d469 b422 0d00 3400  ...dh4d..i."..4.
+00000080: 1a68 068d 3403 4d06 8d00 0c80 00f5 0003  .h..4.M.........
+00000090: 4031 3119 00d0 1a68 1a34 c86d 4640 00d0  @11....h.4.mF@..
+000000a0: 0007 a80d 000d 00e9 a340 d034 0341 a000  .........@.4.A..
+000000b0: 0699 07a9 881e a0d0 da80 6834 0c43 4068  ..........h4.C@h
+000000c0: 6432 0340 0c80 6800 0346 8006 8000 d034  d2.@..h..F.....4
+000000d0: 0001 f0e1 810e 1958 b7a4 92c7 640e 421a  .......X....d.B.
+000000e0: a147 6142 a67e 3603 a756 3ba9 1b08 e034  .GaB.~6..V;....4
+000000f0: 41fd 1247 661d b380 00b7 cd8c b23e b6b2  A..Gf........&gt;..
+00000100: 1947 e803 0be5 6077 a542 e9ea 7810 29f0  .G....`w.B..x.).
+00000110: 429d e1d7 ad8b 0b78 056b e37c 06df 4917  B......x.k.|..I.
+00000120: 9b46 f69d 4473 80b4 edc2 ee10 04e3 3e52  .F..Ds........&gt;R
+00000130: dd34 2244 08cb 5e64 9314 9521 505e e767  .4"D..^d...!P^.g
+00000140: 9021 d029 85e7 9ce2 d1ce d44f 5ec5 f6d6  .!.).......O^...
+00000150: d918 de31 f1f5 d149 4695 0937 d06b f046  ...1...IF..7.k.F
+00000160: 789d 1bd0 ca69 11eb 2c9a 3290 3d9e 0511  x....i..,.2.=...
+00000170: 6cad 205b edc8 c4b5 4691 379a 5978 58c3  l. [....F.7.YxX.
+00000180: 4846 a4a0 3ba5 a89a a794 1f93 c588 8160  HF..;..........`
+00000190: 016e 2504 2c74 643b 5046 4154 751c 33b1  .n%.,td;PFATu.3.
+000001a0: c3e5 53d8 a959 5fdc 6c12 f2bd 02f3 2d83  ..S..Y_.l.....-.
+000001b0: b965 3188 0d3c b097 4156 e950 9d49 64f6  .e1..&lt;..AV.P.Id.
+000001c0: da4a 2db5 a4ea 5365 27c0 1e79 8109 5f31  .J-...Se'..y.._1
+000001d0: c184 46c9 74a5 f923 5ea1 6861 f058 226c  ..F.t..#^.ha.X"l
+000001e0: 3df6 5d10 d11f d966 77c9 e488 448c 5a6f  =.]....fw...D.Zo
+000001f0: 2c10 410b 4280 140a 0818 8afa 0cfa 8bf7  ,.A.B...........
+00000200: ad34 3308 4077 6552 9849 378e 7d85 1fd8  .43.@weR.I7.}...
+00000210: f287 1238 7639 11e2 f1e6 483b 7548 25e2  ...8v9....H;uH%.
+00000220: 7de4 24ff 1a69 0b85 4b4c ebd0 1231 a512  }.$..i..KL...1..
+00000230: f9fb 109c e7ea d932 98fd eb76 f4f8 fa29  .......2...v...)
+00000240: 967c e152 9c69 c607 6207 eaef 2095 9441  .|.R.i..b... ..A
+00000250: a64e 9ffc 5dc9 14e1 4241 ed3e 597c 9f2e  .N..]...BA.&gt;Y|..
+00000260: f0c8 4502 0000                           ..E...
+</code></pre>
+<p>We can use xxd to reverse the HexDump:</p>
+<pre><code class="language-bash">cat data.txt | xxd -r &gt; data
+</code></pre>
+<p>Then we can use the file command to see exactly what this file actually is:</p>
+<pre><code class="language-bash">file data
+</code></pre>
+<pre><code class="language-output">data: gzip compressed data, was "data2.bin", last modified: Sun Apr 23 18:04:23 2023, max compression, from Unix, original size modulo 2^32 581
+</code></pre>
+<p>Nice, now we know that the file is a gzip file, with a quick search we can find the file extension .gz. Using the mv we can alter the extension of your data file:</p>
+<pre><code class="language-bash">mv data data.gz
+</code></pre>
+<p>From now on the level stays the same, we decompress the file, find which program was used to compress the contents of the new file, rename it, decompress it and so on. This level is using tree main programs to compress the files gzip, bzip2 and tar. At the end we should get a ASCII text file with the plain password for the next level.</p>
+<h2>Bandit Level  13  → Level  14</h2>
+<p>This level is somewhat different from the rest, now, according to the over the wire instructions, we need to use the sshkey.private to login as bandit14 and get the password from /etc/bandit_pass/bandit14. To do that we ban simply log in to bandit13 and use ssh to localhost, pasrsing the sshkey file as a parameter:</p>
+<pre><code class="language-bash">ssh bandit14@localhost -i sshkey.private -p 2220
+</code></pre>
+<p>Once logged in we can navigate to the /etc/bandit_pass/bandit14 directory and take the password. But now i would like to take a moment to analise what we just did. Lets take a step back for a moment and analise the contents of the sshkey.private file:</p>
+<pre><code class="language-bash">cat sshkey.private
+</code></pre>
+<pre><code class="language-sshkey">-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAxkkOE83W2cOT7IWhFc9aPaaQmQDdgzuXCv+ppZHa++buSkN+
+gg0tcr7Fw8NLGa5+Uzec2rEg0WmeevB13AIoYp0MZyETq46t+jk9puNwZwIt9XgB
+ZufGtZEwWbFWw/vVLNwOXBe4UWStGRWzgPpEeSv5Tb1VjLZIBdGphTIK22Amz6Zb
+ThMsiMnyJafEwJ/T8PQO3myS91vUHEuoOMAzoUID4kN0MEZ3+XahyK0HJVq68KsV
+ObefXG1vvA3GAJ29kxJaqvRfgYnqZryWN7w3CHjNU4c/2Jkp+n8L0SnxaNA+WYA7
+jiPyTF0is8uzMlYQ4l1Lzh/8/MpvhCQF8r22dwIDAQABAoIBAQC6dWBjhyEOzjeA
+J3j/RWmap9M5zfJ/wb2bfidNpwbB8rsJ4sZIDZQ7XuIh4LfygoAQSS+bBw3RXvzE
+pvJt3SmU8hIDuLsCjL1VnBY5pY7Bju8g8aR/3FyjyNAqx/TLfzlLYfOu7i9Jet67
+xAh0tONG/u8FB5I3LAI2Vp6OviwvdWeC4nOxCthldpuPKNLA8rmMMVRTKQ+7T2VS
+nXmwYckKUcUgzoVSpiNZaS0zUDypdpy2+tRH3MQa5kqN1YKjvF8RC47woOYCktsD
+o3FFpGNFec9Taa3Msy+DfQQhHKZFKIL3bJDONtmrVvtYK40/yeU4aZ/HA2DQzwhe
+ol1AfiEhAoGBAOnVjosBkm7sblK+n4IEwPxs8sOmhPnTDUy5WGrpSCrXOmsVIBUf
+laL3ZGLx3xCIwtCnEucB9DvN2HZkupc/h6hTKUYLqXuyLD8njTrbRhLgbC9QrKrS
+M1F2fSTxVqPtZDlDMwjNR04xHA/fKh8bXXyTMqOHNJTHHNhbh3McdURjAoGBANkU
+1hqfnw7+aXncJ9bjysr1ZWbqOE5Nd8AFgfwaKuGTTVX2NsUQnCMWdOp+wFak40JH
+PKWkJNdBG+ex0H9JNQsTK3X5PBMAS8AfX0GrKeuwKWA6erytVTqjOfLYcdp5+z9s
+8DtVCxDuVsM+i4X8UqIGOlvGbtKEVokHPFXP1q/dAoGAcHg5YX7WEehCgCYTzpO+
+xysX8ScM2qS6xuZ3MqUWAxUWkh7NGZvhe0sGy9iOdANzwKw7mUUFViaCMR/t54W1
+GC83sOs3D7n5Mj8x3NdO8xFit7dT9a245TvaoYQ7KgmqpSg/ScKCw4c3eiLava+J
+3btnJeSIU+8ZXq9XjPRpKwUCgYA7z6LiOQKxNeXH3qHXcnHok855maUj5fJNpPbY
+iDkyZ8ySF8GlcFsky8Yw6fWCqfG3zDrohJ5l9JmEsBh7SadkwsZhvecQcS9t4vby
+9/8X4jS0P8ibfcKS4nBP+dT81kkkg5Z5MohXBORA7VWx+ACohcDEkprsQ+w32xeD
+qT1EvQKBgQDKm8ws2ByvSUVs9GjTilCajFqLJ0eVYzRPaY6f++Gv/UVfAPV4c+S0
+kAWpXbv5tbkkzbS0eaLPTKgLzavXtQoTtKwrjpolHKIHUz6Wu+n4abfAIRFubOdN
+/+aLoRQ0yBDRbdXMsZN/jvY44eM+xRLdRVyMmdPtP8belRi2E2aEzA==
+-----END RSA PRIVATE KEY-----
+</code></pre>
+<p>With that as a parameter, as you may noticed, we don't need to provide a password to login on the ssh, that way, we "use the RSA private key as your password". As you can probably guess, this method is more secure compared to just use a simple password, because its easier to brute force a 15 digit password compared to this monstrous file.</p>
+<blockquote>
+<p>Key-based authentication is the most secure of several modes of authentication usable with OpenSSH, such as plain password and Kerberos tickets. Key-based authentication has several advantages over password authentication, for example the key values are significantly more difficult to brute-force, or guess than plain passwords, provided an ample key length. Other authentication methods are only used in very specific situations.
+https://help.ubuntu.com/community/SSH/OpenSSH/Keys</p>
+</blockquote>
+<h2>Bandit Level  14  → Level  15</h2>
+<p>For this level, as the over the wire website says "The password for the next level can be retrieved by submitting the password of the current level to <strong>port 30000 on localhost</strong>.", for a complete beginner this may be overwhelming, but, there is a lot of good recommendations for reading there. In simple terms, there is a custom program running on port 30000 on the over the wire machine, once it receives a message with the current level's password it returns the next level password. To do that we can use netcat:</p>
+<pre><code class="language-bash">nc localhost 30000
+</code></pre>
+<p>Once the connection has been established we can send the last level's password, than it sends back "Correct!" and the next level password.</p>
+<h2>Bandit Level  15  → Level  16</h2>
+<p>Pretty much like the lest level we just need to connect using s_client and openssl on the localhost with the current level password, we can do this as follows:</p>
+<pre><code class="language-bash">echo "passwordhere" | openssl s_client -connect localhost:30001 -ign_eof
+</code></pre>
+<p>Just like the previous level, we are connecting to a custom program running on port 30001 on the over the wire machine, but this time instead of using netcat we use openssl, since now we are using this secure socket layer.</p>
+<h2>Bandit Level  16  → Level  17</h2>
+<p>With the information that the website give us we can see that this level will be different from the rest, now we need to find the correct port on a range. To do this we can use a port scanner like nmap, to find all the information needed we can do the following:</p>
+<pre><code class="language-bash">nmap localhost -p 31000-32000 --script ssl-cert
+</code></pre>
+<p>On the -p parameter we specify the port range for the scan, and the --script we can parse a script from nmap to run on the ports, in this case we can use ssl-cert to find out which ports are receiving ssl connections. Alternatively we can use the following command to find this:</p>
+<pre><code class="language-bash">nmap localhost -sV -T4 -p 31000-32000 
+</code></pre>
+<p>But we had no success with this one. Anyway, with that we find out the ports 31790 and 31518 are sunning with ssl, with just 2 of then we can try sending the password of this level and verifying the response. Now we run the openssl:</p>
+<pre><code class="language-bash">openssl s_client -connect localhost:31790 -ign_eof
+</code></pre>
+<p>Once the connection is established we can paste the password to see the response. Unlike from the other levels, the server response is a private RSA key.</p>
+<pre><code class="language-plaintext">-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
+imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
+Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
+DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
+JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
+x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
+KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
+J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
+d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
+YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
+vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
++TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
+8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
+SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
+HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
+SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
+R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
+Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
+R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
+L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
+blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
+YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
+77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
+dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
+vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
+-----END RSA PRIVATE KEY-----
+</code></pre>
+<p>But we know what to do with it, on the level 13 we have seen it, we need to login using private key. Let's copy the key and create a directory on the tmp to put it.</p>
+<pre><code class="language-bash">cd /
+cd tmp
+mkdir bandit16key
+touch private.key
+nano private.key
+</code></pre>
+<p>Once nano opens we can paste the key and save the file to use it to connect with bandit17, BUT, before we do that we need to change the permissions to the file, because when we use the ssh with a private key the file needs to be private as well.</p>
+<pre><code class="language-bash">chmod 400 private.key
+</code></pre>
+<p>Now we can use the ssh with the key:</p>
+<pre><code class="language-bash">ssh bandit17@localhost -p 2220 -i private.key
+</code></pre>
+<p>Once connected we can find the password of the bandit17 on the /etc/bandit_pass/bandit17:</p>
+<pre><code class="language-bash">cat /etc/bandit_pass/bandit17
+</code></pre>
+<h2>Bandit Level  17  → Level  18</h2>
+<p>In this level we just need to use the diff command:</p>
+<pre><code class="language-bash">diff passwords.old passwords.new
+</code></pre>
+<p>Now we just take the bottom text, that's our password.</p>
+<h2>Bandit Level  18  → Level  19</h2>
+<p>For that level we need to parse a command with the ssh:</p>
+<pre><code class="language-bash">ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat ~/readme"
+</code></pre>
+<h2>Bandit Level  19  → Level  20</h2>
+<p>Reading the recommended page we can see some thing very usefull.</p>
+<blockquote>
+<p>"<em>... </em><em>setuid</em><em> and </em><em>setgid</em><em> (short for <em>set user identity</em> and <em>set group identity</em>) allow users to run an  executable with the file system permissions of the executable's owner or group respectively and to change behaviour in directories.</em>" https://en.wikipedia.org/wiki/Setuid</p>
+</blockquote>
+<p>So, we can use the binary given to us to run commands as bandit20, so we can just cat the password from the /etc/bandit_pass/bandit20 file:</p>
+<pre><code class="language-bash"> ./bandit20-do cat /etc/bandit_pass/bandit20
+</code></pre>
+<h2>Bandit Level  20  → Level  21</h2>
+<p>The over the wire website give us this instruction:</p>
+<blockquote>
+<p>"There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21)."</p>
+</blockquote>
+<p>We need a way to send the bandit20 password to the suconnect binary, to do this we can use netcat, but we have a problem, how are we going to run the program and netcat at the same time with just one terminal ?
+To do that we can use tmux for example to open multiple terminals. So, to start, lets use the following command:</p>
+<pre><code class="language-bash">tmux
+</code></pre>
+<p>Not much has changed, but now we can use the tmux to split the view, first we need to press ctrl+B.</p>
+<blockquote>
+<p>Note that the B is upper case, so you need to press ctrl+shift+b</p>
+</blockquote>
+<p>Now we need to press % to split de view vertically. To navigate on the terminals now we press ctrl+B an then the arrow keys to change the terminal we are working on. To solve this level we need to setup a netcat on one terminal, listening on a certain port, and on the other run de binary on the same port we configured the netcat. To set netcat we can use de following command:</p>
+<pre><code class="language-bash">nc -l 40000
+</code></pre>
+<p>On the other terminal we can run the binary on the 40000 port:</p>
+<pre><code class="language-bash">./suconnect 40000
+</code></pre>
+<p>Now return to the netcat terminal and paste the current level password (level 20 password), then the binary should check it and send the next password.</p>
+<h2>Bandit Level  21  → Level  22</h2>
+<p>In this level there is a cron job being executed, looking on the directory provided we can see the "tasks" being executed by cron. So, we can check on the file named cronjob_bandit22:</p>
+<pre><code class="language-bash">cat cronjob_bandit22
+</code></pre>
+<pre><code class="language-bash">@reboot bandit22 /usr/bin/cronjob_bandit22.sh &amp;&gt; /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &amp;&gt; /dev/null
+</code></pre>
+<p>So, cron is apparently is running this file /usr/bin/cronjob_bandit22.sh, lets have a look on it:</p>
+<pre><code class="language-bash">cat /usr/bin/cronjob_bandit22.sh
+</code></pre>
+<pre><code class="language-plaintext">#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 &gt; /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+</code></pre>
+<p>So this script is getting the contents of the /etc/bandit_pass/bandit22 and outputting it to /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv , that's the password we need. Now we can just use cat on this file:</p>
+<pre><code class="language-bash">cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+</code></pre>
+<p>and there is your password.</p>
+<h2>Bandit Level  22  → Level  23</h2>
+<p>On that level, similar to the last one, we can check cron directory to find a shell script file, lets have a look on the shell script:</p>
+<pre><code class="language-bash">cat /usr/bin/cronjob_bandit23.sh
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname &gt; /tmp/$mytarget
+</code></pre>
+<p>On a quick look we can see that the file creates 2 variables, one with the whoami output and the other is a md5 hash of a phrase. That way of we execute this tile as bandit22 we will copy the bandit22's password to a file on the tmp directory. There for, we can assume that someone with bandit23 has run this script, so we just need to discover what will be stored in the mytarget variable when bandit23 ran the script, to do this we can just do the following:</p>
+<pre><code class="language-bash">echo I am user bandit23 | md5sum | cut -d ' ' -f 1
+</code></pre>
+<p>This will output a md5 hash, and as we know, this is the name of the file on the /tmp directory that holds the bandit23 password:</p>
+<pre><code class="language-bash">cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+</code></pre>
+<h2>Bandit Level  23  → Level  24</h2>
+<p>As the other two levels lets start looking on the <strong>/etc/cron.d/</strong> directory:</p>
+<pre><code class="language-bash">cat cronjob_bandit24
+</code></pre>
+<pre><code class="language-plaintext">@reboot bandit24 /usr/bin/cronjob_bandit24.sh &amp;&gt; /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &amp;&gt; /dev/null
+</code></pre>
+<p>Now lets check the /usr/bin/cronjob_bandit24.sh file:</p>
+<pre><code class="language-bash">cat /usr/bin/cronjob_bandit24.sh
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname/foo || exit 1
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -rf ./$i
+    fi
+done
+</code></pre>
+<p>Ok, that's a bit overwhelming but, trust me, it's not hard at all. The first echo on the file is giving us a hint of what it's doing, it's executing all the files on /var/spool/bandit24/foo and then deleting then. So, we can create your own shell script, copy it to /var/spool/bandit24/foo, then it will be executed. Lets first create a new directory on /tmp:</p>
+<pre><code class="language-bash">cd /tmp 
+mkdir shellscript 
+cd shellscript
+</code></pre>
+<p>Now lets create a new shell script here:</p>
+<pre><code class="language-bash">touch execute.sh
+chmod 777 execute.sh
+nano execute.sh
+</code></pre>
+<p>Now lets write a simple script to give us te Bandit24 password:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+cat /etc/bandit_pass/bandit24 &gt; /tmp/shellscript/password
+</code></pre>
+<p>Save the file and create a new one:</p>
+<pre><code class="language-bash">touch password
+chmod 666 password
+</code></pre>
+<p>Now lets copy the execute.sh to /var/spool/bandit24/foo:</p>
+<pre><code class="language-bash">cp execute.sh /var/spool/bandit24/foo/
+</code></pre>
+<p>We can see if the file is indeed there with that command:</p>
+<pre><code class="language-bash">ls -al /var/spool/bandit24/foo/execute.sh
+</code></pre>
+<p>Once there we just need to wait a moment for it to be ran, after that we can cat the password file, the password for bandit24 should be there.</p>
+<h2>Bandit Level  24  → Level  25</h2>
+<p>This level has this explanation of what we need to do "A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.". Lets try to connect to it using netcat and see how it respond to a message.</p>
+<pre><code class="language-bash">nc localhost 30002
+'insertlevel24passwordhere' 0000
+</code></pre>
+<p>The daemon will give this response:</p>
+<pre><code class="language-bash">Wrong! Please enter the correct pincode. Try again.
+</code></pre>
+<p>Ok, now we need to create a script to generate all the pin codes from 0000 to 9999 and send it with the bandit24 password. Now i will show a method that should work but i didn't had much luck with it, and i think i know why. First a created a simple shell script to output a txt file with all the possible lines to send to the daemon:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+for i in {0000..9999}
+do
+        echo 'insertlevel24passwordhere' $i &gt;&gt; possibilities.txt
+done
+
+cat possibilities.txt | nc localhost 30002 &gt; result.txt
+</code></pre>
+<blockquote>
+<p>Note: create this file on the /tmp directory</p>
+</blockquote>
+<p>This script will create a file named possibilities.txt, with that we can pipe the output from a cat command to netcat, effectively sending all the possibilities. After that we can just grep the results.txt file in search of the line that doesn't contain the word "Wrong". BUT, i didn't have much luck with that method. My theory is that the daemon is receiving too many attempts of messages at once, or the netcat is not waiting for the server to respond after the previous message was been send. So, i created a python script to do a similar thing:</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+# coding: utf-8  
+
+import socket 
+
+pin = 0
+password = "insertlevel24passwordhere"  
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(("127.0.0.1", 30002))
+
+connect_msg = s.recv(2048)
+print(connect_msg)
+
+while pin &lt; 10000:
+    pincode_string = str(pin).zfill(4)
+
+    message=password+" "+pincode_string+"\n"
+    s.sendall(message.encode())
+
+    receive_msg = s.recv(1024)
+    receive_msg = receive_msg.decode()
+
+    if "Wrong" in receive_msg:
+        print("Wrong PINCODE: %s" % pincode_string)
+
+    else:
+        print(receive_msg)
+        break
+
+    pincode += 1
+</code></pre>
+<p>Using python socket i don't have to worry about the script not waiting for the daemon to respond, it will wait by default. Now lets run your script and wait (a considerable amount of time) to get your password.</p>
+<blockquote>
+<p>Tip: create two scripts, one that goes from 0000 to 5000 and other one that goes backwards, from 9999 to 5001.</p>
+</blockquote>
+<h2>Bandit Level  25 → Level  26 → Level  27</h2>
+<p>Ok you may have noticed that this level will be somewhat different, on this level we will need to get really out of the box, and more, we will need to get the password for level 27 on the moment we get a shell from bandit26. But first lets see what we have with bandit25, listing the files in the home directory of bandit25 we see a sshkey for bandit26, so, we can ssh into it as follows:</p>
+<pre><code class="language-bash">ssh bandit26@localhost -p 2220 -i bandit26.sshkey
+</code></pre>
+<p>As we login we are kicked out after a ascii art of bandit26 show on the screen. Now we need to know what is beeing ran when we login to the bandit26, to do that we can check the passwd file on the /etc directory:</p>
+<pre><code class="language-bash">cat /etc/passwd | grep bandit26
+</code></pre>
+<pre><code class="language-bash">bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext
+</code></pre>
+<p>Ok, instead of the /bin/bash we have /usr/bin/showtext, so lets have a look on it:</p>
+<pre><code class="language-bash">cat /usr/bin/showtext
+</code></pre>
+<pre><code class="language-bash">#!/bin/sh
+
+export TERM=linux
+
+exec more ~/text.txt
+exit 0
+</code></pre>
+<p>So as we login the file text.txt is showed to the screen with the more command. This command will adapt how much of the text will be displayed on the screen, but we can use that on your favor, we just need to resize the screen to not be immediately kicked out. As we do that we can use vim to execute some commands, just press v as you see the more label on the left corner. Now we are on the vim editor, to get a shell with it we just need to use two commands.</p>
+<pre><code class="language-plaintext">:set shell=/bin/bash
+:shell
+</code></pre>
+<p>Now we should be on the bandit26.</p>
+<p>Ok, if we need to login as bandit26 again we will need to do all that all over again, so let's quickly get the bandit27 password now. To do that is very simple, there is as executable file on the home directory of bandit26 that will run all the commands as bandit27, so to get the password we just need to run the following command:</p>
+<pre><code class="language-bash">./bandit27-do cat /etc/bandit_pass/bandit27
+</code></pre>
+<p>Nice now we have the bandit27 password.</p>
+<h2>Bandit Level  27  → Level  28</h2>
+<blockquote>
+<p>Note: the next levels will be using git and some concepts of it, make sure you search a bit and get comfortable with it to really understand what is happening.</p>
+</blockquote>
+<p>As the information we have been given, the password to the next level is on a git repository, to access it we first will connect to bandit27 on the ssh as usual. Now lets create a new folder on the /tmp directory to clone this directory:</p>
+<pre><code class="language-bash">git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
+</code></pre>
+<p>Now we should have a folder named repo, and in it a text file with the password.</p>
+<h2>Bandit Level  28  → Level  29</h2>
+<p>In this level we will start doing the same thing as the last level, creating a folder on the /tmp and cloning the repository. But this time we will have a README.md file, without the password. Since this is a git repository we can see all the commits to it and analise if there is something useful:</p>
+<pre><code class="language-bash">git log
+</code></pre>
+<p>The we can see this:</p>
+<pre><code class="language-plaintext">commit 899ba88df296331cc01f30d022c006775d467f28 (HEAD -&gt; master, origin/master, origin/HEAD)
+Author: Morla Porla &lt;morla@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:39 2023 +0000
+
+    fix info leak
+
+commit abcff758fa6343a0d002a1c0add1ad8c71b88534
+Author: Morla Porla &lt;morla@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:39 2023 +0000
+
+    add missing data
+
+commit c0a8c3cf093fba65f4ee0e1fe2a530b799508c78
+Author: Ben Dover &lt;noone@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:39 2023 +0000
+
+    initial commit of README.md
+</code></pre>
+<p>The commit named 'fix info leak', that sounds interesting, lets have a closer look to the commit and see what as changed:</p>
+<pre><code class="language-bash">git log -p -1
+</code></pre>
+<pre><code class="language-plaintext">commit 899ba88df296331cc01f30d022c006775d467f28 (HEAD -&gt; master, origin/master, origin/HEAD)
+Author: Morla Porla &lt;morla@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:39 2023 +0000
+
+    fix info leak
+
+diff --git a/README.md b/README.md
+index b302105..5c6457b 100644
+--- a/README.md
++++ b/README.md
+@@ -4,5 +4,5 @@ Some notes for level29 of bandit.
+ ## credentials
+
+ - username: bandit29
+-- password: 'thislevelpassword'
++- password: xxxxxxxxxx
+
+</code></pre>
+<p>Ok, there we can see the line that was changed, removing the password, and there we have it.</p>
+<h2>Bandit Level  29  → Level  30</h2>
+<p>Cloning this repository as the last 2 leves, we will have something similar to level 28, the file we have does not have the password, so, as we did on the previous level, we can check the logs:</p>
+<pre><code class="language-bash">git log
+</code></pre>
+<p>But, looking at the logs we will find nothing, the password is not on this branch, so we need to look the other branches to find it. To see all the branches we can use:</p>
+<pre><code class="language-bash">gir branch -a
+</code></pre>
+<pre><code class="language-plaintext">* master
+  remotes/origin/HEAD -&gt; origin/master
+  remotes/origin/dev
+  remotes/origin/master
+  remotes/origin/sploits-dev
+</code></pre>
+<p>Ok, now lets have a look in the dev branch:</p>
+<pre><code class="language-bash">git checkout dev &amp;&amp; git log
+</code></pre>
+<pre><code class="language-plaintext">Your branch is up to date with 'origin/dev'.
+commit 13e735685c73e5e396252074f2dca2e415fbcc98 (HEAD -&gt; dev, origin/dev)
+Author: Morla Porla &lt;morla@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:40 2023 +0000
+
+    add data needed for development
+
+commit 8caf551dba9f9e39bc8ea4163de7902e6fa85f3a
+Author: Ben Dover &lt;noone@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:40 2023 +0000
+
+    add gif2ascii
+
+commit 4bd5389f9f2b9e96ba517aa751ee58d051905761 (origin/master, origin/HEAD, master)
+Author: Ben Dover &lt;noone@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:40 2023 +0000
+
+    fix username
+
+commit 1a57cf10158f133c4f40ff82251f605a7618631d
+Author: Ben Dover &lt;noone@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:40 2023 +0000
+
+    initial commit of README.md
+</code></pre>
+<p>So, there is a commit named 'add data needed for development', lets have a look on it:</p>
+<pre><code class="language-bash">git log -p -1
+</code></pre>
+<pre><code class="language-plaintext">commit 13e735685c73e5e396252074f2dca2e415fbcc98 (HEAD -&gt; dev, origin/dev)
+Author: Morla Porla &lt;morla@overthewire.org&gt;
+Date:   Sun Apr 23 18:04:40 2023 +0000
+
+    add data needed for development
+
+diff --git a/README.md b/README.md
+index 1af21d3..a4b1cf1 100644
+--- a/README.md
++++ b/README.md
+@@ -4,5 +4,5 @@ Some notes for bandit30 of bandit.
+ ## credentials
+
+ - username: bandit30
+-- password: &lt;no passwords in production!&gt;
++- password: 'thislevelpassword'
+</code></pre>
+<p>And there we have it.</p>
+<h2>Bandit Level  30  → Level  31</h2>
+<p>In this level we will do the same thing as the previous ones, but this time, the repo doesn't have any relevant branch and no commit history that we can use, so lets check the tag:</p>
+<pre><code class="language-bash">git tag
+</code></pre>
+<pre><code class="language-plaintext">secret
+</code></pre>
+<p>Ok, so there is a tag named secret, lets have a look in it:</p>
+<pre><code class="language-bash">git show secret
+</code></pre>
+<pre><code class="language-plaintext">'thislevelpassword'
+</code></pre>
+<p>There it is.</p>
+<blockquote>
+<p>Note: "Tags are <strong>ref's that point to specific points in Git history</strong>. Tagging is generally used to capture a point in history that is used for a marked version release (i.e. v1. 0.1)."
+https://www.atlassian.com/git/tutorials/inspecting-a-repository/git-tag</p>
+</blockquote>
+<h2>Bandit Level  31  → Level  32</h2>
+<p>Ok, as you can guess, clone the repository and lets analise it. Reading the README.md file, we can find this:</p>
+<pre><code class="language-plaintext">This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+</code></pre>
+<p>So lets do as the file says, lets create a file named key.txt, with the phase 'May I come in?':</p>
+<pre><code class="language-bash">echo 'May I come in?' &gt; key.txt
+</code></pre>
+<p>Now lets add the file to git:</p>
+<pre><code class="language-bash">git add -f key.txt
+</code></pre>
+<p>And now lets create the commit:</p>
+<pre><code class="language-bash">git commit -a
+</code></pre>
+<p>The nano editor should open, now just type whatever on it, and lastly, lets push your commit to main:</p>
+<pre><code class="language-bash">git push -u origin master
+</code></pre>
+<p>Than we shuld be given a message with the password:</p>
+<pre><code class="language-plaintext">The authenticity of host '[localhost]:2220 ([127.0.0.1]:2220)' can't be established.
+ED25519 key fingerprint is SHA256:C2ihUBV7ihnV1wUXRb4RrEcLfXC5CXlhmAAM/urerLY.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Could not create directory '/home/bandit31/.ssh' (Permission denied).
+Failed to add the host to the list of known hosts (/home/bandit31/.ssh/known_hosts).
+                         _                     _ _ _
+                        | |__   __ _ _ __   __| (_) |_
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+
+
+                      This is an OverTheWire game server.
+            More information on http://www.overthewire.org/wargames
+
+bandit31-git@localhost's password:
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 330 bytes | 330.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: ### Attempting to validate files... ####
+remote:
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote:
+remote: Well done! Here is the password for the next level:
+remote: 'thislevelpassword'
+remote:
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote:
+To ssh://localhost:2220/home/bandit31-git/repo
+ ! [remote rejected] master -&gt; master (pre-receive hook declined)
+error: failed to push some refs to 'ssh://localhost:2220/home/bandit31-git/repo'
+</code></pre>
+<h2>Bandit Level  32  → Level  33</h2>
+<p>So, now that we are out of git levels, we have another tricky level. Connecting to the ssh we will see the WELCOME TO THE UPPERCASE SHELL. Every command that we type will be <em>uppercased</em> therefor the shell will no recognize it. What can we do now ?
+Our main problem is 'every command will be in uppercase', but whats is uppercase ? uppercase , by definition is 'capital letters as opposed to small letters', so, the challenge here is not to use any letters.
+To escape this UPPERCASE SHELL i just need to find something that does not use any letter. In shell there is the special variables, we can use then to resturn to the normal shell.</p>
+<blockquote>
+<p>You can finde more information about the special variables here https://blog.knoldus.com/special-variables-in-bash-scripting/</p>
+</blockquote>
+<p>So, using $0 we will get the filename of the current script, BUT, this uppershell is running shell, so therefore, we will get a normal shell. After that we can just cat the password for the nest level:</p>
+<pre><code class="language-bash">cat /etc/bandit_pass/bandit33
+</code></pre>
+<h2>Bandit Level  33  → Level  34</h2>
+<p><strong>At this moment, level 34 does not exist yet.</strong></p>
+<h2>Final thoughts</h2>
+<p>At this moment the level 32 is the last level for bandit, so that it for now. But after ending all this you would like to share my thoughts on this. The bandit wargame is a amazing place to learn linux, git, shell, hacking and a bunch of more stuff, HOWEVER, you must be careful with it, although this is a good place to start, i need to enjoy searching on the Internet for some specific information, otherwise you may find this experience really frustrating, if that is your case i wouldn't recommend this as first experience.</p>
+    </article>
+  </div>
+</body>
+</html>

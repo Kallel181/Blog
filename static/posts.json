@@ -1,6 +1,17 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Over_The_Wire_-_Bandit_-_Guide-22_10_2024.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Over_The_Wire_-_Bandit_-_Guide-22_10_2024.html",
+            "resume": "OverTheWire offers a series of cybersecurity challenges called wargames, ranging from beginner to advanced levels. Players solve puzzles involving topics like encryption, network analysis, and exploitation, encouraging independent learning and critical thinking. This page provides quick solutions and explanations for all 33 levels.",
+            "name": "Over The Wire - Bandit - Guide",
+            "date": "22/10/2024",
+            "tags": [
+                "Linux",
+                "overthewire"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/HTB_Brutus_Guide-10_05_2024.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/HTB_Brutus_Guide-10_05_2024.html",
             "resume": "Brutus is a Sherlock from Hack The Box, a challenge made for you to investigate a scenario using the files provided to answer a series of questions and solve a mystery. In this Sherlock we will use Unix auth.log and wtmp logs to find the author of a brute force attack and some of its actions on the system.",
