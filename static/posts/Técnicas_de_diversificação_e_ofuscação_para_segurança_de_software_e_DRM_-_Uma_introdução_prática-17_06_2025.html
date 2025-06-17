@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Técnicas de diversificação e ofuscação para segurança de software e DRM - Uma introdução prática</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>Técnicas de diversificação e ofuscação para segurança de software e DRM - Uma introdução prática</h1>
+      <div class="post-meta">
+        <span class="date">2025-06-17</span> —
+        <span class="tags"><span class="tag">reversing</span><span class="tag">obfuscation</span><span class="tag">ghidra</span><span class="tag">diversification</span></span>
+      </div>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>Este trabalho aborda as técnicas de proteção de software por meio da ofuscação e diversificação, com foco na sua eficácia contra a engenharia reversa. Iniciamos com uma introdução à engenharia reversa, destacando sua importância na análise de segurança, no controle de propriedade intelectual e na implementação de sistemas de DRM. Em seguida, são apresentadas as principais técnicas de ofuscação e diversificação. O trabalho também inclui uma análise prática utilizando programas ofuscados em linguagem Javascript e C, explorando o uso do Ghidra para entender o impacto real dessas técnicas no processo de engenharia reversa. Durante a análise, observam-se obstáculos significativos introduzidos pelas técnicas aplicadas, como dificuldade de rastreamento de fluxo e ocultação de valores críticos. Por fim, discute-se o papel emergente da Inteligência Artificial na engenharia reversa, ressaltando sua capacidade de reconhecer padrões e sua ameaça crescente à eficácia das defesas tradicionais. O estudo evidencia como a combinação de técnicas bem aplicadas pode aumentar substancialmente o custo da engenharia reversa, mas também destaca a necessidade constante de evolução frente às novas ferramentas automatizadas.</p>
+<h1>Introdução</h1>
+<p>A engenharia reversa de software é uma disciplina que se dedica à compreensão do funcionamento interno de um programa sem acesso ao seu código-fonte original. Trata-se de uma prática essencial em diversas áreas, como análise de segurança, verificação de conformidade, interoperabilidade entre sistemas, engenharia de malware, e implementação de mecanismos de Digital Rights Management (DRM). Ao permitir a extração de lógica, algoritmos e dados confidenciais, a engenharia reversa também representa uma ameaça significativa à propriedade intelectual e à proteção de sistemas computacionais.</p>
+<p>Em um mundo onde o software desempenha um papel central na infraestrutura de segurança, comunicação e economia digital, proteger o funcionamento interno de um programa tornou-se uma preocupação central para desenvolvedores e empresas. Nesse contexto, surgem duas abordagens complementares para dificultar a engenharia reversa: a ofuscação e a diversificação de software. Ambas visam aumentar o custo computacional, intelectual e temporal necessário para compreender ou modificar indevidamente um programa, mas fazem isso por meio de estratégias diferentes.</p>
+<p>A ofuscação consiste em aplicar transformações ao código (fonte ou binário) que, sem alterar seu comportamento funcional, tornam sua estrutura mais complexa, menos legível ou até mesmo enganosa. A ofuscação é, portanto, uma defesa que se apoia na complexidade de leitura.</p>
+<p>Por outro lado, a diversificação de software busca introduzir variações estruturais ou comportamentais entre diferentes instâncias de um mesmo programa. Essa técnica reduz a previsibilidade do software, dificultando a criação de ataques genéricos ou reutilizáveis. A principal motivação aqui é tornar cada alvo único, impedindo a aplicabilidade de técnicas baseadas em reconhecimento de padrões.</p>
+<p>Este trabalho tem como objetivo, por meio de uma abordagem exploratória, apresentar de forma clara os conceitos fundamentais de ofuscação e diversificação de software, demonstrar suas principais técnicas e discutir suas aplicações práticas no contexto da proteção de programas contra engenharia reversa. Inicialmente, introduzimos brevemente os fundamentos da engenharia reversa e sua relevância, tanto para a manutenção da segurança de sistemas quanto para a proteção da propriedade intelectual. Em seguida, exploramos as principais técnicas de ofuscação e diversificação, classificando-as segundo o momento em que são aplicadas (pré-compilação, compilação, pós-compilação ou pós-distribuição) e os efeitos desejados no código resultante.</p>
+<p>Para reforçar a compreensão dos conceitos teóricos, este trabalho também propõe uma análise prática. Desenvolvemos dois exemplos de programas simples, um em linguagem C e outro em JavaScript, que foram ofuscados com o uso de técnicas selecionadas. A análise desses programas foi realizada utilizando ferramentas de engenharia reversa, com foco na análise estática por meio do Ghidra. Através dessas análises, mostramos como pequenas alterações no código-fonte podem levar a grandes mudanças no código de máquina, dificultando significativamente a compreensão do fluxo do programa, a localização de dados sensíveis e a identificação de vulnerabilidades.</p>
+<p>Além disso, discutimos o papel crescente da Inteligência Artificial no contexto da engenharia reversa. Por serem sistemas de reconhecimento de padrões altamente eficientes, modelos de IA representam uma ameaça concreta à eficácia de técnicas tradicionais de ofuscação e diversificação, que por definição são reversíveis. A combinação de aprendizado de máquina com análise binária pode, no futuro, automatizar partes significativas do processo de desofuscação, exigindo a evolução constante das técnicas de proteção.</p>
+<h1>Engenharia Reversa, DRM e segurança de software</h1>
+<p>A engenharia reversa consiste no processo sistemático de desmontar e analisar um produto, seja ele físico ou digital, com o objetivo de compreender sua estrutura interna, funcionamento e princípios de operação. No campo da computação, particularmente dentro da segurança da informação, a engenharia reversa de software consiste na análise detalhada de programas compilados ou executáveis, muitas vezes sem acesso ao código-fonte original. Essa prática busca reconstruir ou interpretar o comportamento do sistema, revelando os componentes lógicos que o compõem, suas interações e até mesmo as intenções por trás de certas rotinas.</p>
+<p>A motivação para empregar engenharia reversa é ampla e multifacetada. Em contextos técnicos e legítimos, ela pode ser utilizada para compreender algoritmos proprietários, reverter atualizações problemáticas, estudar protocolos de comunicação, extrair dados de sistemas legados (legacy systems) cujo código original tenha se perdido ou se tornado inacessível\cite[p.2]{Oliveira}, ou ainda verificar a segurança de uma aplicação de terceiros. Na cibersegurança, ela desempenha papel central na análise de \textit{malware}, softwares maliciosos usados em ataques diversos, permitindo que profissionais identifiquem vetores de ataque, comportamentos automatizados, técnicas de ofuscação e persistência, e até redes de comando e controle associadas. Com esse conhecimento, é possível desenvolver contramedidas mais eficazes, criar assinaturas para antivírus e aprimorar sistemas de detecção de intrusão (IDS).</p>
+<blockquote>
+<p>Do inglês Intrusion Detection System, são sistemas responsáveis pela análise contínua de um ambiente em busca de sinais de invasões ou comportamentos anômalos.</p>
+</blockquote>
+<p>Além do aspecto técnico, a engenharia reversa tem implicações econômicas e estratégicas. Empresas podem utilizá-la para analisar produtos concorrentes e compreender soluções tecnológicas adotadas no mercado, especialmente quando não há documentação disponível.</p>
+<p>Apesar de sua utilidade, a engenharia reversa é frequentemente cercada por estigmas e mal-entendidos. Em muitos casos, ela é associada a práticas ilegais ou antiéticas, como a pirataria de software, a clonagem não autorizada de produtos ou a exploração maliciosa de vulnerabilidades. Essa associação ocorre porque, embora a técnica em si seja neutra, suas aplicações podem ser tanto construtivas quanto destrutivas. A mesma habilidade que permite proteger um sistema contra falhas também pode ser utilizada para burlar licenças, desativar mecanismos de proteção digital (como DRM), alterar funcionalidades de software comercial ou explorar falhas de segurança com objetivos ilícitos.</p>
+<p>Portanto, o uso da engenharia reversa levanta importantes questões éticas e legais. Em muitos países, sua legalidade depende do propósito e do contexto em que é utilizada. Algumas legislações preveem exceções específicas para uso educacional, de pesquisa ou de segurança, enquanto outras impõem restrições severas. Na prática, há uma linha tênue entre a exploração legítima e a violação de direitos autorais ou contratos de licença. Essa ambiguidade jurídica exige que profissionais da área atuem com responsabilidade e conheçam as implicações legais de suas ações.</p>
+<p>Neste trabalho, a engenharia reversa é explorada sob a ótica da segurança da informação, mais especificamente na análise do impacto de técnicas de proteção como a ofuscação. Onde o objetivo é dificultar ou retardar a compreensão do funcionamento interno de um software por parte de agentes externos, aumentando o esforço necessário para que a engenharia reversa seja bem-sucedida.</p>
+<h2>Propriedade intelectual e segurança de software</h2>
+<p>A engenharia reversa de software, embora tecnicamente versatil, representa uma ameaça direta à proteção da propriedade intelectual. Empresas que desenvolvem softwares proprietários investem consideráveis recursos na criação de produtos cuja lógica interna, algoritmos e estruturas de dados são protegidos por leis de copyright e por contratos de licença. A capacidade de desmontar e compreender esses sistemas levanta preocupações sobre violação de direitos autorais, pirataria, modificações não autorizadas e preocupações com relação a segurança de software. Conforme destacado em \cite[p.75]{Hosseinzadeh} entre os principais objetivos de mecanismos de proteção contra engenharia reversa estão: (a)prevenir modificações não autorizadas em softwares, (b)ocultar dados sensíveis, (c)dificultar a compreensão da lógica interna de programas e (d)evitar a exploração de vulnerabilidades amplamente disseminadas. As três primeiras metas (a, b e c) estão diretamente relacionadas a sistemas de controle de uso, como os mecanismos de \textit{Digital Rights Management} (DRM), enquanto os dois últimos pontos (c e d) têm implicações mais voltadas para o campo da segurança da informação.</p>
+<p>Para mitigar essas ameaças, surgiram diversas soluções voltadas especificamente à dificultação da engenharia reversa. Uma das mais conhecidas é o uso de DRM, sistemas que restringem o uso, modificação e distribuição de software. O DRM, apesar de controverso do ponto de vista do usuário, é amplamente adotado como forma de proteger a lógica interna dos programas e garantir que sejam utilizados conforme os termos de uso definidos pelos desenvolvedores.</p>
+<p>Um exemplo notável é a Denuvo Software Solutions GmbH, empresa austríaca especializada em soluções de DRM voltadas principalmente para jogos digitais. O sistema Denuvo Anti-Tamper combina técnicas avançadas de ofuscação, verificação de integridade e monitoramento de execução para tornar o processo de engenharia reversa extremamente complexo e custoso, mesmo para especialistas experientes. Ao proteger executáveis de serem depurados, modificados ou analisados estaticamente, o Denuvo visa aumentar a janela de exclusividade comercial, retardando o tempo necessário até que uma versão pirateada do software seja disponibilizada, no caso do sistema Denuvo Anti-Tamper temos que aproximadamente metade dos produtos protegidos pelo mesmo possuem um tempo médio de 20 semana até que uma versão pirateada do software se torne publica, como mostrado na Figura abaixo (Volckmann, 2024, p.4).</p>
+<p><img alt="survival_time_of_DRM.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_1.png"/>
+Ainda que tais proteções não sejam infalíveis, já que nenhuma técnica é capaz de impedir completamente a engenharia reversa, elas elevam significativamente o custo técnico e o tempo necessário para romper os mecanismos de proteção, servindo como uma barreira eficaz contra ataques oportunistas ou de baixo nível técnico.</p>
+<p>Do ponto de vista da segurança, tornar um software mais difícil de ser analisado por meio de engenharia reversa contribui diretamente para a mitigação de riscos associados à descoberta de vulnerabilidades. Ainda que falhas estejam presentes no código, os obstáculos impostos com o objetivo de deixar a engenharia reversa mais dificil podem retardar significativamente o processo de análise por agentes mal-intencionados, "exploits frequentemente dependem de detalhes minuciosos sobre os componentes internos do programa. Introduzir diversidade em aplicativos implantados pode tornar mais desafiador construir exploits que funcionem de forma confiável contra múltiplos alvos." (Hosseinzadeh et al., 2018, p.76). Dessa forma, o potencial de dano é reduzido, pois a vulnerabilidade pode não ser identificada ou explorada antes que uma atualização corretiva seja disponibilizada pelos desenvolvedores.</p>
+<h1>Engenharia Reversa na prática</h1>
+<p>O processo de engenharia reversa de software geralmente envolve três etapas principais: desmontagem (disassembly), análise estática e extração de lógica. Essas etapas são fundamentais para compreender a estrutura e o comportamento de um programa sem acesso ao seu código-fonte original.</p>
+<p>Na primeira etapa, a desmontagem, o executável é convertido em uma representação legível, normalmente em código de máquina ou assembly, utilizando ferramentas como <a href="https://hex-rays.com/">IDA</a>, <a href="https://ghidra-sre.org/">Ghidra</a> ou <a href="https://rada.re/n/radare2.html">Radare2</a>. Essa conversão permite observar a estrutura interna do software, seus fluxos de execução, funções e chamadas de sistema.</p>
+<p>Em seguida, a análise estática examina o binário sem executá-lo. O objetivo é mapear funções, identificar strings codificadas, fluxos de controle e padrões que revelem o comportamento do programa, essa abordagem evita a execução do código, o que pode ser útil em casos onde o software é malicioso ou protege-se contra depuração.</p>
+<p>A etapa final envolve a extração da lógica do programa, ou seja, a reconstrução do que o software faz, quais algoritmos utiliza, e como interage com o ambiente. Essa extração pode ser superficial, por exemplo, identificar onde ocorre a verificação de uma senha, ou mais profunda, como a reconstrução de protocolos de comunicação, cifragem ou mecanismos internos de proteção.</p>
+<p>Contudo, é importante destacar que a engenharia reversa não se limita a binários compilados. Também é possível aplicar essas técnicas a linguagens interpretadas, como Python, JavaScript, Lua e PHP, cujo código geralmente é distribuído em formato legível ou sem grande ofuscação. Nesses casos, a engenharia reversa pode ocorrer diretamente sobre o código-fonte, focando na compreensão da lógica, na identificação de mecanismos de proteção, ou na decodificação de rotinas ofuscadas. Assim, técnicas de ofuscação continuam sendo relevantes mesmo em linguagens de alto nível, já que dificultam a análise e compreensão do código por parte de terceiros.</p>
+<p>Profissionais de segurança utilizam a engenharia reversa como ferramenta para auditar softwares de terceiros, investigar malwares, ou compreender o comportamento de sistemas legados cujo código-fonte original não está mais disponível. Em setores como sistemas embarcados, jogos e dispositivos IoT, essa prática permite garantir a interoperabilidade, estudar formatos proprietários ou adaptar funcionalidades. Na pesquisa acadêmica, a engenharia reversa é uma ferramenta importante para o desenvolvimento de novas técnicas de proteção, análise de vulnerabilidades e avaliação de mecanismos de segurança.</p>
+<p>Por outro lado, as mesmas etapas da engenharia reversa também podem ser empregadas por agentes mal-intencionados. Nesses casos, o objetivo pode ser descobrir vulnerabilidades exploráveis, burlar mecanismos de proteção de licença, remover restrições, ou criar versões modificadas do software com comportamentos indesejados. Com a lógica extraída, torna-se possível replicar, modificar ou explorar funcionalidades de forma maliciosa, o que representa um risco considerável à segurança de sistemas e dados.</p>
+<p>Para ilustrar de forma simples como a engenharia reversa pode ser aplicada, consideremos um pequeno programa escrito em linguagem C. Esse programa solicita que o usuário digite uma senha numérica, que é então verificada por uma função específica. Se a senha for correta, uma mensagem de sucesso é exibida; caso contrário, o programa informa que a senha está incorreta.</p>
+<p>A lógica de verificação da senha, no entanto, não está diretamente visível no fluxo principal do código-fonte, pois foi encapsulada em uma função separada. Esse tipo de organização reflete o que ocorre em programas reais, onde funcionalidades importantes (como autenticação, verificação de licenças ou validação de integridade) são distribuídas por várias partes do código, dificultando sua análise direta.</p>
+<p>Um analista que deseje entender como esse programa verifica a senha, sem acesso ao código-fonte original, teria que realizar engenharia reversa sobre o executável compilado. Nesse caso vamos simular esse processo usando o disassembler Ghidra para analisar o código compilado. Na Figura abaixo temos o fluxo de execução da função <code>main</code> de um programa.
+<img alt="Ghidra_1_main_test1.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_2.png"/></p>
+<blockquote>
+<p>O programa apresentado foi compilado usando compilador <a href="https://gcc.gnu.org/}{https://gcc.gnu.org/">GCC</a> e foi utilizado <a href="https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html">linker</a> para facilitar a demonstração do exemplo.</p>
+</blockquote>
+<p>Observando o grafo gerado pelo Ghidra, especialmente a região central correspondente ao fluxo da função <code>main</code>, é possível identificar com facilidade uma estrutura condicional simples. Essa estrutura é responsável por realizar uma tomada de decisão: dependendo de um teste lógico, o programa imprime na tela uma das mensagens "Senha correta!" ou "Senha incorreta!''. A partir dessa análise superficial do grafo de controle, já é possível inferir com relativa segurança que a função <code>main</code> está recebendo uma entrada do usuário e repassando essa informação para outra função, que contém a lógica de verificação da senha. Essa senha, por sua vez, parece estar armazenada localmente no binário, o que representa um ponto de interesse para qualquer processo de engenharia reversa.</p>
+<p>Com uma análise mais detalhada, é possível observar que, logo antes da instrução <code>JZ</code> (Jump if Zero) no endereço <code>0040156e</code>, há uma instrução <code>TEST</code> que compara o registrador <code>EAX</code> com ele mesmo. Essa instrução é utilizada para verificar se o valor de <code>EAX</code> é igual a zero ou não. O valor contido em <code>EAX</code> é modificado pela função imediatamente anterior, localizada no endereço <code>00401567</code>, à qual o Ghidra atribuiu automaticamente o rótulo <code>verifica_senha</code>. Isso indica que o resultado da verificação de senha é retornado por essa função e armazenado em <code>EAX</code>, sendo então utilizado para determinar o fluxo de execução seguinte. Além disso, podemos ver que a entrada do usuário é obtida por meio da função <code>scanf</code>, chamada no endereço <code>0040155b</code>, e passada como argumento para a função de verificação. Na Figura abaixo, apresentamos o código completo em linguagem assembly correspondente à função <code>verifica_senha</code>.
+<img alt="verifica_senha_Ghidra1.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_3.png"/>
+Ao analisarmos a função <code>verifica_senha</code>, podemos identificar que a instrução mais relevante está localizada no endereço <code>00401523</code>. Trata-se da instrução <code>CMP</code> (compare), que compara o valor recebido como parâmetro da função, que, conforme observado anteriormente na função <code>main</code>, corresponde à entrada fornecida pelo usuário, com o valor constante <code>0x4d2</code>. Este valor, em notação decimal, equivale a <code>1234</code>. Logo após essa comparação, o resultado lógico da operação é armazenado no registrador de 8 bits <code>AL</code>, sendo em seguida transferido para o registrador de 32 bits <code>EAX</code> por meio da instrução <code>MOVZX</code> (Move with Zero-Extend). Com base nessa sequência de instruções, podemos inferir que a senha correta esperada pelo programa é o valor numérico <code>1234</code>, revelando assim, de forma explícita, o segredo embutido no binário.</p>
+<p>A seguir, apresentamos o código-fonte desse programa:</p>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int verificar_senha(int entrada) {
+    return entrada == 1234;
+}
+
+int main() {
+    int senha;
+
+    printf("Digite a senha: ");
+    scanf("%d", &amp;senha);
+
+    if (verificar_senha(senha)) {
+        printf("Senha correta!\n");
+    } else {
+        printf("Senha incorreta!\n");
+    }
+
+    return 0;
+}
+</code></pre>
+<p>Podemos ver, com a representação simbólica, que nossa inferência estava correta. O valor <code>1234</code>, identificado na instrução de comparação da função <code>verifica_senha</code>, de fato corresponde à senha esperada pelo programa. </p>
+<p>Embora o exemplo apresentado seja simples, o aspecto mais importante a ser compreendido é o processo envolvido na engenharia reversa. Esse processo é chamado de analise estática, que envolve a desmontagem do código, a análise das instruções em baixo nível e a extração da lógica original (CHESS and MCGRAW, 2004, p.1). É importante destacar que a engenharia reversa não se limita apenas à análise estática. Existem diversas outras abordagens, como a análise dinâmica, que envolve a execução do programa em um ambiente controlado para observar seu comportamento em tempo real, além de técnicas híbridas que combinam aspectos estáticos e dinâmicos, depuração em tempo de execução, monitoramento de memória, entre outras. No entanto, para fins deste trabalho, a análise será conduzida exclusivamente sob a perspectiva da análise estática, uma vez que ela permite compreender diretamente o impacto das técnicas de ofuscação e diversificação sem a necessidade de executar o software.</p>
+<p>Em contextos reais, esse tipo de análise pode expor algoritmos proprietários, estruturas de dados inovadoras ou estratégias comerciais embutidas no software. Diante desse cenário, torna-se evidente a necessidade de mecanismos que limitem ou dificultem esse tipo de acesso não autorizado. Isso nos leva a uma discussão mais ampla sobre a proteção da propriedade intelectual no desenvolvimento de software e as diversas soluções tecnológicas implementadas com o objetivo de dificultar ou desencorajar a engenharia reversa.</p>
+<h1>Dificultando a engenharia reversa</h1>
+<p>Uma vez que a engenharia reversa representa riscos concretos à propriedade intelectual e à segurança de sistemas, diversas técnicas têm sido desenvolvidas com o objetivo de dificultar sua aplicação. Essas técnicas não visam impedir completamente a engenharia reversa, tarefa praticamente impossível do ponto de vista técnico, uma vez que, qualquer transformação feita no software ainda precisa mante-lo com a mesma funcionalidade (Lynn et al., 2004, p.21). O objetivo é tornar o processo mais trabalhoso, demorado e custoso, desencorajando ataques oportunistas e elevando o nível de esforço necessário para obter sucesso na análise.</p>
+<p>Nesta seção, abordaremos duas das principais estratégias utilizadas para esse fim: a ofuscação e a diversificação. A ofuscação "é o processo de embaralhar o código e torná-lo ininteligível (mas ainda funcional), a fim de dificultar a engenharia reversa.'' (Hosseinzadeh et al., 2018, p.72). A ofuscação usa de técnicas que embaralham a lógica do programa, alteram nomes de variáveis, inserem instruções irrelevantes ou reorganizam estruturas de controle, a ofuscação busca obscurecer a intenção do código e dificultar a leitura tanto por humanos quanto por ferramentas automatizadas.</p>
+<p>Já a diversificação parte de um princípio diferente ela se refere "à mudança das interfaces internas e da estrutura do software para gerar versões únicas e diversificadas dele. Os usuários recebem instâncias únicas do software que funcionam da mesma forma, embora diversificadas de forma diferente. Em outras palavras, a diversificação quebra o "monoculturalismo" e introduz o "multiculturalismo" no processo de implantação de software.''(Hosseinzadeh et al., 2018, p.73). Isso visa aumentar a possibilidade de malwares ou exploits de encontrarem sistemas incompativeis aos que foram desenhados para atacar.</p>
+<p>Essas duas abordagens, embora distintas em suas estratégias, compartilham o mesmo objetivo: tornar o processo de engenharia reversa mais complexo, oneroso e menos atraente do ponto de vista do atacante. As estratégias de ofuscação e diversificação se apoiam em um conjunto de técnicas de transformação que modificam a aparência, estrutura ou comportamento do software sem alterar sua funcionalidade. Essas técnicas não pertencem exclusivamente a uma única estratégia; ao contrário, podem ser aplicadas tanto para ofuscar quanto para diversificar um programa, dependendo da forma como são utilizadas. A seguir, são listadas algumas das principais técnicas de transformação elencadas por (Hosseinzadeh et al., 2018, p.81).</p>
+<p>As técnicas de transformação podem ser organizadas em três categorias principais, como apresentado em (Hosseinzadeh et al., 2018, p.81), conforme o aspecto do programa que elas buscam modificar ou ocultar. A ofuscação de controle de fluxo (control flow) tem como objetivo alterar ou embaralhar o fluxo de execução do programa, dificultando que um atacante compreenda a lógica subjacente. Já a ofuscação de dados (data) concentra-se em ocultar informações e estruturas de dados internas do software, tornando-as menos acessíveis ou inteligíveis durante a análise. Por fim, a ofuscação de layout.
+<img alt="tecnicas.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_4.png"/></p>
+<h2>Os métodos de ofuscação de controle de fluxo (<em>control flow</em>) são:</h2>
+<ul>
+<li>
+<p><strong>Predicados opacos (<em>Opaque predicates</em>):</strong><br/>
+    Essas expressões, conhecidas como predicados opacos, são construídas de forma que seu valor de avaliação seja previsível para o ofuscador, mas não para o atacante ou desofuscador. Um exemplo clássico consiste em expressões booleanas projetadas para sempre retornarem <em>verdadeiro</em> ou <em>falso</em>, embora a avaliação exija execução em tempo de execução. Isso introduz incerteza no fluxo de controle aparente do programa, confundindo ferramentas de análise e aumentando significativamente o custo cognitivo e computacional da engenharia reversa.</p>
+</li>
+<li>
+<p><strong>Inserção Falsa (<em>Bogus insertion</em>):</strong><br/>
+    Essa é a técnica mais usada dentro dos métodos de controle de fluxo. A técnica baseia-se na inserção de trechos de código que não são efetivamente executados, também chamados de código morto (<em>dead code</em>), cinza (<em>gray code</em>) ou fictício (<em>dummy code</em>), cuja função principal é simular transferências de controle e introduzir ambiguidades no fluxo de execução. O objetivo é confundir ferramentas de análise estática e dinâmica, dificultando a reconstrução precisa da lógica original do programa e mascarando o caminho real de execução.</p>
+</li>
+<li>
+<p><strong>Polimorfismo (<em>Polymorphism</em>):</strong><br/>
+    O polimorfismo é uma técnica muito mais comumente empregada para fins de diversificação do que propriamente para a ofuscação do código. Essa abordagem consiste na utilização de versões alternativas de métodos, instruções e estruturas lógicas, permitindo a geração de múltiplas instâncias de um mesmo software que preservam a funcionalidade original, mas operam por meio de diferentes sequências de operações. Dessa forma, cada instância torna-se única em sua implementação, dificultando ataques automatizados e a reutilização de técnicas de engenharia reversa entre diferentes cópias do software.</p>
+</li>
+<li>
+<p><strong>Funções Ramificadas (<em>Branching functions</em>):</strong><br/>
+    Esse método refere-se ao uso extensivo de seccionamento do código, criando cadeias complexas e longas de execução e chamadas de funções. Essa técnica aumenta a complexidade do fluxo de controle, fragmentando o código de forma a dificultar a análise e a compreensão do processo de execução. Ao dividir o código em múltiplas funções interdependentes, que se chamam de maneira intrincada, torna-se mais desafiador para ferramentas de análise automatizada ou para um atacante compreender a estrutura do programa. Esse tipo de ramificação pode ser combinado com outras técnicas, como a inserção de chamadas de funções redundantes ou a criação de ciclos de execução, que tornam o código ainda mais difícil de ser desofuscado.</p>
+</li>
+<li>
+<p><strong>Transposição de métodos (<em>Inlining methods</em>):</strong><br/>
+    Essa técnica consiste na substituição de chamadas de função pelo corpo da própria função, processo conhecido como <em>inlining</em>. Ao eliminar a chamada explícita e incorporar diretamente o código da função no ponto de invocação, essa transformação busca ocultar as estruturas principais do programa, dificultando a identificação de seus componentes funcionais e a compreensão modular da aplicação.</p>
+</li>
+<li>
+<p><strong>Mecanismo de auto-modificação (<em>Self-modification mechanism</em>):</strong><br/>
+    O <em>mecanismo de auto-modificação</em> é uma técnica que permite que o código de um programa se altere durante sua execução, de modo que o comportamento do software mude de forma dinâmica. Isso pode envolver a modificação de instruções ou dados do próprio código enquanto ele está em execução, o que torna mais difícil a análise e a engenharia reversa do programa. Ao fazer isso, o código se torna mais imprevisível e difícil de entender, uma vez que a estrutura do programa não é estática, mas muda com o tempo.</p>
+<p>Essa técnica também é amplamente utilizada em áreas mais nebulosas da segurança, como a evasão de softwares antivírus e IDS. Ao permitir que o código se modifique durante a execução, programas maliciosos podem dificultar a detecção por ferramentas que dependem de assinaturas estáticas ou análises comportamentais tradicionais. Além disso, pode complicar a tarefa de entender como o programa funciona, uma vez que ele está constantemente se alterando para evitar a detecção.</p>
+<p>Existem várias formas de criar estruturas auto-modificáveis, incluindo técnicas como <em>Shell-code hiding</em>, compressão UPX, ou até mesmo o uso de <em>CSPIM</em>. Contudo, encontrar informações detalhadas sobre a implementação dessas técnicas se revela um desafio, pois elas estão frequentemente associadas a áreas obscuras do uso de segurança, como em malwares, ou são parte de tecnologias proprietárias, o que limita a documentação e a pesquisa acessível.</p>
+</li>
+<li>
+<p><strong>Transformação de instrução (<em>Instruction transformation</em>):</strong><br/>
+    Essa técnica atua diretamente sobre as instruções do programa, por meio da reorganização de instruções, ocultação de operações e substituição por instruções fictícias ou inúteis. Em alguns casos, podem ser inseridas instruções que disparam exceções ou armadilhas durante a execução. De forma geral, o objetivo é introduzir ruído no código deixando ele mais extenso.</p>
+</li>
+<li>
+<p><strong>Reorganização de blocos (<em>Reordering of blocks</em>):</strong><br/>
+    Essa é uma técnica comumente empregada para criar diversidade entre instâncias de um mesmo software. Ela consiste em alterar o posicionamento físico de seções do código no binário, mudando diretamente o fluxo de execução do programa. Embora a lógica permaneça funcionalmente equivalente, a estrutura do código resultante difere substancialmente, dificultando a aplicação de técnicas de comparação binária e análise estática. Essa reorganização pode ser feita de forma aleatória ou controlada, e geralmente exige a inserção de instruções de salto adicionais para garantir a continuidade do fluxo lógico.</p>
+</li>
+<li>
+<p><strong>Falsificação de Tabelas de Pulo (<em>Jump table spoofing</em>):</strong><br/>
+<em>Jump Table Spoofing</em> é uma técnica que explora o uso de tabelas de salto (<em>jump tables</em>), estruturas intermediárias que armazenam ponteiros para funções, como forma de dificultar a análise estática do código. Comum em linguagens como C, esse mecanismo permite que chamadas de funções sejam feitas de forma indireta. A técnica de <em>spoofing</em> consiste em introduzir entradas fictícias ou inalcançáveis nessas tabelas, ou ainda modificar drasticamente, em tempo de execução, qual função será efetivamente chamada, dessa forma temos um fluxo de controle altamente dinâmico.</p>
+</li>
+<li>
+<p><strong>Transformação de código (<em>Code Transformation</em>):</strong><br/>
+    Transformação de código é outra estratégia utilizada para a produção de binários similares. Essa técnica permite que diferentes versões de um mesmo programa sejam geradas a partir de variações na sua implementação, sem alteração da funcionalidade.</p>
+</li>
+<li>
+<p><strong>Transformação de laço (<em>Loop transformation</em>):</strong><br/>
+    Essa técnica pode ser aplicada diretamente sobre estruturas de repetição, modificando sua forma original por meio do desenrolamento, da interseção, da extensão, da eliminação ou ainda pela alteração das condições de controle do loop.</p>
+</li>
+</ul>
+<h2>Os métodos de ofuscação de dados (<em>data</em>) são:</h2>
+<ul>
+<li>
+<p><strong>Transformações de classes (<em>Class transformation</em>):</strong><br/>
+    Essa é uma técnica cujo objetivo é dificultar a compreensão da estrutura de classes por parte de um leitor ou atacante, obscurecendo as relações e responsabilidades dos elementos do sistema. Essa transformação pode ser realizada de diversas formas. Uma delas é a divisão de classes (<em>class splitting</em>), que fragmenta uma classe em múltiplas sub-classes menores. Outra estratégia comum é a união de classes (<em>class merging</em>), que consolida diversas classes previamente distintas em uma única estrutura. Também se destaca o achatamento da hierarquia de classes (<em>class hierarchy flattening</em>), que elimina a hierarquia de tipos do programa, tornando a herança menos evidente. Por fim, técnicas de ocultamento de tipos (<em>type hiding</em>) podem ser empregadas para esconder informações sobre os tipos utilizados e suas inter-relações.</p>
+</li>
+<li>
+<p><strong>Transformações de listas (<em>Array transformation</em>):</strong><br/>
+    Essa é uma técnica que tem como objetivo alterar a estrutura e a natureza de vetores e matrizes, tornando sua compreensão mais difícil por parte de um atacante ou analista. Essa técnica pode ser aplicada de diversas formas, como a divisão de um array em subarrays menores (<em>array splitting</em>) ou a junção de múltiplos arrays em um único array maior (<em>array merging</em>). Além disso, podem ser utilizadas abordagens como o <em>array folding</em>, que consiste em aumentar a dimensionalidade de um array, e o <em>array flattening</em>, que faz o oposto, reduz a dimensionalidade de um array.</p>
+</li>
+<li>
+<p><strong>Transformações de variáveis (<em>Variable transformation</em>):</strong><br/>
+    Essa técnica visa ocultar ou disfarçar o uso de variáveis no código. Isso pode ser feito por meio da introdução de expressões matemáticas complexas, alterações nos nomes e tipos das variáveis, ou pela utilização de estruturas indiretas para seu acesso. Tais modificações tornam a tarefa de inferir o propósito original das variáveis consideravelmente mais difícil.</p>
+</li>
+<li>
+<p><strong>Substituição de código (<em>Code substitution</em>):</strong><br/>
+    Essa técnica transforma um código-fonte original em uma versão funcionalmente idêntica, mas consideravelmente mais complexa de compreender e analisar. Em contextos práticos, essa técnica é utilizada para dificultar a engenharia reversa e a análise estática de softwares, elevando o esforço necessário para compreender sua lógica interna e, consequentemente, aumentando a resiliência contra ataques e cópias indevidas.</p>
+</li>
+<li>
+<p><strong>Criptografia (<em>encryption</em>):</strong><br/>
+    A técnica é aplicada de forma que o executável, os arquivos que são distribuídos ou ainda os valores numéricos e strings de um software sejam criptografados e, no momento da execução ou antes da execução, passam por um processo de descriptografia automática para que possam ser utilizados. Com o código criptografado, um agente mal-intencionado precisa, antes de qualquer tentativa de análise, superar a camada criptográfica para obter acesso ao conteúdo real.</p>
+</li>
+</ul>
+<h2>Os métodos de ofuscação de <em>layout</em> são:</h2>
+<ul>
+<li>
+<p><strong>Remoção de informações de formatação ou <em>debug</em> (<em>Removing debugging or formatting information</em>):</strong><br/>
+    As transformações de <em>layout</em> consistem na modificação da estrutura superficial do código com o objetivo de dificultar sua leitura e compreensão por parte de analistas humanos. Entre as principais técnicas dessa categoria estão a renomeação de identificadores e a remoção de comentários, informações de depuração e elementos de formatação do código-fonte.</p>
+</li>
+<li>
+<p><strong>Renomear identificadores (<em>Identifier renaming</em>):</strong><br/>
+    A renomeação de identificadores é uma técnica de transformação de <em>layout</em> que consiste na substituição de nomes descritivos presentes no código-fonte, como nomes de variáveis, funções, classes e outros elementos, por identificadores sem significado semântico, como sequências arbitrárias de caracteres ou combinações mínimas (ex.: <code>a1</code>, <code>x2</code>, <code>zz3</code>). Essa transformação remove pistas que ajudariam o analista ou atacante a compreender a funcionalidade de cada parte do código, dificultando a engenharia reversa. Embora o funcionamento do programa não seja afetado, a legibilidade é severamente comprometida, tornando o processo de análise manual muito mais custoso.</p>
+</li>
+</ul>
+<h2>Ofuscação na prática</h2>
+<p>O principal objetivo da ofuscação é aumentar significativamente a dificuldade de análise estática ou dinâmica por parte de agentes mal-intencionados. Isso inclui retardar ou inibir a engenharia reversa, dificultar a extração de algoritmos proprietários, e proteger contra cópia indevida, modificação maliciosa ou exploração de vulnerabilidades.  </p>
+<p>Um dos princípios fundamentais da ofuscação é a preservação do comportamento funcional do programa. Isso significa que, apesar das transformações aplicadas, a versão ofuscada deve produzir os mesmos resultados e executar a mesma lógica que a versão original. Essa característica é crucial para garantir a integridade funcional da aplicação em produção. Em outras palavras, a ofuscação transforma a aparência do código, mas não seu efeito. Essa premissa permite que técnicas de ofuscação sejam aplicadas inclusive em sistemas críticos, desde que respeitem os requisitos de desempenho e confiabilidade.  </p>
+<p>As linguagens de programação mais frequentemente associadas à aplicação de técnicas de ofuscação variam de acordo com o tipo de aplicação e o nível de exposição ao qual o código está sujeito. No caso das linguagens de programação de sistemas, como C, C++, Cobol e Assembly observa-se uma predominância clara: dos 158 trabalhos analisados por (Hosseinzadeh et al., 2018, p.77), 52 empregam C como linguagem principal. Isso reflete o uso de C em sistemas embarcados, software de baixo nível e aplicações de alta performance, onde a proteção contra engenharia reversa é uma preocupação constante. No contexto de linguagens voltadas à criação de scripts, como JavaScript, a ofuscação também é largamente aplicada, especialmente em ambientes web. Dos 19 trabalhos voltados a linguagens desse tipo na mesma análise, 11 têm como foco o JavaScript (Hosseinzadeh et al., 2018, p.77), evidenciando sua exposição ao usuário final e, portanto, sua vulnerabilidade à análise e modificação. A ofuscação, nesses casos, atua como uma barreira importante para impedir o entendimento direto do código fonte exposto no navegador.</p>
+<p><img alt="linguas.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_5.png"/></p>
+<h3>Exemplo de Ofuscação em Javascript</h3>
+<p>No contexto do desenvolvimento web, a ofuscação de código JavaScript desempenha um papel importante na proteção de aplicações que operam no lado do cliente. Como esse tipo de código é facilmente acessado pelo navegador, torna-se um vetor comum para engenharia reversa e exploração por agentes mal-intencionados. A principal motivação para aplicar técnicas de ofuscação em JavaScript é adicionar uma camada extra de complexidade, dificultando a leitura, compreensão e modificação do código. Essa estratégia tem como objetivo mitigar uma série de ameaças, como ataques de <em>Cross-Site Scripting</em> (XSS), <em>SQL Injection</em>, <em>Browser-based attacks</em> e <em>Code Injection</em> (Hosseinzadeh et al., 2018, p.79). Ao embaralhar a lógica e esconder as estruturas reais do programa, a ofuscação torna esses ataques mais difíceis de serem executados com sucesso, mesmo que não os impeça completamente.  </p>
+<p>Para compreender de maneira prática como as técnicas de ofuscação são aplicadas em JavaScript, utilizaremos algumas ferramentas automatizadas disponíveis online. O objetivo é identificar, no código ofuscado, quais das técnicas discutidas anteriormente são empregadas por esse tipo de ferramenta.  </p>
+<p>Para ilustrar os efeitos da ofuscação automatizada em código JavaScript, utilizamos como base uma página web extremamente simples, cuja funcionalidade consiste em receber uma senha através de um campo de input e verificar se ela corresponde a uma string definida internamente no código.<br/>
+<img alt="Site_example1.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_6.png"/></p>
+<p>Caso a senha esteja correta, uma mensagem de sucesso é exibida; caso contrário, uma mensagem de erro é apresentada. O código JavaScript responsável por essa lógica é direto e acessível, como mostrado logo abaixo.</p>
+<pre><code class="language-javascript">document.getElementById("verificar").addEventListener("click", function () {
+  const senhaCorreta = "segredo123";
+  const senhaDigitada = document.getElementById("senha").value;
+
+  if (senhaDigitada === senhaCorreta) {
+    document.getElementById("resultado").innerText = "Você acertou a senha!";
+  } else {
+    document.getElementById("resultado").innerText = "Você errou a senha.";
+  }
+
+});
+</code></pre>
+<p>A seguir, apresentamos a versão ofuscada do código utilizando o <em>obfuscator.io</em>, uma das ferramentas mais populares e acessíveis para ofuscação de código JavaScript. Essa ferramenta permite um alto grau de controle sobre as transformações aplicadas ao código, possibilitando a ativação seletiva de diferentes técnicas de ofuscação. Essa granularidade torna o <em>obfuscator.io</em> uma boa escolha para fins didáticos, permitindo a análise isolada dos efeitos de cada técnica.  </p>
+<pre><code class="language-javascript">const _0x3a7800 = _0x1600;
+(function(_0x5742f2, _0x33bf47) {
+    const _0x3ec2f8 = _0x1600,
+        _0x30d3ea = _0x5742f2();
+    while (!![]) {
+        try {
+            const _0x48a8fd = -parseInt(_0x3ec2f8(0xf5)) / 0x1 * (parseInt(_0x3ec2f8(0xf0)) / 0x2) + -parseInt(_0x3ec2f8(0xfa)) / 0x3 + -parseInt(_0x3ec2f8(0xeb)) / 0x4 * (parseInt(_0x3ec2f8(0xf8)) / 0x5) + -parseInt(_0x3ec2f8(0xef)) / 0x6 * (-parseInt(_0x3ec2f8(0xee)) / 0x7) + -parseInt(_0x3ec2f8(0xfb)) / 0x8 * (parseInt(_0x3ec2f8(0xf7)) / 0x9) + -parseInt(_0x3ec2f8(0xe9)) / 0xa * (parseInt(_0x3ec2f8(0xed)) / 0xb) + parseInt(_0x3ec2f8(0xf1)) / 0xc;
+            if (_0x48a8fd === _0x33bf47) break;
+            else _0x30d3ea['push'](_0x30d3ea['shift']());
+        } catch (_0x3a0279) {
+            _0x30d3ea['push'](_0x30d3ea['shift']());
+        }
+    }
+}(_0xc3a4, 0x9dba1), document[_0x3a7800(0xea)](_0x3a7800(0xec))[_0x3a7800(0xfd)]('click', function() {
+    const _0x31675a = _0x3a7800,
+        _0xef9ffe = _0x31675a(0xf4),
+        _0x146746 = document['getElementById'](_0x31675a(0xf2))[_0x31675a(0xf9)];
+    _0x146746 === _0xef9ffe ? document['getElementById']('resultado')[_0x31675a(0xf6)] = _0x31675a(0xf3) : document[_0x31675a(0xea)]('resultado')[_0x31675a(0xf6)] = _0x31675a(0xfc);
+}));
+
+function _0x1600(_0x146bba, _0x3e4959) {
+    const _0xc3a497 = _0xc3a4();
+    return _0x1600 = function(_0x1600a5, _0x1adc4a) {
+        _0x1600a5 = _0x1600a5 - 0xe9;
+        let _0x4e3205 = _0xc3a497[_0x1600a5];
+        if (_0x1600['sSoSLH'] === undefined) {
+            var _0x4278bc = function(_0xef9ffe) {
+                const _0x146746 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';
+                let _0x39dd7b = '',
+                    _0x2f4179 = '';
+                for (let _0x218737 = 0x0, _0x226a1a, _0x48d39f, _0x138b95 = 0x0; _0x48d39f = _0xef9ffe['charAt'](_0x138b95++); ~_0x48d39f &amp;&amp; (_0x226a1a = _0x218737 % 0x4 ? _0x226a1a * 0x40 + _0x48d39f : _0x48d39f, _0x218737++ % 0x4) ? _0x39dd7b += String['fromCharCode'](0xff &amp; _0x226a1a &gt;&gt; (-0x2 * _0x218737 &amp; 0x6)) : 0x0) {
+                    _0x48d39f = _0x146746['indexOf'](_0x48d39f);
+                }
+                for (let _0x25e048 = 0x0, _0x4ed057 = _0x39dd7b['length']; _0x25e048 &lt; _0x4ed057; _0x25e048++) {
+                    _0x2f4179 += '%' + ('00' + _0x39dd7b['charCodeAt'](_0x25e048)['toString'](0x10))['slice'](-0x2);
+                }
+                return decodeURIComponent(_0x2f4179);
+            };
+            _0x1600['DGJTUs'] = _0x4278bc, _0x146bba = arguments, _0x1600['sSoSLH'] = !![];
+        }
+        const _0x3dc833 = _0xc3a497[0x0],
+            _0x4b15cc = _0x1600a5 + _0x3dc833,
+            _0x3460b9 = _0x146bba[_0x4b15cc];
+        return !_0x3460b9 ? (_0x4e3205 = _0x1600['DGJTUs'](_0x4e3205), _0x146bba[_0x4b15cc] = _0x4e3205) : _0x4e3205 = _0x3460b9, _0x4e3205;
+    }, _0x1600(_0x146bba, _0x3e4959);
+}
+
+function _0xc3a4() {
+    const _0x3e227b = ['nti0shfRqNjR', 'DMvYAwzPy2fY', 'ntvlEhbfrxG', 'mte5mJe3n2XAEwn2AW', 'mJrItwzftNq', 'nZGXogvrEg9AEG', 'mJa5odmXnZzSu25xuhO', 'C2vUAge', 'vM9JW6OGywnLCNrVDsbHihnLBMHHiq', 'C2vNCMvKBZeYmW', 'm0DoAwr0zq', 'Aw5UzxjuzxH0', 'mtG1nte3DwPWvvjf', 'mtm3mZb2suvPAeS', 'DMfSDwu', 'mte1mtiZmMrHv3b5rq', 'mJK2AhPsD3HY', 'vM9JW6OGzxjYB3uGysbZzw5Oys4', 'ywrKrxzLBNrmAxn0zw5LCG', 'ntmXodmWyMjtzwDc', 'z2v0rwXLBwvUDej5swq'];
+    _0xc3a4 = function() {
+        return _0x3e227b;
+    };
+    return _0xc3a4();
+</code></pre>
+<p>Logo ao observar o código ofuscado gerado pela ferramenta <em>obfuscator.io</em>, é evidente o aumento significativo na sua complexidade estrutural e visual. Podemos identificar diversas técnicas de ofuscação e diversificação aplicadas automaticamente. Começando pelos métodos de <strong>layout</strong>, há a substituição dos identificadores, nomes de variáveis, funções e constantes por combinações em hexadecimal, caracterizando o método de <strong>renomeação de identificadores (identifier renaming)</strong>. Além disso, todo o código foi comprimido em uma única linha, evidenciando o uso de <strong>remoção de formatação</strong>, o que dificulta consideravelmente a leitura direta e exige uma etapa de formatação inicial com ferramentas como <em>js-beautify</em>.</p>
+<p>Nos métodos de <strong>ofuscação de dados</strong>, observamos que a função <code>_0xc3a4</code> contém um array extenso de strings aparentemente criptografadas, sugerindo que essas strings são utilizadas no código original, mas protegidas por alguma forma de codificação, como <strong>string encoding</strong> ou <strong>string encryption</strong>. Já entre as técnicas de <strong>fluxo de controle (control flow)</strong>, é possível notar o uso de <strong>transformação de instruções (instruction transformation)</strong>, onde chamadas comuns do JavaScript, como acesso ao DOM via <code>document.getElementById</code>, são reescritas de forma indireta, dificultando o reconhecimento imediato da funcionalidade. Também é visível a <strong>inserção de elementos falsos (bogus insertion)</strong> dentro do array da função <code>_0xc3a4</code>, onde várias strings não são utilizadas no fluxo principal, adicionando ruído e confundindo a análise estática do código.</p>
+<p>Pensando sob a perspectiva de um agente mal-intencionado, esse seria um caso bastante simples. Não é necessário compreender todo o fluxo de execução do programa ou desfazer toda a lógica aplicada na ofuscação. Basta localizar os dados relevantes, neste caso, a senha que concede acesso. Como há uma lista evidente de <em>strings</em> codificadas no código, um atacante pode focar apenas em analisá-la, aplicando técnicas básicas como inversão de letras maiúsculas/minúsculas e decodificação Base64, até encontrar a informação desejada.</p>
+<p>Alternativamente, poderia recorrer ao uso de ferramentas automatizadas, como deobfuscadores, que tentam reverter parte da ofuscação e simplificar a leitura do código, facilitando ainda mais esse processo.  </p>
+<p>Esse tipo de aplicação, apesar de trivial, foi escolhido propositalmente com fins didáticos. Em um cenário real, informações sensíveis como senhas jamais deveriam ser armazenadas ou processadas diretamente no lado do cliente, uma vez que o código JavaScript é acessível ao usuário e, portanto, suscetível à engenharia reversa. No entanto, justamente por sua simplicidade, esse exemplo torna-se ideal para observar de forma clara os efeitos da ofuscação automatizada. Ele permite uma visualização objetiva das transformações aplicadas ao código, como renomeação de variáveis, inserção de código redundante, embaralhamento de estruturas e outras técnicas descritas anteriormente, sem a interferência de uma lógica complexa ou múltiplos módulos.</p>
+<p>Portanto, o objetivo aqui não é propor uma técnica de proteção definitiva para dados sensíveis, mas sim compreender, em um ambiente controlado, como diferentes métodos de ofuscação impactam a legibilidade e a estrutura de um código-fonte acessível. Em aplicações reais, essas técnicas têm como função principal dificultar a compreensão do fluxo lógico e da arquitetura interna do programa, atrasando ou desencorajando atacantes, mesmo que não eliminem completamente os riscos de engenharia reversa.</p>
+<h2>Exemplo de Ofuscação em C</h2>
+<p>Diferente do JavaScript, onde a ofuscação visa principalmente dificultar a leitura do código-fonte que é enviado diretamente ao cliente, no caso da linguagem C a situação muda. O código C não é distribuído diretamente, mas sim compilado para um binário. Dessa forma, um atacante só terá acesso ao binário final, o que exige técnicas de engenharia reversa para reverter o código para uma forma minimamente compreensível. Nesse cenário, a ofuscação em C pode ser voltada especificamente para dificultar a leitura do código em assembly, gerado durante a descompilação.</p>
+<p>Mesmo alterações simples no código-fonte podem resultar em mudanças substanciais na forma como as instruções são organizadas no assembly, o que aumenta significativamente o esforço necessário para compreender a lógica do programa. Utilizamos como base o mesmo código da seção anterior, mas agora com algumas técnicas de ofuscação aplicadas. Na imagem abaixo, apresentamos o código ofuscado descompilado no <em>Ghidra</em>:</p>
+<p><img alt="Example1_obfuscated.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_7.png"/></p>
+<p><strong>Figura:</strong> <em>Graph View</em> da função <code>main</code> do exemplo apresentado na seção anterior, agora ofuscado.</p>
+<p>O exemplo apresentado possui o mesmo objetivo do código indicado anteriormente, porém agora aplicamos uma série de técnicas de ofuscação para dificultar a análise estática. Logo de início, já nos deparamos com um obstáculo: o binário foi compilado sem a utilização de um linker, por meio da flag <code>-S</code> do <code>gcc</code>. Isso faz com que ferramentas como o <em>Ghidra</em> não consigam identificar automaticamente os nomes das funções nem localizar com facilidade o ponto de entrada do programa, como a função <code>main</code>. Antes mesmo de iniciarmos a análise do código em si, já podemos identificar a técnica de <strong>remoção de informações de formatação ou debug</strong> (<em>Removing debugging or formatting information</em>), que tem como objetivo eliminar metadados úteis para engenharia reversa. Essa técnica é comumente usada para dificultar a leitura do binário por ferramentas de engenharia reversa, uma vez que impede a reconstrução automática de nomes e estruturas. Dessa forma, nosso primeiro desafio começa tentando identificar onde o fluxo da função <code>main</code> inicia.</p>
+<p>Para localizarmos a função <code>main</code> no Ghidra, podemos buscar pelas <em>strings</em> presentes no programa e observar onde elas são utilizadas. Essa abordagem nos permite identificar pontos-chave do fluxo, como mensagens impressas ao usuário, que normalmente estão próximas à função principal. Em seguida, como o executável foi compilado sem informações de depuração, é necessário renomear manualmente as funções à medida que compreendemos seu comportamento. Por exemplo, no endereço <code>004015a6</code>, há uma instrução <code>call</code> que invoca a função rotulada como <code>FUN_00402750</code>. Mesmo sem inspecionar profundamente seu conteúdo, é possível inferir que essa função corresponde à <code>printf</code>, pois há movimentação de uma <em>string</em> para o registrador <code>ESP</code>, um padrão típico da chamada dessa função em C.</p>
+<p>No endereço <code>004015c6</code>, encontramos nossa primeira instrução de desvio condicional, um <code>JZ</code> (<em>Jump if Zero</em>), que realiza o salto apenas se o resultado da instrução <code>TEST</code>, logo acima, for igual a zero. Essa instrução <code>TEST</code> utiliza o conteúdo do registrador <code>EAX</code>, que, por sua vez, é potencialmente modificado pela chamada de função no endereço <code>004015bf</code>. Essa chamada invoca a função rotulada pelo <em>Ghidra</em> como <code>FUN_00401561</code>. Para compreendermos qual fluxo de execução será seguido após o <code>JZ</code>, é necessário analisarmos o comportamento dessa função e determinar o valor resultante que ela armazena em <code>EAX</code>. Na sequência, apresentamos uma imagem com as instruções contidas dentro dessa função para facilitar essa análise:</p>
+<p><img alt="Opaque_function.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_8.png"/></p>
+<p><strong>Figura:</strong> Fluxo de execução da função <code>FUN_00401561</code>.</p>
+<p>Para facilitar a leitura e análise estática do código, realizamos algumas renomeações de variáveis locais: <code>local_8</code> foi renomeada para <code>x</code> e <code>local_c</code> para <code>y</code>. Além disso, podemos converter os valores apresentados em hexadecimal para seus equivalentes em decimal. Com essas alterações, podemos acompanhar de forma mais compreensível a evolução dos valores nos registradores <code>EAX</code> e <code>EDX</code>, bem como nas variáveis <code>x</code> e <code>y</code>, permitindo identificar com mais facilidade as operações realizadas pela função. Na imagem a seguir temos o mesmo código mas agora com comentários indicando os valores dos registradores e variáveis locais:</p>
+<p><img alt="Opaque_function_comments.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_9.png"/></p>
+<p><strong>Figura:</strong> Fluxo de execução da função <code>FUN_00401561</code> com comentários.</p>
+<p>Podemos notar que na instrução <code>CMP</code> no endereço <code>00401587</code> temos uma instrução que sempre retorna o mesmo valor. Dessa forma, podemos concluir que a função <code>FUN_00401561</code> é usada para construir um <strong>predicado opaco</strong> (<em>Opaque Predicate</em>). Podemos agora voltar para o corpo da função <code>main</code> e analisar novamente o fluxo de execução. Na imagem a seguir temos novamente o grafo de execução da função <code>main</code>, mas agora com identificadores nas funções, variáveis e blocos de código:
+<img alt="example2_comments_full.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_10.png"/><strong>Figura:</strong> <em>Graph View</em> da função <code>main</code> com comentários.</p>
+<p>Uma vez identificada a condição do predicado opaco, temos que o bloco em destaque sempre será executado, enquanto o bloco imediatamente à direita dele nunca será alcançado. Essa construção caracteriza a técnica conhecida como <strong>inserção falsa</strong> (<em>Bogus insertion</em>).</p>
+<p>Agora, para termos acesso à senha correta, precisamos analisar a função <code>verifica_senha</code>, apresentada na próxima imagem. Podemos observar que, diferentemente do exemplo anterior, a senha não está diretamente evidente dentro do corpo da função, o que nos obriga a realizar uma análise mais aprofundada para identificá-la corretamente. Nesse caso, conseguimos identificar mais uma técnica de ofuscação: a <strong>transformação de variáveis</strong> (<em>Variable transformation</em>), uma vez que o valor real da senha foi ocultado por meio de uma operação matemática, dificultando sua extração direta por análise superficial.
+<img alt="verifica_senha.png" src="https://kallel181.github.io/Blog/static/images/tecnicas_de_diversificacao_e_ofuscacao_para_seguranca_de_software_e_drm_uma_introducao_pratica_11.png"/>
+<strong>Figura:</strong> Função <code>verifica_senha</code> com comentários.</p>
+<p>A partir da análise do código Assembly mostrado acima, podemos confirmar que a senha continua sendo <code>1234</code>, porém agora está muito menos evidente do que antes, uma vez que foram inseridas operações matemáticas intermediárias que precisam ser avaliadas para compreendermos a comparação final. Embora as operações utilizadas neste exemplo sejam relativamente simples, é importante destacar que poderíamos empregar quantas operações quisermos e variá-las de diversas formas, o que aumentaria significativamente a complexidade da análise estática e dificultaria a recuperação da senha.</p>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int verificar_senha_real(int entrada) {
+  int x = 2160;
+  int senha_codificada = x - 926;  // 2160 - 926 = 1234
+
+  return entrada == senha_codificada;
+}
+
+int verificar_senha_falsa(int entrada) {
+  int senha_codificada = ((1000 &lt;&lt; 1) + 234) ^ 0x0;
+
+  return entrada == senha_codificada;
+}
+
+int predicado_opaco() {
+  int x = 10;
+  int y = 2 * x;
+
+  return ((y * y) - (4 * x * x)) == 0; // Sempre verdadeiro (400 - 400 == 0)
+}
+
+int main() {
+    int senha;
+    int resultado;
+
+    printf("Digite a senha: ");
+    scanf("%d", &amp;senha);
+
+    if (predicado_opaco()) {
+      resultado = verificar_senha_real(senha);
+    } else {
+      resultado = verificar_senha_falsa(senha);
+    }
+
+    // Código morto para confundir ainda mais
+    if (senha == 4563) {      
+      return 1;
+    }
+
+    if (resultado) {
+      printf("Senha correta!\n");
+    } else {
+      printf("Senha incorreta!\n");
+    }
+
+    return 0;
+}
+</code></pre>
+<p>No caso da linguagem C, por ser uma linguagem compilada, temos um leque ainda maior de possibilidades para aplicar técnicas de ofuscação. No exemplo apresentado, realizamos modificações diretamente no código-fonte, ou seja, antes do processo de compilação (<em>pre-compilation</em>). No entanto, outras abordagens também são viáveis: é possível aplicar ofuscações durante a compilação (<em>compilation time</em>), após a geração do executável, manipulando diretamente o binário (<em>post-compilation</em>), ou até mesmo na máquina do cliente, já após a distribuição do programa (<em>post-distribution</em>) (Hosseinzadeh et al., 2018, p.82).</p>
+<p>No contexto da linguagem C, uma alternativa eficaz para realizar ofuscação de código em tempo de compilação é o uso do Obfuscator-LLVM, uma ferramenta de código aberto baseada no compilador LLVM. Esse projeto foi iniciado em 2010 pelo grupo de segurança da informação da Universidade de Ciências Aplicadas e Artes da Suíça Ocidental (HEIG-VD), com o objetivo de aumentar a segurança de softwares por meio da ofuscação e da proteção contra adulterações (Junod et al., 2015).</p>
+<p>A principal vantagem dessa abordagem é que a ofuscação ocorre no nível da <em>Intermediate Representation</em> (IR), o que permite aplicar as transformações diretamente no fluxo intermediário do compilador, mantendo a compatibilidade com uma ampla gama de linguagens e arquiteturas.</p>
+<p>Por operar no nível intermediário da compilação, o Obfuscator-LLVM pode ser usado com linguagens como C, C++, Objective-C, Ada e Fortran, além de suportar diversas plataformas, incluindo x86, x86-64, ARM, MIPS e outras. Isso o torna uma ferramenta versátil para desenvolvedores que desejam dificultar a engenharia reversa de seus binários.</p>
+<h1>Diversificação de Software</h1>
+<p>A técnica de diversificação em segurança de software refere-se ao processo de gerar múltiplas variantes de um mesmo programa, todas funcionalmente equivalentes, porém com implementações distintas. A ideia central é que cada instância do software seja única, reduzindo a uniformidade entre cópias e, consequentemente, dificultando ataques genéricos.</p>
+<p>Embora muitas vezes confundida com a ofuscação, a diversificação tem objetivos diferentes. Enquanto a ofuscação busca dificultar a compreensão do código, tornando a leitura e a análise mais complexas, a diversificação visa exclusivamente quebrar a uniformidade estrutural entre as cópias de um mesmo sistema, sem necessariamente tornar o código individualmente mais difícil de entender. Assim, enquanto a ofuscação impacta a <strong>confidencialidade do código</strong>, a diversificação atua diretamente sobre a <strong>reutilização de ataques</strong>.</p>
+<p>A motivação principal por trás da diversificação está na redução da previsibilidade e da consistência estrutural. Quando um atacante conhece a arquitetura interna de um sistema, pode desenvolver <em>exploits</em> específicos e replicá-los em diferentes máquinas. Porém, se cada instância do programa apresentar variações estruturais, um ataque que funciona em um ambiente pode falhar em outro. Essa imprevisibilidade cria uma barreira considerável contra ataques automatizados e direcionados, como os realizados por <em>malwares</em>.</p>
+<p>Entre os principais benefícios da diversificação, destacam-se:
+- O aumento da resiliência contra ataques de engenharia reversa em larga escala (Hosseinzadeh et al., 2018, p.73);
+- A proteção contra a propagação de <em>malwares</em> que dependem de conhecimento estrutural prévio do software (Hosseinzadeh et al., 2018, p.73);
+- O fortalecimento de sistemas que executam cópias idênticas de um mesmo binário, como servidores em ambientes de computação em nuvem.</p>
+<p>Além disso, a diversificação pode ser empregada como uma técnica complementar à ofuscação, contribuindo para elevar o nível geral de segurança de um sistema.</p>
+<p>Por outro lado, a diversificação também possui limitações. A geração de múltiplas variantes pode aumentar a complexidade do ciclo de desenvolvimento e manutenção, especialmente em sistemas que requerem atualizações frequentes. A verificação e validação de software diversificado também exigem estratégias mais robustas, a fim de garantir que todas as variantes preservem o comportamento funcional esperado. Outro ponto crítico é o aumento potencial no consumo de recursos, tanto durante o processo de compilação quanto no armazenamento e distribuição das diferentes versões.</p>
+<p>Por fim, embora a diversificação não substitua outras práticas de segurança, ela representa uma camada adicional e eficaz, sobretudo quando combinada com técnicas como ofuscação, empacotamento e criptografia.</p>
+<h1>Conclusão</h1>
+<p>Ao longo deste trabalho, exploramos diversas técnicas voltadas à proteção de código, com foco em dificultar a engenharia reversa e a obtenção de informações sensíveis por meio de análise estática. A partir de exemplos práticos, mostramos como operações simples podem ser transformadas por técnicas de <strong>ofuscação</strong>, afetando diretamente a leitura e interpretação do código em nível de Assembly. Técnicas como <strong>remoção de informações de formatação</strong> (<em>Stripping</em>), <strong>predicados opacos</strong> (<em>Opaque Predicates</em>), <strong>inserções falsas</strong> (<em>Bogus Insertion</em>) e <strong>transformações de variáveis</strong> se mostraram ferramentas eficazes nesse processo.</p>
+<p>Discutimos também a diferença entre ofuscação e diversificação, destacando como a diversificação atua na geração de múltiplas variantes funcionais de um mesmo programa, com o objetivo de reduzir a previsibilidade estrutural e, consequentemente, a eficácia de ataques replicáveis. Ressaltamos que, embora a diversificação não torne o código mais difícil de entender isoladamente, ela adiciona uma camada importante de proteção ao dificultar a aplicação de explorações genéricas.</p>
+<p>A utilização de ferramentas como o <strong>Ghidra</strong> foi essencial para a análise estática, permitindo a visualização do fluxo de execução, a identificação de instruções críticas e o rastreamento de variáveis ao longo do código descompilado. Mostramos ainda que, mesmo com técnicas de ofuscação relativamente simples, como esconder constantes por trás de operações matemáticas, já é possível elevar significativamente a complexidade da análise por parte de um agente mal-intencionado.</p>
+<p>Concluímos que a combinação de diferentes camadas de proteção — incluindo técnicas de pré-compilação, modificações em tempo de compilação e estratégias pós-distribuição — forma um ecossistema robusto de segurança e proteção de propriedade intelectual. Cada técnica contribui de maneira complementar, aumentando o esforço necessário para reverter ou comprometer o funcionamento do software.</p>
+<p>Além disso, é importante destacar o papel crescente da Inteligência Artificial no contexto da engenharia reversa. Modelos modernos de IA, especialmente aqueles treinados para análise de código, são altamente eficazes em reconhecer padrões complexos, mesmo quando estes estão deliberadamente ofuscados. Como toda técnica de proteção é, em essência, reversível — ainda que a um alto custo computacional — o uso de IA treinada com grandes volumes de exemplos pode acelerar significativamente o processo de desofuscação. Ferramentas automatizadas baseadas em IA já são capazes de identificar estruturas recorrentes, inferir nomes de funções e variáveis e até sugerir reescritas legíveis para trechos de código binário, representando uma ameaça real e crescente à eficácia das abordagens tradicionais de proteção.</p>
+<p>Esse cenário evidencia a necessidade contínua de inovação nas estratégias de proteção, bem como a importância de combinar múltiplas camadas defensivas para elevar o custo e a complexidade de ataques automatizados.</p>
+<p>Portanto, compreender e aplicar técnicas de <strong>ofuscação</strong> e <strong>diversificação</strong> não apenas fortalece a segurança de sistemas, mas também amplia a consciência sobre os desafios enfrentados no desenvolvimento de aplicações mais resistentes a ataques, cópias e modificações não autorizadas. Em tempos de crescente exposição e sofisticação das ameaças, proteger o código não é apenas desejável — é uma necessidade estratégica.</p>
+<h1>Referências</h1>
+<ul>
+<li>C. I. D. Oliveira, <em>Reengenharia e engenharia reversa de software</em>, UNESP Departamento de Ciências de Computação e Estatística, 2018. [Online]. Disponível em: https://www.academia.edu/42010642/Reengenharia_e_Engenharia_Reversa_de_Software</li>
+<li>S. Hosseinzadeh, S. Rauti, S. Laurén, J.-M. Mäkelä, J. Holvitie, S. Hyrynsalmi e V. Leppänen, "Diversification and obfuscation techniques for software security: A systematic literature review," <em>Information and Software Technology</em>, Elsevier, 2018. [Online]. Disponível em: <a href="https://www.sciencedirect.com/science/article/pii/S0950584918301484">https://www.sciencedirect.com/science/article/pii/S0950584918301484</a></li>
+<li>W. M. Volckmann, "Revenue effects of denuvo digital rights management on PC video games," <em>Journal of Business Research</em>, Elsevier, 2024. [Online]. Disponível em: <a href="https://www.sciencedirect.com/science/article/abs/pii/S1875952124002532?casa">https://www.sciencedirect.com/science/article/abs/pii/S1875952124002532?casa</a></li>
+<li>B. Chess e G. McGraw, "Static analysis for security," <em>IEEE Security &amp; Privacy</em>, IEEE Computer Society, 2004. [Online]. Disponível em: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=1366126">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=1366126</a></li>
+<li>B. Lynn, M. Prabhakaran e A. Sahai, "Positive results and techniques for obfuscation," in <em>Advances in Cryptology – EUROCRYPT 2004</em>, Lecture Notes in Computer Science, C. Cachin e J. Camenisch, Eds. Springer, 2004. [Online]. Disponível em: <a href="https://link.springer.com/chapter/10.1007/978-3-540-24676-3_2">https://link.springer.com/chapter/10.1007/978-3-540-24676-3_2</a></li>
+<li>N. Mavrogiannopoulos, N. Kisserli e B. Preneel, "A taxonomy of self-modifying code for obfuscation," <em>Computers &amp; Security</em>, Elsevier, 2011. [Online]. Disponível em: <a href="https://www.sciencedirect.com/science/article/pii/S0167404811001076">https://www.sciencedirect.com/science/article/pii/S0167404811001076</a></li>
+<li>V. Sihag, M. Vardhan e P. Singh, "A survey of Android application and malware hardening," <em>Computer Science Topics</em>, Elsevier, 2021. [Online]. Disponível em: <a href="https://www.sciencedirect.com/topics/computer-science/obfuscation-code">https://www.sciencedirect.com/topics/computer-science/obfuscation-code</a></li>
+<li>A. Majumdar e C. Thomborson, "Securing mobile agents control flow using opaque predicates," Department of Computer Science, The University of Auckland, 2005. [Online]. Disponível em: <a href="https://link.springer.com/chapter/10.1007/11553939_149">https://link.springer.com/chapter/10.1007/11553939_149</a></li>
+<li>P. Junod, J. Rinaldini, J. Wehrli e J. Michielin, "Obfuscator-LLVM – software protection for the masses," in <em>Proceedings of the IEEE/ACM 1st International Workshop on Software Protection (SPRO’15)</em>, Firenze, Italy, May 19th, 2015, B. Wyseur, Ed. IEEE, 2015, pp. 3–9. [Online]. Disponível em: <a href="https://github.com/obfuscator-llvm/obfuscator/wiki">https://github.com/obfuscator-llvm/obfuscator/wiki</a></li>
+</ul>
+    </article>
+  </div>
+</body>
+</html>
