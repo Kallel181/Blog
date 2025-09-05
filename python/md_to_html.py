@@ -6,8 +6,8 @@ import os
 import shutil
 import unicodedata
 
-# Caminho absoluto de onde copiar as imagens
-IMAGEM_DESTINO = "../static/images"
+# Caminho absoluto para onde copiar as imagens
+IMAGEM_DESTINO = "static\images"
 
 def slugify(value):
   """Gera um slug para usar como nome de arquivo (ex: Título do Post -> titulo_do_post)"""
@@ -37,7 +37,7 @@ def clean_code_blocks(soup):
     div.append(new_pre)
   return soup
 
-def processar_imagens(md_text, titulo_slug,origem_imagem):
+def processar_imagens(md_text,titulo_slug,origem_imagem):
   imagem_map = {}
   imagem_count = 1
   def substituir(match):

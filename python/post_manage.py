@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 
-def write_json(new_data, filename='../static/posts.json'):
+def write_json(new_data, filename='static/posts.json'):
   with open(filename,'r+') as file:
     file_data = json.load(file)
     file_data["posts"].insert(0,new_data)
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     md = f.read()
   meta = extrair_metadados(md)
 
-  file_path = "../static/posts/"
+  file_path = "static/posts/"
   file_name = meta[0].get('title').replace(" ","_")+"-"+meta[0].get('date').strftime("%d_%m_%Y")+".html"
 
   with open(file_path+file_name, 'w', encoding='utf-8') as f:

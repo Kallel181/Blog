@@ -1,6 +1,17 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Nmap_Guide-05_09_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Nmap_Guide-05_09_2025.html",
+            "resume": "Nmap is the one tool for scanning networks, it has a complete set of commands and options that makes it the best tool for doing scanning on networks. In this post, I will cover some of the most important e most common usages of Nmap, giving examples and discussing some technical terms and concepts around them.",
+            "name": "Nmap Guide",
+            "date": "05/09/2025",
+            "tags": [
+                "tool",
+                "reconnaissance"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/T\u00e9cnicas_de_diversifica\u00e7\u00e3o_e_ofusca\u00e7\u00e3o_para_seguran\u00e7a_de_software_e_DRM_-_Uma_introdu\u00e7\u00e3o_pr\u00e1tica-17_06_2025.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/T\u00e9cnicas_de_diversifica\u00e7\u00e3o_e_ofusca\u00e7\u00e3o_para_seguran\u00e7a_de_software_e_DRM_-_Uma_introdu\u00e7\u00e3o_pr\u00e1tica-17_06_2025.html",
             "resume": "Este trabalho aborda as t\u00e9cnicas de prote\u00e7\u00e3o de software por meio da ofusca\u00e7\u00e3o e diversifica\u00e7\u00e3o, com foco na sua efic\u00e1cia contra a engenharia reversa. Iniciamos com uma introdu\u00e7\u00e3o \u00e0 engenharia reversa, destacando sua import\u00e2ncia na an\u00e1lise de seguran\u00e7a, no controle de propriedade intelectual e na implementa\u00e7\u00e3o de sistemas de DRM. Em seguida, s\u00e3o apresentadas as principais t\u00e9cnicas de ofusca\u00e7\u00e3o e diversifica\u00e7\u00e3o. O trabalho tamb\u00e9m inclui uma an\u00e1lise pr\u00e1tica utilizando programas ofuscados em linguagem Javascript e C, explorando o uso do Ghidra para entender o impacto real dessas t\u00e9cnicas no processo de engenharia reversa. Durante a an\u00e1lise, observam-se obst\u00e1culos significativos introduzidos pelas t\u00e9cnicas aplicadas, como dificuldade de rastreamento de fluxo e oculta\u00e7\u00e3o de valores cr\u00edticos. Por fim, discute-se o papel emergente da Intelig\u00eancia Artificial na engenharia reversa, ressaltando sua capacidade de reconhecer padr\u00f5es e sua amea\u00e7a crescente \u00e0 efic\u00e1cia das defesas tradicionais. O estudo evidencia como a combina\u00e7\u00e3o de t\u00e9cnicas bem aplicadas pode aumentar substancialmente o custo da engenharia reversa, mas tamb\u00e9m destaca a necessidade constante de evolu\u00e7\u00e3o frente \u00e0s novas ferramentas automatizadas.",
