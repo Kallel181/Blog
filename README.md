@@ -4,17 +4,6 @@ Este é o repositório do meu blog pessoal, onde compartilho conteúdos relacion
 
 ---
 
-## ✨ Destaques
-
-- Tema **moderno e escuro**, com destaque em **laranja**.
-- Posts organizados por **tags**.
-- Sistema de **busca** por título e tags.
-- Suporte a **paginação** (10 posts por página).
-- Layout simples e adaptado para leitura técnica.
-- Posts gerados a partir de arquivos **Markdown**, convertidos para HTML (via script externo).
-
----
-
 ## 📁 Estrutura do Projeto
 
 ```
