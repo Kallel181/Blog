@@ -180,6 +180,21 @@ code{
   color: #ff8c42;
 }
 
+.post-body a:link{
+  color: #ff8c42;
+}
+
+.post-body a:visited{
+  color: #d15000;
+}
+
+.post-body a:hover {
+  color: #fcad7c;
+}
+
+.post-body a:active  {
+  color: #fcad7c;
+}
 
 
 pre code {
@@ -191,7 +206,7 @@ pre code {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-family: monospace;
-  color: #ffd699;
+  color: #ff8c42;
 }
 
 blockquote{
