@@ -1,6 +1,21 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Introdu\u00e7\u00e3o_a_DLL_Hijacking-07_09_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Introdu\u00e7\u00e3o_a_DLL_Hijacking-07_09_2025.html",
+            "resume": "DLL Hijacking consiste em criar DLLs arbitrarias e posicion\u00e1-las de forma que essas DLL sejam executadas no lugar de DLLs legitimas. Essa t\u00e9cnica pode ser usada por agentes mal-intencionados para escalar privil\u00e9gios ou ainda criar uma persist\u00eancia em um sistema. No artigo \u00e9 detalhada a defini\u00e7\u00e3o dos m\u00e9todos de DLL Hijacking e tamb\u00e9m e mostrado alguns exemplos pr\u00e1ticos de duas t\u00e9cnicas.",
+            "name": "Introdu\u00e7\u00e3o a DLL Hijacking",
+            "date": "07/09/2025",
+            "tags": [
+                "privilege_escalation",
+                "DLL",
+                "Windows",
+                "lateral_movement",
+                "persistance",
+                "defence_evasion"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/Nmap_Guide-05_09_2025.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/Nmap_Guide-05_09_2025.html",
             "resume": "Nmap is the one tool for scanning networks, it has a complete set of commands and options that makes it the best tool for doing scanning on networks. In this post, I will cover some of the most important e most common usages of Nmap, giving examples and discussing some technical terms and concepts around them.",

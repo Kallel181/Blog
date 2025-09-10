@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
   write_json(post)
 
-  print("Adicione o arquivo: ")
+  print("\nAdicione os arquivos: ")
   print("/static/images/"+file_name+"_icon.png")
   print("/static/images/"+meta[0].get('title').replace(" ","_").lower()+"_banner.png")
 
