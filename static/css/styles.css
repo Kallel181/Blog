@@ -151,7 +151,7 @@ header h1 {
 
 .post-banner {
   width: 100%;
-  object-fit: cover;
+  max-width: 300px;
   border-radius: 10px;
   margin-top: 1rem;
   border: 3px solid #ff8c42;
