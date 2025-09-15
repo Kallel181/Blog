@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Introdução ao Manim</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>Introdução ao Manim</h1>
+      <div class="post-meta">
+        <span class="date">2025-09-15</span> —
+        <span class="tags"><span class="tag">Math</span><span class="tag">Manim</span><span class="tag">Python</span></span>
+      </div>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>O Manim é uma biblioteca do Python criada para produzir animações programáticas, com foco especial em conteúdos matemáticos. Diferente de programas tradicionais de edição, ele permite criar animações por meio de código, o que possibilita automatizar tarefas complexas, como gerar diversas formas ou escrever expressões matemáticas de maneira precisa e organizada. No guia, é mostrado como instalar o Python, o Manim e suas dependências, além de indicar o uso de uma IDE, como o Visual Studio Code, para facilitar a escrita dos códigos. A partir daí, é possível dar os primeiros passos criando animações simples com figuras geométricas e textos em LaTeX. Dessa forma, o Manim se apresenta como uma ferramenta versátil para quem deseja produzir vídeos didáticos, apresentações e materiais visuais voltados para ensino e pesquisa.</p>
+<h1>O que é Manim?</h1>
+<p>Manim é uma biblioteca Python, feita para animações programáticas com foco em assuntos matemáticos. Entenda isso como uma "modificação" para o Python que nos permite gerar vídeos¹ de animações de conteúdos matemáticos, ou seja, essa biblioteca possui todas a ferramentas que precisamos para gerar gráficos, textos Latex e figuras geométricas, e ainda animar a posição, cor, tamanho e muitas outras coisas.</p>
+<blockquote>
+<p>Junto a outras bibliotecas podemos também usar Manim para apresentações de Slides, assunto que também será abordado nesse guia.</p>
+</blockquote>
+<h2>O que são animações programáticas?</h2>
+<p>Até agora tenho usado o termo <strong>animações programáticas</strong>, mas o que isso quer dizer?</p>
+<p>Animações programáticas são uma forma de criarmos animações usando programação, ou seja, nosso código é uma sequência de eventos que devem acontecer em uma dada animação. </p>
+<h2>Por que usar animações programáticas?</h2>
+<p>Vamos imaginar a seguinte situação, estamos usando um programa de animações tradicional, e precisamos fazer um pequeno quadrado na tela. Em softwares tradicionais iríamos clicar em algum menu e arrastar o quadrado até a posição que desejássemos ,mas imagine um problema mais difícil digamos que queremos adicionar 100 quadrados na tela, todos ele com um espaçamento igual entre si dispostos em 10 linha e 10 colunas, essa seria uma tarefa não só tediosa, mas também completamente inumana de ser realizada. Nesses casos, podemos usar animações programáticas, tirando vantagem de estarmos em uma ambiente onde loops de repetição estão facilmente disponíveis para nós e assim,  conseguimos fazer uma implementação usando loops for para criar esses pequenos quadrados.</p>
+<blockquote>
+<p>Não se preocupe com termos específicos por enquanto, ou com o entendimento completo desse exemplo, iremos aplicar esse mesmo caso mais a frente.</p>
+</blockquote>
+<h1>Instalação</h1>
+<p>Antes de começarmos a usar o Manim, precisamos instalar a biblioteca e suas dependências, para isso nosso primeiro passo é instalar o Python. </p>
+<blockquote>
+<p><strong>Nota importante</strong>: Durante esse guia estarei realizando a instalação em uma máquina <strong>Windows</strong>, muito embora o processo não seja complicado, se estiver tendo complicações por estar usando um sistema operacional diferente, é possível encontrar mais informações sobre a instalação na documentação oficial do Manim Community.
+https://docs.manim.community/en/stable/installation.html</p>
+</blockquote>
+<h3>Instalando o Python</h3>
+<p>Primeiro antes de começarmos a instalar o Python precisamos checar se ele já está instalado, para isso podemos usar um terminal. Clicando no menu iniciar do Windows abrimos  um CMD, ou terminal, nele basta digitarmos python. 
+<img alt="cmd_abrir.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_1.png"/></p>
+<p>Se o Python não estiver instalado o Windows irá nos redirecionar para a Microsoft Store para adquirir o Python, muito embora seja um método possível de se instalar o Python neste guia irei usar o site oficial para realizar o download do mesmo.</p>
+<blockquote>
+<p>Caso o terminal abra o Python, mostrando sua versão instalada significa que o Python já está instalado, e podemos seguir para a instalação do Manim. </p>
+</blockquote>
+<p>No site oficial do Python podemos facilmente encontrar um executável para instalar o Python, siga como indicado na imagem abaixo:
+<img alt="Instalacao-python.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_2.png"/></p>
+<p>Ao baixar o Instalador vamos abri-lo se seguir os seguintes passo:
+<img alt="python_instalacao.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_3.png"/></p>
+<p>Primeiro vamos marcar a opção <strong>Add python.exe to PATH</strong> (1) e depois clicamos em <strong>Install Now</strong> (2). Em seguida, o Python irá instalar todos os seus componentes básicos necessários. Podemos novamente verificar a instalação abrindo o terminal e digitando Python:</p>
+<p><img alt="python_terminal_install.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_4.png"/></p>
+<p>Agora como podemos ver o Python foi devidamente instalado, podemos prosseguir com a instalação do manim.</p>
+<h3>Instalando o Manim</h3>
+<p>A instalação do Manim é extremamente simples, só precisamos usar o pip (Package Installer for Python), instalado por padrão junto ao Python. Vamos executar o seguinte comando no terminal:</p>
+<pre><code>python -m pip install manim
+</code></pre>
+<p><img alt="manim_pip.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_5.png"/></p>
+<p>Agora temos a biblioteca Manim instalada e está quase pronta para ser usada, ainda precisamos instalar duas dependências da biblioteca, ffmpeg e Latex. Na <a href="https://docs.manim.community/en/stable/installation/windows.html">documentação</a> do Manim Community podemos encontrar algumas instruções para a instalação no geral, incluindo essas dependências que ainda precisamos instalar. Nesse guia eu escolhi usar o instalador de pacotes do Windows <strong>scoop</strong>, na minha visão é o mais simples de se instalar e de usar, e para nossa aplicação será suficiente.</p>
+<blockquote>
+<p>Note que ao longo desse guia já usamos um instalador de pacotes do Python conhecido como pip, acho importante explicar o que de fato estamos fazendo é instalando essas ferramentas. Instaladores de pacotes são softwares responsáveis por gerenciar/instalar outros softwares, com eles podemos fazer instalações apenas usando o terminal, digitando o nome do programa que queremos gerenciar/instalar. No nosso caso pip é um instalador de pacotes do Python, ou seja, ele é responsável por gerenciar os pacotes/bibliotecas do Python. Agora vamos instalar um gerenciador de pacotes para o Windows chamado scoop, ou seja, o scoop pode instalar programas no nosso sistema operacional, com isso digitamos apenas o nome do programa que queremos instalar, se ele estiver disponível na plataforma do scoop ele será automaticamente instalado por ele, bem como quaisquer possíveis dependências.</p>
+</blockquote>
+<h3>Instalando o scoop e ffmpeg</h3>
+<p>Podemos encontrar um guia de como fazer a instalação no site oficial do <a href="https://scoop.sh">scoop</a>, mas é instalação é bem simples e direta, tudo que precisamos fazer é executar dois comando no Windows Powershell:</p>
+<pre><code>&gt; Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+&gt; irm get.scoop.sh | iex
+</code></pre>
+<p><img alt="scoop_install.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_6.png"/></p>
+<blockquote>
+<p>Para abrir o Windows Powershell basta digitar Powershell no menu de pesquisa do Windows e clicar no ícone com o mesmo nome.</p>
+</blockquote>
+<p>Na imagem anterior podemos ver que o Scoop foi instalado com sucesso, agora podemos usa-lo para instalar o ffmep, para isso basta digitar o seguinte comando:</p>
+<pre><code>&gt; scoop install ffmpeg
+</code></pre>
+<p><img alt="ffmep_install.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_7.png"/></p>
+<p>Pronto agora temos uma das dependências, agora vamos para a última, Latex.</p>
+<h3>Instalando Miktex</h3>
+<p>Existem muitos gerenciadores de pacotes para Latex, pessoalmente, prefiro usar MikTex, uma vez que ele funciona <strong>on demand</strong>, ou seja, só irão ser baixados os arquivos de fontes do Latex que forem requisitados por outros programas. Podemos encontrar o executável para a instalação do Miktex no <a href="https://miktex.org">site oficial</a>, a instalação é bem simples, vamos apenas seguir os seguintes passos:
+<img alt="miktex_site.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_8.png"/>
+No site oficial clicamos em Download (1) e depois no botão azul de Download (2), quando o arquivo for baixado abrimos ele e seguimos os seguintes passos:
+<img alt="Miktex_install_1.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_9.png"/>
+Primeiro marcamos a caixa evidenciada na imagem (1) e clicamos em avançar (2):
+<img alt="miktex_install_2.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_10.png"/>
+Em seguida selecionamos para quais usuários queremos instalar, geralmente queremos instalar apenas para nosso usuário, então deixe a primeira opção marcada (1), depois clicamos em avançar (2):
+<img alt="miktex_install_3.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_11.png"/>
+Nessa tela, podemos mudar o local da instalação do Miktex, porem podemos deixar na pasta padrão, então clicamos em avançar (1):
+<img alt="miktex_install_4.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_12.png"/>
+Aqui podemos ver o que havia dito, podemos configurar o miktex para instalar os pacotes que estiverem faltando assim que forem requisitados, vamos selecionar a opção <strong>Ask me first</strong> (1), e clicamos em avançar (2), nas telas seguintes só precisamos clicar em avançar.</p>
+<p>Agora estamos prontos para começar a usar o Manim, porem ainda existe uma consideração a ser feita.</p>
+<h2>IDEs</h2>
+<p>Muito embora não seja necessário, é altamente recomendado o uso de um <strong>IDE (Integrated Development Environment)</strong>, uma boa IDE pode nos ajudar a organizar o código, além de nos auxiliar com algumas funcionalidades uteis como por exemplo autocomplete, em termos simples uma IDE é um programa que pode nos auxiliar na escrita de um programa fornecendo ferramentas. Minha recomendação é usar o Visual Studio Code, uma vez que, durante todo esse artigo estarei usando ele para criar os códigos, porem sinta-se livre para usar a IDE que se sentir mais confortável ou que tiver mais experiência.</p>
+<p>Alguns exemplos de IDEs que podemos usar para facilitar nosso trabalho:
+- IDLE (Vem junto a instalação padrão do Python)
+- PyCharm
+- Visual Studio Code (Recomendado)
+- Sublime Text 3
+- Atom
+- Jupyter
+- Spyder
+- Thonny</p>
+<h1>Usando Manim</h1>
+<p>Agora vamos começar a usar o Manim de fato, vamos abrir nosso Visual Studio Code (ou sua IDE de preferencia) e vamos criar um arquivo Python.</p>
+<blockquote>
+<p>Note que seria impossível cobrir todas as funcionalidades da biblioteca Manim, caso precise de alguma informação adicional, é possível encontrá-las na documentação <a href="https://docs.manim.community/en/stable/index.html">oficial do Manim</a>.</p>
+</blockquote>
+<h3>Começando</h3>
+<p>Vamos agora testar o Manim para termos certeza que ele foi configurado corretamente, vamos abrir um novo arquivo Python e testar um pequeno código, nesse primeiro momento não se preocupe em entender o código, apenas copie e siga os passos, iremos entender o que de fato está acontecendo quando chegarmos ao final.
+Como já havia dito, durante esse guia estarei usando o <a href="https://code.visualstudio.com">Visual Studio Code</a>, por isso estarei ensinando mais abaixo como podemos criar o arquivo e salvar ele, porem esse mesmo processo pode ser feito com qualquer IDE. Primeiro vamos Abrir o Visual Studio Code e criar um novo arquivo, para isso clicamos em File -&gt; New Text File (Arquivo -&gt; Novo Arquivo de Texto):
+<img alt="vscode_create_file.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_13.png"/>
+Assim já temos um arquivo que podemos começar a digitar, vamos escrever o seguinte código:</p>
+<pre><code class="language-python">from manim import *
+
+class Circulo(Scene):
+    def construct(self):
+        circle = Circle()
+        circle.set_fill(ORANGE, opacity=0.5)
+        self.play(Create(circle))
+</code></pre>
+<p>Como eu disse, não se preocupe com o que esta acontecendo nesse momento, vamos voltar nesse exemplo mais a frente e explicar linha a linha. Agora vamos salvar esse arquivo, para isso basta clicarmos novamente em File -&gt; Save (Arquivo -&gt; Salvar).</p>
+<center><h1>Importante</h1></center>
+<center><h1>Mantenha-se organizado</h1></center>
+<p>Certifique-se de salvar o arquivo em um local onde você possa facilmente encontra-lo, isso vai ser muito importante para a próxima parte.
+<img alt="vscode_save_test_file.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_14.png"/>
+No meu caso, tenho uma pasta de documento onde vou deixar todos os códigos Python salvos, novamente, <strong>é muito importante se manter organizado e saber exatamente onde estamos salvando todos os arquivos</strong>. </p>
+<p>Vamos usar o manim para criar um pequeno vídeo da animação que criamos, para isso vamos ter que novamente usar o terminal (cmd), <strong>não se assuste</strong>, por mais que usar o terminal do Windows possa ter algo diferente e novo para você estou certo que ira se acostumar rapidamente. Tudo que precisamos fazer no terminal é navegar até a pasta onde deixamos salvo nosso arquivo e usar o comando do manim para criar um vídeo. Vamos abrir o terminal digitando no menu de pesquisa do Windows, assim como fizemos no começo desse guia.
+Agora, vamos navegar até a pasta onde salvamos nosso arquivo, para fazer isso seja na imagem acima onde deixei marcado com um retângulo vermelho aquele é nosso caminho, podemos clicar em qualquer ponto daquela barra, <strong>exceto</strong> nos nomes que estão ali dispostos, quando fazemos isso podemos ver o caminho completo do arquivo, vamos usar essa caminho, copie ele todo e digite o seguinte comando no terminal:</p>
+<pre><code class="language-bash">cd CAMINHO_DO_ARQUIVO
+</code></pre>
+<p><img alt="folder_nav_terminal.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_15.png"/></p>
+<p>Veja na imagem acima justamente o que temos que fazer, apenas vamos digitar cd e inserir o caminho do arquivo a frente. Assim que apertarmos enter podemos ver que o terminal sofreu uma alteração:
+<img alt="Terminal.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_16.png"/></p>
+<p>Veja que no terminal sempre há uma pasta/caminho em evidência, essa pasta é a maneira do terminal do Windows de nos dizer "Estamos trabalhando nessa pasta". Note que esse é o caminho do meu arquivo no meu computador, o seu pode ser diferente, o que não é nenhum problema, somente se certifique de que estamos no caminho certo. Para nos certificarmos de que estamos na pasta certa podemos usar o comando dir, esse comando irá mostrar todos os arquivos presente na pasta em que estamos:
+<img alt="test_dir.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_17.png"/>
+Como podemos ver ali está o nosso arquivo, agora podemos continuar.</p>
+<p>Por último vamos agora digitar esse ultimo comando no terminal:</p>
+<pre><code>manim -pqh teste1.py Circulo
+</code></pre>
+<p>Note que no comando acima inserimos o nome do arquivo Python, novamente, seu arquivo tiver um nome diferente apenas escreva o mesmo nome que deu a ele antes. Assim que apertarmos enter o Manim irá começar a processar nosso arquivo, provavelmente assim que o processo for concluído o Manim abrirá automaticamente o arquivo. Pronto, já criamos nosso primeiro projeto com Manim!</p>
+<h3>Entendendo o que fizemos</h3>
+<p>Vamos tirar um tempo agora para entendermos de fato o que estamos fazendo. Primeiro, vamos dar uma pequena olhada no código que criamos:</p>
+<pre><code class="language-Python">from manim import *
+
+class Circulo(Scene):
+    def construct(self):
+        circle = Circle()
+        circle.set_fill(ORANGE, opacity=0.5)
+        self.play(Create(circle))
+</code></pre>
+<p>Se você possui algum conhecimento de Python boa parte desse código já faz algum sentido para você, mas mesmo que tenha pouco conhecimento de Python vamos linha a linha entender o que esta acontecendo. Primeiro, na primeira linha estamos importando a biblioteca manim, a forma a qual escrevemos <code>from manim import *</code> significa que da biblioteca manim queremos importar tudo, assim não precisamos ficar nos preocupando em importar partes específicas da biblioteca. 
+Nas linhas 3 e 4 definimos uma nova classe e um método construtor, eu imagino que isso possa ser algo novo para muitos que esteja seguindo esse guia, porem nós não precisamos nos preocupar com o porquê dessa parte se assim, para explicar isso precisaríamos de um bom entendimento de partes específicas do funcionamento do manim e de programação orientada a objeto, por isso, vamos nos concentrar somente nas partes seguintes, mas precisamos entender dois pontos sobre essas linhas. Primeiro, essa estrutura será sempre a mesma, ou seja, sempre que começarmos nossa animação manim iremos escrever:</p>
+<pre><code class="language-python">from manim import *
+
+class nome_da_cena(Scene):
+    def construct(self):
+        ...
+        ...
+        ... 
+</code></pre>
+<p>Segunda parte importante é que, veja no código a cima, logo após escrevermos <code>class</code> nos precisamos inserir o nome da cena em questão, esse nome pode ser qualquer nome ele só não pode conter espaços e começar com um número, esse nome é usado para criarmos a mídia de saída quando usamos o manim pelo terminal (Veja no exemplo mais acima).</p>
+<p>Agora vamos linha a linha entender o que fizemos dentro da animação de fato. Na linha 5 criamos uma variável com o nome <code>circle</code> nela armazenamos uma função do próprio manim, a função <code>Circle()</code>, dessa forma criamos o que é chamado na computação de <strong>objeto</strong>, nesse caso nosso objeto é um círculo.
+Na linha 6 alteramos algumas propriedades desse círculo, nesse caso, usamos uma função chamada <code>set_fill</code>, que altera as propriedades do preenchimento do círculo, ali nos indicamos que queremos o preenchimento do círculo para ser Laranja (Orange) e que o fundo desse círculo precisa ter uma opacidade, ou transparência, de 50%.
+Por último, na linha 7 temos uma função chamada <code>Play()</code>, essa é a função que vamos acabar mais usando dentro do manim, nela podemos descrever como o manim deve apresentar os objetos na tela, existem muitos parâmetros diferentes para a função <code>Play()</code> Durante esse guia vamos ver mais alguns exemplos. </p>
+<p>Perceba o seguinte, no começo de nossa animação tudo que fazemos é <strong>definir um círculo</strong>, ou seja, ele ainda não existe na animação, o círculo passa a existir somente quando chamamos a função <code>Play()</code>.</p>
+<h3>Mais um exemplo</h3>
+<p>Vamos fazer mais um exemplo, crie mais um arquivo Python, exatamente como fizemos antes. <strong>Lembre-se de criar uma nova pasta para esse arquivo para ficar organizado</strong>. Agora vamos digitar o seguinte:</p>
+<pre><code class="language-python">from manim import *  
+
+class Latex(Scene):
+    def construct(self):
+        text = MathTex(
+            "\\frac{d}{dx}f(x)g(x)=","f(x)\\frac{d}{dx}g(x)","+",
+            "g(x)\\frac{d}{dx}f(x)"
+        )
+        self.play(Write(text))
+        self.wait(2)
+</code></pre>
+<p>Vamos novamente abrir essa nova pasta que criamos no cmd, ou terminal, e digitar o seguinte comando novamente:</p>
+<pre><code class="language-bash">manim -pqh teste2.py Latex
+</code></pre>
+<blockquote>
+<p>Perceba que indicamos o nome do arquivo e o nome da cena, o seu arquivo pode ter um nome diferente, então atente-se a isso.</p>
+</blockquote>
+<p>Agora temos uma nova animação Manim, dessa vez temos um texto Latex sendo escrito na tela!</p>
+<p>Mais a frente vamos voltar nos textos Latex e ver mais alguns detalhes sobre não se preocupe, vamos agora estudar alguns casos mais específicos aprender algumas funções do Manim.</p>
+<h1>Aplicando exemplos</h1>
+<p>Vamos agora estudar de fato alguns casos de objetos, animações e manipulações que podemos usar. Para fazer isso vamos trabalhar como se tivéssemos fazendo exercícios, cada uma das seções irá conter um objetivo final desde o começo, nos vamos caminhar até conseguirmos fazer o que foi indicado.</p>
+<h3>Trabalhando com objetos simples, posições e propriedades</h3>
+<p>Nosso objetivo é adicionar na tela, um quadrado, um círculo e um triangulo equilátero. Seguindo os seguintes critérios</p>
+<ul>
+<li>O quadrado deve ter um fundo azul, uma opacidade de 20% e deve estar acima da circunferência.</li>
+<li>A circunferência não pode ter um fundo, ela deve ser vermelha e deve estar localizada na origem (centro da tela).</li>
+<li>O triangulo deve ter o fundo verde, uma opacidade de 70% e deve estar localizado abaixo da circunferência.</li>
+</ul>
+<blockquote>
+<p>Antes de começarmos a resolver esse problema é importante ressaltar o seguinte, a biblioteca Manim possui uma abundância de funções, objetos, parâmetros, métodos… por isso, não se preocupe em decorar todos eles, sempre que tiver alguma dúvida ou quiser aprender mais sobre uma função do Manim é possível encontrar tudo isso na <a href="https://docs.manim.community/en/stable/">documentação oficial</a>.</p>
+</blockquote>
+<p>Vamos começar com a circunferência, para criar uma circunferência podemos usar a função <code>Circle()</code>, assim vamos escrever o seguinte:</p>
+<pre><code class="language-python">from manim import *
+
+class Figuras(Scene):
+    def construct(self):
+        circulo = Circle(color=RED)
+</code></pre>
+<p>Perceba que para esse exemplo precisamos entender dois conceitos, <strong>como essas cores confinam?</strong> E <strong>como podemos colocar nossa circunferência na origem?</strong> </p>
+<h3>Entendo as cores</h3>
+<p>Primeiro, Manim possui uma série de cores pré-definidas junto a ele, por isso podemos só digitar <code>color=RED</code>, como um dos parâmetros do círculo, mais abaixo deixo listado todas as cores que já estão pré-definidas pelo Manim: <a href="https://docs.manim.community/en/stable/reference/manim.utils.color.manim_colors.html">https://docs.manim.community/en/stable/reference/manim.utils.color.manim_colors.html</a></p>
+<p>Perceba que todas as cores são definidas por códigos hexadecimal de 6 numero e letras, cada par de número define uma certa "quantidade" de uma determinada cor entre Vermelho, Verde e Azul:
+<img alt="Hex_color.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_18.png"/></p>
+<center><p>https://www.smashingmagazine.com/2012/10/the-code-side-of-color/</p></center>
+<p>Dessa forma podemos definir qualquer cor que quisermos, vamos ver um exemplo, vamos usar um <a href="https://www.google.com/search?client=opera-gx&amp;q=cor+hexadecimal&amp;sourceid=opera&amp;ie=UTF-8&amp;oe=UTF-8">aplicativo do google</a> para selecionar uma cor qualquer e deixar nossa circunferência dessa cor:</p>
+<pre><code class="language-python">from manim import *
+
+class Figuras(Scene):
+    def construct(self):
+    roxo = "#bd34eb"
+        circulo = Circle(color=roxo)
+</code></pre>
+<p>Dessa forma podemos fazer qualquer cor que quisermos dentro do Manim. Vamos agora adicionar a circunferência a tela e ver onde ela será adicionada:</p>
+<pre><code class="language-python">from manim import *
+
+class Figuras(Scene):
+    def construct(self):
+        circulo = Circle(color=RED)
+        self.play(Create(circulo))
+        self.wait(1)
+</code></pre>
+<p>Nesse caso adicionamos a circunferência no centro da tela usando o método <code>Create()</code> e depois esperamos 1 segundo com a função <code>self.wait(1)</code>.</p>
+<p>Novamente, vamos usar nosso terminal para navegar até a pasta onde deixamos salvo esse código e executar o comando:</p>
+<pre><code class="language-bash">manim -pqh ex1.py Figuras
+</code></pre>
+<p>Perceba que nossa circunferência já foi adicionada no centro da tela, essa é a posição padrão onde todos os objetos criados são colocados. </p>
+<h3>Entendo o sistema de posição</h3>
+<p>Podemos ver um pouco mais sobre o sistema de coordenadas do Manim com o seguinte código:</p>
+<pre><code class="language-python">from manim import *
+
+class NumberPlaneExample(Scene):
+    def construct(self):
+        number_plane = NumberPlane(
+            background_line_style={
+                "stroke_color": TEAL,
+                "stroke_width": 4,
+                "stroke_opacity": 0.6
+            }
+        )
+        self.add(number_plane)
+</code></pre>
+<p>Podemos usar a função <code>NumberPlane()</code> para deixar uma malha quadriculada na tela toda, dessa forma podemos entender um pouco mais como o sistema de posicionamento, note também que usamos o método <code>self.add(numberplane)</code> dessa forma não indicamos nenhuma animação para ser usada, o objeto é apenas colocado em cena, assim, o Manim irá nos devolver uma imagem, que deve ser parecida com essa:
+<img alt="NumberPlaneExample_ManimCE_v0.17.3.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_19.png"/>
+Aqui podemos ver algo que é bem parecido com um plano cartesiano, e realmente é um plano cartesiano, todos os objetos no Manim tem suas posições descritas por coordenadas seguindo esse plano. Vamos agora voltar para o quadrado e ver como podemos deixar ele abaixo da circunferência.</p>
+<p>Para criar o quadrado vamos fazer o seguinte:</p>
+<pre><code class="language-python">from manim import *
+
+
+class Figuras(Scene):
+    def construct(self):
+        circulo = Circle(color=RED)
+        self.play(Create(circulo))
+        self.wait(1)
+
+        quadrado = Square()
+        quadrado.set_color(BLUE)
+        quadrado.set_fill(color=BLUE,opacity=0.2)
+        quadrado.move_to([0,-2.5,0])
+        self.play(Create(quadrado))
+        self.wait(1)
+</code></pre>
+<p>Perceba que a cima temos algumas coisas diferentes, primeiro definimos nosso quadrado usando a função <code>Square()</code>, depois disso usamos uma função diferente para mudar a cor do quadrado <code>quadrado.set_color(BLUE)</code>, escrevendo dessa forma nos estamos usando uma função que já existe no objeto <code>Square()</code>, fazendo dessa forma obtemos o mesmo resultado se fizéssemos <code>quadrado=Square(color=BLUE)</code>. </p>
+<p>Mais abaixo usamos a função <code>set_fill()</code>, nessa função, diferentemente da função <code>set_color()</code> temos que indicar qual parâmetro estamos alterando, uma vez que a função <code>set_fill()</code> possui mais de um parâmetro. Aqui estamos alterando os parâmetros <code>color</code> e <code>opacity</code>. Note que o parâmetro <code>color</code> já é conhecido e podemos usar as cores predefinidas pelo Manim, ou inserir uma <code>string</code> com nossa cor personalizada (uma string é um texto entre aspas, nessa caso como é uma cor devemos inserir algo como "#ffffff"), além do parâmetro <code>color</code> também estamos alterando o parâmetro <code>opacity</code>, esse parâmetro varia entre 0 e 1, e ele indica a transparência do nosso fundo.</p>
+<blockquote>
+<p>Perceba que o parâmetro <code>opacity</code> nesse caso ira alterar apenas a opacidade do fundo, se quiséssemos mudar a opacidade do objeto na totalidade poderíamos escrever <code>quadrado.set_opacity(0.2)</code>, nesse caso todo o quadrado ficaria opaco, incluindo sua borda.</p>
+</blockquote>
+<p>Por último, antes de animarmos o objeto na tela vamos definir uma posição diferente da origem, para isso usamos a função <code>move_to()</code>, no nosso caso precisamos inserir apenas uma coordenada cartesiana de onde esse objeto deve ser posicionado, como já vimos, Manim trabalha com um plano cartesiano, ou seja, dentro da função devemos inserir uma coordenada, note que no exemplo acima escrevemos o seguinte <code>quadrado.move_to([0,-2.5,0])</code>, dentro da função <code>move_to()</code> escrevemos a seguinte lista <code>[0,-2.5,0]</code>, cada elemento da lista é separado por uma vírgula, dessa forma estamos indicando coordenadas x, y e z <code>[x,y,z]</code>, note que mesmo estando trabalhando em um ambiente 2D precisamos indicar uma coordenada z.</p>
+<blockquote>
+<p>Manim é capaz de gerar animações de objetos tridimensionais, porem esse não será um assunto abordado nesse guia.</p>
+</blockquote>
+<p>Por último usamos as funções <code>selg.play(Create(quadrado))</code> e <code>self.wait(1)</code> que são funções que já vimos antes, agora podemos usar o comando do Manim para exportar um vídeo.</p>
+<p>Vamos agora partir para a última parte, o triangulo:</p>
+<pre><code class="language-python">from manim import *
+
+
+class Figuras(Scene):
+    def construct(self):
+        circulo = Circle(color=RED)
+        self.play(Create(circulo))
+        self.wait(1)
+
+        quadrado = Square()
+        quadrado.set_color(BLUE)
+        quadrado.set_fill(color=BLUE,opacity=0.2)
+        quadrado.move_to([0,-2.5,0])
+        self.play(Create(quadrado))
+        self.wait(1)
+
+        tri = Triangle(color=GREEN)
+        tri.set_fill(color=GREEN,opacity=0.7)
+        tri.move_to([0,2.5,0])
+        self.play(FadeIn(tri))
+        self.wait(1)
+</code></pre>
+<p>Veja que criar um triangulo é extremamente semelhante a outras figuras, por agora não vamos alterar nenhum parâmetro de dimensões dessas figuras, vamos fazer isso mais a frente, por agora apenas perceba que na função <code>move_to()</code> deixamos o triangulo mais acima, e a única coisa realmente diferente que usamos para o triangulo é uma animação de entrada diferente, nessa caso estamos usando a animação <code>FadeIn()</code>.</p>
+<p>Com isso já temos uma boa base para avançarmos mais um pouco com o Manim.</p>
+<h3>Manim Slides</h3>
+<p>Antes de continuarmos com outros exemplos vamos adicionar uma ferramenta ao Manim. Existem muito pacotes que complementam as funcionalidades do Manim, porem um dos mais importantes, na minha visão, é o Manim Slides. Com esse pote adicional podemos ao invés de criarmos vídeos podemos iniciar uma apresentação de slide que pausa em momentos pre-definidos e que só avança quando pressionarmos uma tecla no nosso teclado, o que faz do Manim uma ferramenta ótima para apresentações ao vivo.</p>
+<p>Primeiro vamos instalar esse pacote adicional, abra seu terminal (cmd), assim como ja fizemos e digite o seguinte comando:</p>
+<pre><code class="language-bash">pythom -m pip install manim-slides
+</code></pre>
+<p><img alt="manim-slides_install.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_20.png"/></p>
+<p>Vamos usar o mesmo código que fizemos as figuras com algumas modificações:</p>
+<pre><code class="language-python">from manim import *
+from manim_slides import Slide
+
+class apresentacao(Slide):
+    def construct(self):
+        circulo = Circle(color=RED)
+        self.play(Create(circulo))
+        self.wait(0.1)
+        self.next_slide()  
+
+        quadrado = Square()
+        quadrado.set_color(BLUE)
+        quadrado.set_fill(color=BLUE,opacity=0.2)
+        quadrado.move_to([0,-2.5,0])
+        self.play(Create(quadrado))
+        self.wait(0.1)
+        self.next_slide()
+
+        tri = Triangle(color=GREEN)
+        tri.set_fill(color=GREEN,opacity=0.7)
+        tri.move_to([0,2.5,0])
+        self.play(FadeIn(tri))
+        self.wait(0.1)
+        self.next_slide()
+</code></pre>
+<p>Perceba que dessa vez estamos importando uma nova biblioteca <code>from manim_slides import Slide</code>, aqui estamos importando as ferramentas que precisamos para transformar nossa animação em uma apresentação de slides. Mais a frente podemos notar mais uma diferença, <code>class apresentacao(Slide):</code> perceba que usamos <code>Slide</code> ou invés de <code>Scene</code>, isso indica para o Manim que nossa animação será executada como uma apresentação de Slides. Por último, depois de cada <code>self.wait(0.1)</code> usamos a função <code>self.next_slide()</code> essa função indica onde devem ser feitas as pausas dos slides, assim, a animação só avança quando pressionamos uma tecla do teclado (nesse caso a seta para a direita). </p>
+<p>Para iniciarmos nossa apresentação de slides primeiro precisamos gerar um video de nossa animação, assim como estávamos fazendo anteriormente:</p>
+<pre><code class="language-bash">manim -pqh slides.py apresentacao
+</code></pre>
+<p>Depois disso precisamos digitar o seguinte comando no terminal:</p>
+<pre><code class="language-bash">manim-slides apresentacao
+</code></pre>
+<p>Logo após pressionarmos enter estaremos com a mesma animação de antes, mas agora em uma apresentação de slides, onde as figuras só são desenhadas na tela quando pressionamos a seta para a direita.</p>
+<h3>Exemplo mais prático</h3>
+<p>Agora vamos tentar aplicar um exemplo um pouco mais complexo.</p>
+<p>Nosso objetivos é mostrar a resolução de um exercício de geometria, o exercício consiste em um quadrado inscrito em uma circunferência de raio 2, o exercício pede para encontrarmos a seguinte área em destaque:
+<img alt="drawing_ManimCE_v0.17.3.png" src="https://kallel181.github.io/Blog/static/images/introducao_ao_manim_21.png"/></p>
+<p>Nesse caso vamos trabalhar com o Manim Slides e criar uma apresentação, além disso, vamos usar Latex para mostrar algumas das contas necessárias.</p>
+<blockquote>
+<p>Esse desenho acima foi feito com o Manim, mais a frente vamos ver tudo que precisamos para criar um desenho como esse, mas deixo abaixo o código que fiz para esse desenho:</p>
+</blockquote>
+<pre><code class="language-python">from manim import *
+
+class drawing(Scene):
+    def construct(self):
+        circ_radius = 2
+        sqr_side = 2*circ_radius/(2**(1/2))
+
+        circulo = Circle(radius=circ_radius,color=BLUE)
+        quadrado = Square(side_length=sqr_side,color=GREEN)
+
+        line = Line([0,0,0],[sqr_side/2,-sqr_side/2,0],color=BLUE)
+        label = MathTex(str(circ_radius),color=BLUE)
+        label.move_to(line.get_center())
+        label.shift(UR*(1/4))
+
+        e = Exclusion(circulo, quadrado, fill_opacity=0.4,color=BLUE)
+        self.add(e,line,label,circulo,quadrado)
+</code></pre>
+<p>Antes de começarmos, como esse é um exemplo um pouco mais complexo, vamos primeiro pensar em uma sequência a qual as coisas devem acontecer, para isso temos que ter uma boa visão de como resolver o exercício. Para esse exemplo vou seguir a seguinte sequência de passos:</p>
+<ul>
+<li>Desenhar o círculo e indicar seu raio</li>
+<li>Desenhar o quadrado</li>
+<li>Evidenciar a diferença entre a área do círculo e a área do quadrado</li>
+<li>Copiar o segmento de reta que indica o raio do círculo e rotacionar para indicar o diâmetro do círculo, ou seja, também indicando a diagonal do quadrado</li>
+<li>Mover a figura toda para a esquerda</li>
+<li>A direita vamos usar Pitágoras para encontrar o lado do quadrado</li>
+<li>Evidenciar na figura o lado do quadrado</li>
+<li>Apagar as contas para o lado do quadrado </li>
+<li>Calcular a área do círculo </li>
+<li>Mover o resultado da conta da área do círculo mais a cima (Podemos evidenciar na figura a área do círculo referente a conta, para isso podemos mudar a cor do <code>fill</code> do círculo)</li>
+<li>Apagar as contas referentes ao cálculo da área do círculo, com exceção do resultado, ao qual já deixamos separado mais acima</li>
+<li>Calcular a área do quadrado</li>
+<li>Mover o resultado da conta da área do quadrado mais acima, ao lado do resultado da conta da área do círculo (Podemos evidenciar na figura a área do quadrado referente a conta, para isso podemos mudar a cor do <code>fill</code> do quadrado)</li>
+<li>Apagar as contas referentes ao cálculo da área do quadrado, com exceção do resultado</li>
+<li>Calcular a diferença entre a área do círculo e a área do quadrado</li>
+</ul>
+<blockquote>
+<p>Olhando em retrospecto isso pode parecer algo bem complexo de ser feito, mas cada um desses passos individuais são, na verdade, bem simples, esse é um dos motivos que eu recomendo que essa sequencia detalhada seja feita, quanto mais complexa uma for a animação, mais eficiente será essa separação em passos pequenos.</p>
+</blockquote>
+<h3>Analise Passo a passo</h3>
+<p>Vamos agora analisar parte por parte do que temos que fazer, vamos começar criando a figura do exercício: </p>
+<pre><code class="language-python">from manim import *
+from manim_slides import Slide
+
+class exercicio(Slide):
+  def construct(self):
+    figura = VGroup()
+    
+    #===== Desenhar o círculo e indicar seu raio =====
+    raio_circ = 2
+    lado_quadrado = 2*raio_circ/(2**(1/2))  
+
+    circulo = Circle(radius=raio_circ,color=BLUE)
+    linha_raio = Line([0,0,0],[lado_quadrado/2,-lado_quadrado/2,0],color=BLUE)  
+
+    raio = MathTex(str(raio_circ),color=BLUE)
+    raio.move_to(linha_raio.get_center())
+    raio.shift(UR*(1/4))  
+
+    self.play(Create(circulo))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(Create(linha_raio))
+    self.play(Write(raio))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(circulo,raio,linha_raio)
+    
+    &lt;Snip&gt;
+</code></pre>
+<blockquote>
+<p>Note acima a última linha que temos no código <code>&lt;Snip&gt;</code>, isso significa que há mais código a ser digitado abaixo, durante esse exemplo irei continuar usando essa notação, assim, só teremos que analisar um pedaço do código de cada vez, mas lembre que todos esses pedaços compõem um código maior, que pode ser encontrado no final dessa seção.</p>
+</blockquote>
+<p>O começo do arquivo já é familiar para nós, ali importamos as bibliotecas que vamos usar, <code>Manim</code> e <code>Manim_slides</code>, na primeira linha da nossa animação já temos algo novo <code>figura = VGroup()</code>, aqui definimos uma variável como sendo o objeto <code>VGroup()</code>, esse objeto irá armazenar outros objetos, pense nele como uma caixa que irá armazenar outros objetos, <strong>por que fazemos isso?</strong>
+Muito simples, para criar a figura do nosso exercício vamos ter muitos outros objetos compondo essa figura, se agruparmos todos os objetos em um só lugar podemos muito mais facilmente alterar certas propriedades de todos os objetos ao mesmo tempo, por exemplo, sabemos que após construirmos essa figura vamos precisar movê-la toda mais a esquerda, para facilitar esse processo vamos agrupar todos os objetos que compõem a figura em um só lugar, assim podemos mover todos os objetos em conjunto.</p>
+<p>Mais abaixo definimos a variável <code>raio_circ</code>, que está armazenando a raio do círculo que iremos apresentar na tela, perceba que mais abaixo também estamos definindo o lado do quadrado que vamos precisar, nesse caso na variável <code>lado_quadrado</code>, mais ainda, note que o tamanho do lado do quadrado é calculado com base no raio do círculo <code>lado_quadrado = 2*raio_circ/(2**(1/2))</code>:
+$$L_{q}=\frac{2r}{\sqrt{2}}$$
+Dessa forma, se no futuro decidirmos deixar a figura maior só precisamos alterar uma variável e tudo mudará de acordo.</p>
+<p>Depois criamos o círculo usando a função <code>Circle()</code>, aqui usamos dois parâmetros, <code>color=BLUE</code> e <code>radius=raio_circ</code>, o parâmetro <code>color</code> já vimos como funciona, o parâmetro <code>radius</code> é bem simples, aqui definimos para que ele seja igual a um valor numérico, esse será o raio do círculo, no nosso caso, definimos para que ele seja igual à variável <code>raio_circ</code> a qual já atribuímos um valor.</p>
+<p>Abaixo usamos um novo tipo de objeto <code>Line()</code>, como o nome já diz ele cria uma linha, com esse objeto somos obrigados a informar dois parâmetros, no caso duas coordenadas, esses serão os pontos de início e fim do nosso segmento, perceba que para esse pontos usamos o seguinte <code>[0,0,0],[lado_quadrado/2,-lado_quadrado/2,0]</code> A primeira coordenada usamos a origem, já na segunda podemos encontrar a coordenada do vértice inferior direito do quadrado a partir da metade do lado do quadrado, assim, como a variável <code>lado_quadrado</code> depende da variável <code>raio_circ</code> se a alterarmos a linha também terá seu tamanho alterado. Por último usamos novamente o parâmetro <code>color</code> para deixar a linha azul.</p>
+<p>Agora definimos um pequeno texto para indicar o raio do círculo, para isso usamos o objeto <code>MathTex()</code> (Também podemos usar o objeto <code>Text()</code>), perceba que para esse objeto precisamos de uma string como parâmetro, nesse caso, usamos a string de nossa variável <code>raio_circ</code>, alternativamente podemos usar uma string qualquer: <code>raio = MathTex("3",color=BLUE)</code>, dessa forma desatrelamos a raio que deixamos visual na animação com o raio do círculo. Para posicionar usarmos a função <code>move_to()</code> essa função move o objeto até uma dada coordenada, nesse caso, vamos usar a coordenada do centro da linha que criamos anteriormente, para isso podemos usar a função <code>get_center()</code> que nos retorna o centro do objeto, assim, quando escrevemos <code>raio.move_to(linha_raio.get_center())</code> estamos movendo o objeto <code>raio</code> a até o centro do objeto <code>linha_raio</code>. Por último, para terminar o posicionamento, usamos a função <code>shift()</code>, nessa função precisamos inserir um vetor para movimentarmos o objeto, dessa forma usamos da seguinte forma <code>raio.shift(UR*(1/4))</code>, aqui usamos a variável <code>UR</code> (Up Right), para movermos conforme o vetor <code>[1,1,0]</code>, nesse caso em específico multiplicamos o vetor por <code>1/4</code>, para que o objeto fique mais próximo da linha que indica o raio da circunferência.</p>
+<p>Por último usamos a função <code>add()</code> para que os objetos que criamos aqui sejam colocados dentro do grupo que criamos mais acima, dessa forma podemos organizar todos os objeto que pertencem à figura.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#===== Desenhar o quadrado =====
+    quadrado = Square(side_length=lado_quadrado*0.98,color=GREEN)
+
+    self.play(Create(quadrado))
+    self.wait(0.1)
+    self.next_slide()      
+
+    figura.add(quadrado)
+&lt;Snip&gt;
+</code></pre>
+<p>Aqui vamos criar o nosso quadrado, usando a função <code>Square()</code> podemos passar os parâmetros que precisamos, nesse caso, usamos o parâmetro <code>color</code> que já é conhecido, e o parâmetro <code>side_length</code>, nesse parâmetro passamos o valor da variável <code>lado_quadrado</code>, ainda mais, podemos diminuir levemente o lado do quadrado para ficar mais contido dentro do círculo. Mais adiante usamos a função <code>Play()</code> com o método <code>Create()</code> para desenhar o circulo na tela, e adicionamos o quadrado dentro da nossa variável <code>figura</code>.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#===== Evidenciar a diferença entre a área do círculo e a área do quadrado =====
+    diferenca = Exclusion(circulo, quadrado, fill_opacity=0.4,color=BLUE)
+    diferenca.z_index = -1  
+
+    self.play(FadeIn(diferenca))
+    self.wait(0.1)
+    self.next_slide() 
+
+    figura.add(diferenca)
+&lt;Snip&gt;
+</code></pre>
+<p>Aqui para mostrarmos a área da circunferência menos a área do quadrado podemos usar a função <code>Exclusion()</code>, aqui vamos inserir dois outros objetos, a função <code>Exclusion()</code> irá criar um objeto que é justamente a diferença entre os dois objetos que inserirmos como parâmetro, mais a frente, como os outros objetos que já trabalhamos, podemos alterar <code>color</code> e <code>fill_opacity</code>.Além disso, mudamos um parâmetro especifico desse novo objeto <code>z_indexPor</code>, isso indica que o objeto deve estar atrás de todos os outros. E por último, novamente, adicionamos esse jogo objeto ao grupo <code>figura</code>.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+ #===== Copiar o segmento de reta que indica o raio do círculo e rotacionar para indicar o diâmetro do círculo =====
+    linha_raio2 = linha_raio.copy()
+    centro = Dot(ORIGIN,color=BLUE)
+    
+    self.play(FadeIn(centro))
+    self.play(Rotate(linha_raio2,angle=PI,about_point=ORIGIN))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(linha_raio2,centro)
+
+    #Copiar raio e mover mais acima
+    raio2 = raio.copy()
+    raio2.move_to(linha_raio2.get_center())
+    raio2.shift(UR*(1/4))
+    self.play(Write(raio2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(raio2)
+&lt;Snip&gt;
+</code></pre>
+<p>Nessa parte vamos evidenciar que o diâmetro da circunferência é igual à diagonal do quadrado, para isso, vamos criar mais uma linha que irá representar o raio da circunferência, porem dessa vez vamos deslocar essa linha para o canto superior esquerdo do quadrado. Para isso vamos criar dois objetos, uma nova linha que será igual à linha que já criamos, para facilitar podemos usar a função <code>copy()</code>, e outro objeto que precisamos é um ponto para deixarmos no centro da circunferência, tecnicamente não precisamos desse ponto, mas, como o plano é rotacionar a cópia da linha que criamos é interessante criarmos esse ponto mais visando esconder as "quinas" do segmento que iremos rotacionar. Após isso começamos com a animação, usamos dentro do <code>self.play()</code> o método <code>FadeIn()</code> para apresentar o ponto na tela, depois disso usamos o método <code>Rotate()</code> para rotacionar a cópia do nosso segmento do raio, perceba o seguinte, ali estamos passando alguns parâmetros necessários para que a animação corra da forma que imaginamos, o primeiro deles indicamos qual o objeto que deve ser racionado, nesse caso <code>linha_raio2</code>, depois indicamos o ângulo de rotação, <code>angle</code>, note que colocamos o ângulo em radianos, por último a mais importante, <code>about_point</code>, nesse parâmetro estamos indicando o <strong>Pivot</strong> de rotação, por padrão, esse pivot será o centro do objeto, porem nesse caso, queremos usar o centro da circunferência como pivot, como nossa figura está localizada na origem, podemos usar a variável <code>ORIGIN</code>, que por padrão é configurada como <code>[0,0,0]</code>. Depois disso adicionamos esses novos objetos a nossa coleção <code>figura</code>.</p>
+<p>Mais abaixo vamos copiar o raio que já temos criado, esse novo raio servirá para indicar o comprimento do nosso segmento que criamos, que ainda é o raio da circunferência. Depois só precisamos mudar suas posição, para ficar próximo ao segmento desejado, e também colocamos esse novo raio dentro da coleção <code>figura</code>.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#===== Mover a figura toda para a esquerda =====
+    self.play(figura.animate.shift(LEFT*3))
+    self.wait(0.1)
+    self.next_slide()
+&lt;Snip&gt;
+</code></pre>
+<p>Essa parte é bem simples, agora que já temos todos os elementos que precisamos na figura podemos movê-la mais a esquerda para abrir espaço para as contas que vamos fazer, para isso usamos usar o seguinte comando <code>self.play(figura.animate.shift(LEFT*3))</code>, aqui estamos dizendo basicamente que, a <code>figura</code> deve ser animada em um movimento que irá seguir o vetor <code>LEFT*3</code>, ou seja, <code>[-3,0,0]</code>, dessa forma movendo 3 unidades para a esquerda.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#===== A direita vamos usar Pitágoras para encontrar o lado do quadrado =====
+
+    #Evidenciar na figura o lado do quadrado
+    lado1 = MathTex("x",color=GREEN)
+    lado1.move_to(centro.get_center())
+    lado1.shift(LEFT)  
+
+    lado2 = lado1.copy()
+    lado2.move_to(centro.get_center())
+    lado2.shift(DOWN)  
+
+    self.play(Write(lado1),Write(lado2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #Adicionando as contas
+    pitagoras = MathTex("4^2 &amp;= x^2 + x^2\\\\",
+                        "16 &amp;= 2x^2\\\\",
+                        "\\frac{16}{2} &amp;= x^2\\\\",
+                        "8 &amp;= x^2\\\\",
+                        "x &amp;= \\sqrt{8}\\\\",
+                        "x &amp;= 2 \\sqrt{2}\\\\")
+
+    pitagoras.shift(RIGHT*3)
+    
+    for i in range(0,6):
+      self.play(Write(pitagoras[i]))
+      self.wait(0.1)
+      self.next_slide() 
+
+    #trocar x da figura pelo resultado da conta
+    self.play(FadeOut(lado1)) 
+    result_lado_quadrado = MathTex("2 \\sqrt{2}",color=GREEN,font_size=40)
+    result_lado_quadrado.move_to(lado2.get_center())  
+
+    self.play(Transform(lado2,result_lado_quadrado))
+    self.wait(0.1)
+    self.next_slide()
+&lt;Snip&gt;
+</code></pre>
+<p>Aqui vamos incialmente criar dois textos, nesse caso a letra x, para representar o lado do quadrado, assim podemos calcular o lado do quadrado usando Pitágoras, para esses textos usamos novamente a função <code>MathTex()</code>, e outros métodos de posicionamento que já usamos <code>move_to()</code> e <code>shift()</code>. Agora vamos criar um novo objeto com todas as contas que precisamos para o cálculo do lado do quadrado, aqui vamos analisar com calma, perceba que cada linha da conta está sendo colocada em um parâmetro diferente, dessa forma podemos criar um laço de repetição colocando uma pausa a cada linha, apresentando tudo com mais calma, outro detalhe importante é que usamos uma barra invertida a mais na escrita do nosso código Latex, isso é porque o Python precisa disso para entender que deve inserir um barra invertida, podemos fazer de uma forma alternativa usando raw strings da seguinte forma:</p>
+<pre><code class="language-python">&lt;Snip&gt;
+    pitagoras = MathTex(r'4^2 &amp;= x^2 + x^2\\',
+                        r'16 &amp;= 2x^2\\',
+                        r'\\frac{16}{2} &amp;= x^2\\',
+                        r'8 &amp;= x^2\\',
+                        r'x &amp;= \sqrt{8}\\',
+                        r'x &amp;= 2 \sqrt{2}\\')
+&lt;Snip&gt;
+</code></pre>
+<p>Dessa forma escrevemos o Latex da forma convencional, ambos os métodos funcionam normalmente, fica a critério do leitor qual escolher. Mais a frente movemos o texto a direita, e começamos um laço de repetição para mostrar linha a linha da resolução por Pitágoras. Perceba o seguinte, estamos variando <code>i</code> em um intervalo de 0 a 5, cada um desses números corresponde a uma das linhas da nossa resolução, dessa forma, podemos simplificar nosso código. Por último vamos apagar o x à esquerda do quadrado e transformar o x abaixo no resultado da conta que acabamos de fazer, assim indicando o lado do quadrado.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#===== Apagar as contas para o lado do quadrado =====
+    self.play(FadeOut(pitagoras))
+    self.wait(0.1)
+    self.next_slide()
+&lt;Snip&gt;
+</code></pre>
+<p>Aqui temos novamente mais um bloco de código simples, tudo que fazemos aqui é apagar as contas que fizemos usando Pitágoras. </p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#===== Calcular a area do Circulo =====
+    circ_area = MathTex("A_c", "&amp;= \\pi r^2 \\\\",
+                        "A_c &amp;= 4 \\pi")  
+
+    circ_area.move_to(ORIGIN)
+    circ_area.shift(RIGHT*3)  
+
+    self.play(Write(circ_area[0]),Write(circ_area[1]))
+    self.wait(0.1)
+    self.next_slide()    
+    
+    #Evidenciar a area do circulo na figura
+    circulo2 = circulo.copy()
+    circulo2.set_fill(opacity=0.3,color=BLUE)
+    circulo2.z_index = -5  
+
+    self.play(FadeOut(diferenca),FadeOut(quadrado),FadeOut(lado2),FadeOut(linha_raio2),FadeOut(raio2))
+    self.wait(0.1)
+    self.next_slide()
+    self.play(FadeToColor(circ_area[0],color=BLUE),Create(circulo2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #continuar a conta
+    self.play(Write(circ_area[2]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #retornar a figura
+    self.play(FadeIn(diferenca),FadeIn(quadrado),FadeIn(lado2),FadeIn(linha_raio2),FadeIn(raio2),FadeOut(circulo2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #reservando o resultado mais acima
+    circ_area_resul = circ_area[2].copy()
+    circ_area_resul.shift(UP*3)
+    circ_area_resul.shift(LEFT)  
+
+    self.play(Transform(circ_area,circ_area_resul))
+    self.wait(0.1)
+    self.next_slide()
+&lt;Snip&gt;
+</code></pre>
+<p>Nessa seção temos um grande bloco do nosso código, mas quase tudo que temos aqui já usamos antes, a sequência que fazemos aqui é, primeiro criamos todas as contas que precisamos para calcular a área do círculo, assim como fizemos no Pitágoras, separamos cada linha da conta como um parâmetro diferente, porem aqui, eu escolhi separar o primeiro <code>A_c</code> em um parâmetro diferente, pois o objetivo é, mais a frente apagar tudo da figura exceto pelo círculo e seu raio, assim podemos deixar esse <code>A_c</code> e o fundo do círculo da mesma cor, evidenciando ainda mais o que estamos fazendo.</p>
+<p>Mais abaixo crio uma cópia do círculo que já temos, porem nesse mudo o <code>fill_opacity</code> para que quando usarmos método <code>Create()</code> possamos ver o fundo do círculo. Como comentei, vamos pagar tudo da figura com exceção da circunferência e seu raio, depois vamos evidenciar sua área criando a cópia da circunferência <code>self.play(FadeToColor(circ_area[0],color=BLUE),Create(circulo2))</code>, aqui usamos o método <code>FadeToColor()</code>, tudo que esse método faz é mudar a cor de um determinado objeto para a cor especificada.</p>
+<p>Depois escrevemos a última linha da nossa conta da área do círculo, voltamos com todas as outas partes da figura e removemos o copia do círculo que fizemos. Por último criamos um cópia do resultado da conta <code>circ_area_resul = circ_area[2].copy()</code>, posicionamos ela mais a cima e a esquerda usando <code>shift()</code> e usamos o método <code>Transform()</code> para mover e transformar as contas que fizemos no resultado mais acima.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+#==== Calculando a area do quadrado =====
+    quad_area = MathTex("A_q", "&amp;= l^2 \\\\",
+                        "A_q &amp;= (2\\sqrt{2})^2\\\\",
+                        "A_q &amp;= 8")  
+
+    quad_area.move_to(ORIGIN)
+    quad_area.shift(RIGHT*3)  
+
+    self.play(Write(quad_area[0]),Write(quad_area[1]))
+    self.wait(0.1)
+    self.next_slide()    
+
+    #Evidenciar a area do quadrado na figura
+    quadrado2 = quadrado.copy()
+    quadrado2.set_fill(opacity=0.3,color=GREEN)
+    quadrado2.z_index = -5  
+
+    self.play(FadeOut(diferenca),FadeOut(circulo),FadeOut(raio),FadeOut(raio2),FadeOut(linha_raio2),FadeOut(linha_raio),FadeOut(raio),FadeOut(centro))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(FadeToColor(quad_area[0],color=GREEN),Create(quadrado2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #continuar a conta
+    self.play(Write(quad_area[2]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(Write(quad_area[3]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #retornar a figura
+    self.play(FadeIn(diferenca),FadeIn(circulo),FadeIn(raio),FadeIn(raio2),FadeIn(linha_raio2),FadeIn(linha_raio),FadeIn(raio),FadeOut(quadrado2),FadeIn(centro))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #reservando o resultado mais acima
+    quad_area_resul = quad_area[3].copy()
+    quad_area_resul.next_to(circ_area_resul,RIGHT)  
+
+    self.play(Transform(quad_area,quad_area_resul))
+    self.wait(0.1)
+    self.next_slide()
+&lt;Snip&gt;
+</code></pre>
+<p>Aqui vamos fazer todos os mesmos passos que fizemos para a circunferência, porem, nesse caso vamos ajustar para que mostrar a área do quadrado. A única coisa que fazemos diferente foi o posicionamento do resultado da área do quadrado, para esse caso usamos o método <code>next_to()</code> aqui indicamos quem deve estar perto de quem, e em qual direção.</p>
+<hr/>
+<pre><code class="language-python">&lt;Snip&gt;
+    #===== Calcular a diferença de areas =====
+    dif_area = MathTex("A_d &amp;= A_c - A_q\\\\",
+                        "A_d &amp;= 4\pi - 8\\\\")  
+
+    dif_area.move_to(ORIGIN)
+    dif_area.shift(RIGHT*3)  
+
+    self.play(Write(dif_area[0]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(Write(dif_area[1]))
+    self.wait(0.1)
+    self.next_slide()
+&lt;Snip&gt;
+</code></pre>
+<p>Por último fazemos as contas referentes ao cálculo da área indicada na figura.</p>
+<h3>Código Completo</h3>
+<pre><code class="language-python">from manim import *
+from manim_slides import Slide
+
+class exercicio(Slide):
+  def construct(self):
+    figura = VGroup()
+    
+    #===== Desenhar o círculo e indicar seu raio =====
+    raio_circ = 2
+    lado_quadrado = 2*raio_circ/(2**(1/2))  
+
+    circulo = Circle(radius=raio_circ,color=BLUE)
+    linha_raio = Line([0,0,0],[lado_quadrado/2,-lado_quadrado/2,0],color=BLUE)  
+
+    raio = MathTex(str(raio_circ),color=BLUE)
+    raio.move_to(linha_raio.get_center())
+    raio.shift(UR*(1/4))  
+
+    self.play(Create(circulo))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(Create(linha_raio))
+    self.play(Write(raio))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(circulo,raio,linha_raio)
+
+    #===== Desenhar o quadrado =====
+    quadrado = Square(side_length=lado_quadrado*0.98,color=GREEN)
+    self.play(Create(quadrado))
+    self.wait(0.1)
+    self.next_slide()     
+
+    figura.add(quadrado)     
+
+    #===== Evidenciar a diferença entre a área do círculo e a área do quadrado =====
+    diferenca = Exclusion(circulo, quadrado, fill_opacity=0.4,color=BLUE)
+    diferenca.z_index = -1  
+
+    self.play(FadeIn(diferenca))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(diferenca)
+    
+    #===== Copiar o segmento de reta que indica o raio do círculo e rotacionar para indicar o diâmetro do círculo =====
+    linha_raio2 = linha_raio.copy()
+    centro = Dot(ORIGIN,color=BLUE)
+    
+    self.play(FadeIn(centro))
+    self.play(Rotate(linha_raio2,angle=PI,about_point=ORIGIN))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(linha_raio2,centro)
+
+    #Copiar raio e mover mais acima
+    raio2 = raio.copy()
+    raio2.move_to(linha_raio2.get_center())
+    raio2.shift(UR*(1/4))
+    self.play(Write(raio2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    figura.add(raio2)
+
+    #===== Mover a figura toda para a esquerda =====
+    self.play(figura.animate.shift(LEFT*3))
+    self.wait(0.1)
+    self.next_slide()
+    
+    #===== A direita vamos usar Pitágoras para encontrar o lado do quadrado ===== 
+
+    #Adicionar x como o lado do quadrado na figura
+    lado1 = MathTex("x",color=GREEN)
+    lado1.move_to(centro.get_center())
+    lado1.shift(LEFT)  
+
+    lado2 = lado1.copy()
+    lado2.move_to(centro.get_center())
+    lado2.shift(DOWN)  
+
+    self.play(Write(lado1),Write(lado2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #Adicionando as contas
+    pitagoras = MathTex("4^2 &amp;= x^2 + x^2\\\\",
+                        "16 &amp;= 2x^2\\\\",
+                        "\\frac{16}{2} &amp;= x^2\\\\",
+                        "8 &amp;= x^2\\\\",
+                        "x &amp;= \\sqrt{8}\\\\",
+                        "x &amp;= 2 \\sqrt{2}\\\\")
+
+    pitagoras.move_to(ORIGIN)
+    pitagoras.shift(RIGHT*3)
+
+    for i in range(0,6):
+      self.play(Write(pitagoras[i]))
+      self.wait(0.1)
+      self.next_slide()
+    
+    #trocar x da figura pelo resultado da conta
+    self.play(FadeOut(lado1))  
+
+    result_lado_quadrado = MathTex("2 \\sqrt{2}",color=GREEN,font_size=40)
+    result_lado_quadrado.move_to(lado2.get_center())  
+
+    self.play(Transform(lado2,result_lado_quadrado))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #===== Apagar as contas para o lado do quadrado =====
+    self.play(FadeOut(pitagoras))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #===== Calcular a area do Circulo =====
+    circ_area = MathTex("A_c", "&amp;= \\pi r^2 \\\\",
+                        "A_c &amp;= 4 \\pi")  
+
+    circ_area.move_to(ORIGIN)
+    circ_area.shift(RIGHT*3)  
+
+    self.play(Write(circ_area[0]),Write(circ_area[1]))
+    self.wait(0.1)
+    self.next_slide()   
+
+    #Evidenciar a area do circulo na figura
+    circulo2 = circulo.copy()
+    circulo2.set_fill(opacity=0.3,color=BLUE)
+    circulo2.z_index = -5  
+
+    self.play(FadeOut(diferenca),FadeOut(quadrado),FadeOut(lado2),FadeOut(linha_raio2),FadeOut(raio2))
+    self.wait(0.1)
+    self.next_slide()
+    self.play(FadeToColor(circ_area[0],color=BLUE),Create(circulo2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #continuar a conta
+    self.play(Write(circ_area[2]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #retornar a figura
+    self.play(FadeIn(diferenca),FadeIn(quadrado),FadeIn(lado2),FadeIn(linha_raio2),FadeIn(raio2),FadeOut(circulo2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #reservando o resultado mais acima
+    circ_area_resul = circ_area[2].copy()
+    circ_area_resul.shift(UP*3)
+    circ_area_resul.shift(LEFT)  
+
+    self.play(Transform(circ_area,circ_area_resul))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #==== Calculando a area do quadrado =====
+    quad_area = MathTex("A_q", "&amp;= l^2 \\\\",
+                        "A_q &amp;= (2\\sqrt{2})^2\\\\",
+                        "A_q &amp;= 8")  
+
+    quad_area.move_to(ORIGIN)
+    quad_area.shift(RIGHT*3)  
+
+    self.play(Write(quad_area[0]),Write(quad_area[1]))
+    self.wait(0.1)
+    self.next_slide()    
+
+    #Evidenciar a area do quadrado na figura
+    quadrado2 = quadrado.copy()
+    quadrado2.set_fill(opacity=0.3,color=GREEN)
+    quadrado2.z_index = -5  
+
+    self.play(FadeOut(diferenca),FadeOut(circulo),FadeOut(raio),FadeOut(raio2),FadeOut(linha_raio2),FadeOut(linha_raio),FadeOut(raio),FadeOut(centro))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(FadeToColor(quad_area[0],color=GREEN),Create(quadrado2))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #continuar a conta
+    self.play(Write(quad_area[2]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(Write(quad_area[3]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #retornar a figura
+    self.play(FadeIn(diferenca),FadeIn(circulo),FadeIn(raio),FadeIn(raio2),FadeIn(linha_raio2),FadeIn(linha_raio),FadeIn(raio),FadeOut(quadrado2),FadeIn(centro))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #reservando o resultado mais acima
+    quad_area_resul = quad_area[3].copy()
+    quad_area_resul.next_to(circ_area_resul,RIGHT)  
+
+    self.play(Transform(quad_area,quad_area_resul))
+    self.wait(0.1)
+    self.next_slide()  
+
+    #===== Calcular a diferença de areas =====
+    dif_area = MathTex("A_d &amp;= A_c - A_q\\\\",
+                        "A_d &amp;= 4\pi - 8\\\\")  
+
+    dif_area.move_to(ORIGIN)
+    dif_area.shift(RIGHT*3)    
+
+    self.play(Write(dif_area[0]))
+    self.wait(0.1)
+    self.next_slide()  
+
+    self.play(Write(dif_area[1]))
+    self.wait(0.1)
+    self.next_slide()
+</code></pre>
+    </article>
+  </div>
+</body>
+</html>

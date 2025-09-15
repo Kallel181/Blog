@@ -1,6 +1,18 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Introdu\u00e7\u00e3o_ao_Manim-15_09_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Introdu\u00e7\u00e3o_ao_Manim-15_09_2025.html",
+            "resume": "O Manim \u00e9 uma biblioteca do Python criada para produzir anima\u00e7\u00f5es program\u00e1ticas, com foco especial em conte\u00fados matem\u00e1ticos. Diferente de programas tradicionais de edi\u00e7\u00e3o, ele permite criar anima\u00e7\u00f5es por meio de c\u00f3digo, o que possibilita automatizar tarefas complexas, como gerar diversas formas ou escrever express\u00f5es matem\u00e1ticas de maneira precisa e organizada. No guia, \u00e9 mostrado como instalar o Python, o Manim e suas depend\u00eancias, al\u00e9m de indicar o uso de uma IDE, como o Visual Studio Code, para facilitar a escrita dos c\u00f3digos. A partir da\u00ed, \u00e9 poss\u00edvel dar os primeiros passos criando anima\u00e7\u00f5es simples com figuras geom\u00e9tricas e textos em LaTeX. Dessa forma, o Manim se apresenta como uma ferramenta vers\u00e1til para quem deseja produzir v\u00eddeos did\u00e1ticos, apresenta\u00e7\u00f5es e materiais visuais voltados para ensino e pesquisa.",
+            "name": "Introdu\u00e7\u00e3o ao Manim",
+            "date": "15/09/2025",
+            "tags": [
+                "Math",
+                "Manim",
+                "Python"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/Introdu\u00e7\u00e3o_a_DLL_Hijacking-07_09_2025.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/Introdu\u00e7\u00e3o_a_DLL_Hijacking-07_09_2025.html",
             "resume": "DLL Hijacking consiste em criar DLLs arbitrarias e posicion\u00e1-las de forma que essas DLL sejam executadas no lugar de DLLs legitimas. Essa t\u00e9cnica pode ser usada por agentes mal-intencionados para escalar privil\u00e9gios ou ainda criar uma persist\u00eancia em um sistema. No artigo \u00e9 detalhada a defini\u00e7\u00e3o dos m\u00e9todos de DLL Hijacking e tamb\u00e9m e mostrado alguns exemplos pr\u00e1ticos de duas t\u00e9cnicas.",
