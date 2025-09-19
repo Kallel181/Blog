@@ -92,8 +92,8 @@ def gerar_html_template(md_file_path,origem_imagem):
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{titulo}</title>
-  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
-</head>
+    <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+    <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
 <body>
   <div class="container">
     <header class="post-header">
@@ -108,6 +108,9 @@ def gerar_html_template(md_file_path,origem_imagem):
       {html_conteudo}
     </article>
   </div>
+  
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>"""
   return template

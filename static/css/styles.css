@@ -172,14 +172,6 @@ blockquote p{
   margin: 0px;
 }
 
-code{
-  background: #2e2e2e;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-family: monospace;
-  color: #ff8c42;
-}
-
 .post-body a:link{
   color: #ff8c42;
 }
@@ -202,6 +194,14 @@ pre code {
   padding: 2rem;
   background: #2e2e2e;
   overflow-x: auto;
+  background: #2e2e2e;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #ff8c42;
+}
+
+code{
   background: #2e2e2e;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Introdução ao Manim</title>
   <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
 </head>
 <body>
   <div class="container">
@@ -423,7 +424,9 @@ class exercicio(Slide):
 <p>O começo do arquivo já é familiar para nós, ali importamos as bibliotecas que vamos usar, <code>Manim</code> e <code>Manim_slides</code>, na primeira linha da nossa animação já temos algo novo <code>figura = VGroup()</code>, aqui definimos uma variável como sendo o objeto <code>VGroup()</code>, esse objeto irá armazenar outros objetos, pense nele como uma caixa que irá armazenar outros objetos, <strong>por que fazemos isso?</strong>
 Muito simples, para criar a figura do nosso exercício vamos ter muitos outros objetos compondo essa figura, se agruparmos todos os objetos em um só lugar podemos muito mais facilmente alterar certas propriedades de todos os objetos ao mesmo tempo, por exemplo, sabemos que após construirmos essa figura vamos precisar movê-la toda mais a esquerda, para facilitar esse processo vamos agrupar todos os objetos que compõem a figura em um só lugar, assim podemos mover todos os objetos em conjunto.</p>
 <p>Mais abaixo definimos a variável <code>raio_circ</code>, que está armazenando a raio do círculo que iremos apresentar na tela, perceba que mais abaixo também estamos definindo o lado do quadrado que vamos precisar, nesse caso na variável <code>lado_quadrado</code>, mais ainda, note que o tamanho do lado do quadrado é calculado com base no raio do círculo <code>lado_quadrado = 2*raio_circ/(2**(1/2))</code>:
-$$L_{q}=\frac{2r}{\sqrt{2}}$$
+
+  $$L_{q}=\frac{2r}{\sqrt{2}}$$
+
 Dessa forma, se no futuro decidirmos deixar a figura maior só precisamos alterar uma variável e tudo mudará de acordo.</p>
 <p>Depois criamos o círculo usando a função <code>Circle()</code>, aqui usamos dois parâmetros, <code>color=BLUE</code> e <code>radius=raio_circ</code>, o parâmetro <code>color</code> já vimos como funciona, o parâmetro <code>radius</code> é bem simples, aqui definimos para que ele seja igual a um valor numérico, esse será o raio do círculo, no nosso caso, definimos para que ele seja igual à variável <code>raio_circ</code> a qual já atribuímos um valor.</p>
 <p>Abaixo usamos um novo tipo de objeto <code>Line()</code>, como o nome já diz ele cria uma linha, com esse objeto somos obrigados a informar dois parâmetros, no caso duas coordenadas, esses serão os pontos de início e fim do nosso segmento, perceba que para esse pontos usamos o seguinte <code>[0,0,0],[lado_quadrado/2,-lado_quadrado/2,0]</code> A primeira coordenada usamos a origem, já na segunda podemos encontrar a coordenada do vértice inferior direito do quadrado a partir da metade do lado do quadrado, assim, como a variável <code>lado_quadrado</code> depende da variável <code>raio_circ</code> se a alterarmos a linha também terá seu tamanho alterado. Por último usamos novamente o parâmetro <code>color</code> para deixar a linha azul.</p>
@@ -897,5 +900,8 @@ class exercicio(Slide):
 </code></pre>
     </article>
   </div>
+
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
