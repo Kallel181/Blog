@@ -4,7 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Introdução a DLL Hijacking</title>
-  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+    <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+    <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
 </head>
 <body>
   <div class="container">
@@ -258,23 +259,27 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 <p>Mitigações, segundo <a href="https://attack.mitre.org/techniques/T1574/001/#mitigations">MITRE ATT&amp;CK</a> incluem fazer auditorias, auxiliar desenvolvedores a incluir verificações em hash de DLLs utilizadas, prevenção execução de DLL não confiaveis e verificação de inserções de DLLs.</p>
 <p>Adicionalmente <a href="https://hijacklibs.net">hijacklibs.net</a> fornece exemplos de regras <a href="https://github.com/SigmaHQ/sigma">Sigma</a> para sistemas <a href="https://www.microsoft.com/pt-br/security/business/security-101/what-is-siem">SIEM</a>.</p>
 <h1>Referências</h1>
-<p>https://www.youtube.com/watch?v=3eROsG_WNpE</p>
-<p>https://www.youtube.com/watch?v=uY8BpZBF2f0</p>
-<p>https://www.sciencedirect.com/science/article/pii/S2666281723000069</p>
-<p>https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/dynamic-link-library</p>
-<p>https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox</p>
-<p>https://hijacklibs.net/</p>
-<p>https://unit42.paloaltonetworks.com/dll-hijacking-techniques/</p>
-<p>https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order</p>
-<p>https://attack.mitre.org/techniques/T1574/001/</p>
-<p>https://www.youtube.com/watch?v=UUERWYcjwFs</p>
-<p>https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=msvc-170</p>
-<p>https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll?view=msvc-170</p>
-<p>https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-declspec-dllexport?view=msvc-170</p>
-<p>https://learn.microsoft.com/en-us/visualstudio/ide/reference/command-prompt-powershell?view=vs-2022</p>
+<ul>
+    <li><a href="https://www.youtube.com/watch?v=3eROsG_WNpE">https://www.youtube.com/watch?v=3eROsG_WNpE</a></li>
+    <li><a href="https://www.youtube.com/watch?v=uY8BpZBF2f0">https://www.youtube.com/watch?v=uY8BpZBF2f0</a></li>
+    <li><a href="https://www.sciencedirect.com/science/article/pii/S2666281723000069">https://www.sciencedirect.com/science/article/pii/S2666281723000069</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/dynamic-link-library">https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/dynamic-link-library</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox">https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox</a></li>
+    <li><a href="https://hijacklibs.net/">https://hijacklibs.net/</a></li>
+    <li><a href="https://unit42.paloaltonetworks.com/dll-hijacking-techniques/">https://unit42.paloaltonetworks.com/dll-hijacking-techniques/</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order">https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order</a></li>
+    <li><a href="https://attack.mitre.org/techniques/T1574/001/">https://attack.mitre.org/techniques/T1574/001/</a></li>
+    <li><a href="https://www.youtube.com/watch?v=UUERWYcjwFs">https://www.youtube.com/watch?v=UUERWYcjwFs</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=msvc-170">https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=msvc-170</a></li>
+    <li><a href="https.learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll?view=msvc-170">https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll?view=msvc-170</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-declspec-dllexport?view=msvc-170">https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-declspec-dllexport?view=msvc-170</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/visualstudio/ide/reference/command-prompt-powershell?view=vs-2022">https://learn.microsoft.com/en-us/visualstudio/ide/reference/command-prompt-powershell?view=vs-2022</a></li>
+</ul>
 <h1>Uso de IA no artigo</h1>
 <p>Nenhuma IA foi usada na escrita ou na obtenção de informação. <a href="https://app.napkin.ai">Napkin AI</a> foi usada para auxiliar na criação de algumas figuras.</p>
     </article>
   </div>
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
