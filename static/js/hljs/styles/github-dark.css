@@ -18,7 +18,10 @@ code.hljs {
 */
 .hljs {
   color: #c9d1d9;
-  background: #0d1117
+  background: #0d1117;
+  border: solid;
+  border-color: #ff8c42;
+  border-radius: 20px;
 }
 .hljs-doctag,
 .hljs-keyword,
