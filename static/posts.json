@@ -1,6 +1,18 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/HTB_Busqueda_Guide-26_11_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/HTB_Busqueda_Guide-26_11_2025.html",
+            "resume": "In this post, I document the full exploitation path of the Searcher machine. After finding a vulnerable web app running Searchor 2.4.0, we use a public exploit to gain a reverse shell and capture the user flag. The privilege escalation relies on leaked Git credentials that expose information about Docker containers, ultimately leading to a misconfigured sudo script that can be hijacked via a relative path. With that, we obtain the root flag.",
+            "name": "HTB Busqueda Guide",
+            "date": "26/11/2025",
+            "tags": [
+                "HTB",
+                "Busqueda",
+                "Searchor"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/Introdu\u00e7\u00e3o_ao_Manim-15_09_2025.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/Introdu\u00e7\u00e3o_ao_Manim-15_09_2025.html",
             "resume": "O Manim \u00e9 uma biblioteca do Python criada para produzir anima\u00e7\u00f5es program\u00e1ticas, com foco especial em conte\u00fados matem\u00e1ticos. Diferente de programas tradicionais de edi\u00e7\u00e3o, ele permite criar anima\u00e7\u00f5es por meio de c\u00f3digo, o que possibilita automatizar tarefas complexas, como gerar diversas formas ou escrever express\u00f5es matem\u00e1ticas de maneira precisa e organizada. No guia, \u00e9 mostrado como instalar o Python, o Manim e suas depend\u00eancias, al\u00e9m de indicar o uso de uma IDE, como o Visual Studio Code, para facilitar a escrita dos c\u00f3digos. A partir da\u00ed, \u00e9 poss\u00edvel dar os primeiros passos criando anima\u00e7\u00f5es simples com figuras geom\u00e9tricas e textos em LaTeX. Dessa forma, o Manim se apresenta como uma ferramenta vers\u00e1til para quem deseja produzir v\u00eddeos did\u00e1ticos, apresenta\u00e7\u00f5es e materiais visuais voltados para ensino e pesquisa.",
