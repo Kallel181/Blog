@@ -52,17 +52,17 @@ else:
 <p>ARM architecture instead of making a 12bit long integer instead splits this number into a 8bit number(n) and a 4bit rotation filed(r).</p>
 <p>The actual Immediate value (v) is given by the formula: <code>v = n ror 2*r</code>.</p>
 <p>With this formula we know, for example, that 256 is a valid immediate because we can express 256 as the following expression: <code>256 = 1 ror 24</code>.</p>
-<p><img alt="AMR_immediate_binary.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_1.png"/></p>
+<p><img width="100%" alt="AMR_immediate_binary.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_1.png"/></p>
 <h1>The Valid Candidate</h1>
 <p>The actual clever way for checking if a value is a valid immediate value for ARM is by doing a left rotation (yes a left rotation) to find a candidate, if this candidate can be represented in 8 bits then we have a match.</p>
 <p>This may sound confusing so let's break it down.</p>
 <p>Imagine that you have a function f like the one below:</p>
-<p><img alt="Function.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_2.png"/></p>
+<p><img width="300" alt="Function.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_2.png"/></p>
 <p>The question is: how can I find another function the reverts the process of the function f? In other words, how can I find the inverse function?</p>
 <p>To easy find this function we can consider f(x)=y and isolate the x on one of the sides of the equation:</p>
-<p><img alt="Fiding_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_3.png"/></p>
+<p><img width="300" alt="Fiding_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_3.png"/></p>
 <p>You might be questioning: <strong>how does that relate with the immediate value problem?</strong> Easy answer: Instead of brute forcing your way to the answer, we can find the inverse to get "directly" to the answer. Let's find the inverse:</p>
-<p><img alt="immediate_value_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_4.png"/></p>
+<p><img width="300" alt="immediate_value_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_4.png"/></p>
 <p>Rotating to the right an x amount of times and following that with a left rotation by the same x amount we will be back at the start. (here I'm making a slight abuse of mathematics notation for the sake of clarity, but the calculation remains perfectly valid)</p>
 <p>In the end we get that n will be equal to v rotated to the left by 2r, but <strong>there is a catch!!</strong></p>
 <p>The number n have a hard constraint, it needs to be a 8bit number, so that n on the new expression <strong>it is not your final answer</strong>, it's just a candidate, it needs to be tested to ensure that it is a 8bit number!</p>
