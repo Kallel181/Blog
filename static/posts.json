@@ -1,6 +1,18 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Immediate_Values_on_ARM_an_clever_way_for_finding_valid_values-14_02_2026.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Immediate_Values_on_ARM_an_clever_way_for_finding_valid_values-14_02_2026.html",
+            "resume": "This post explains how ARM immediate values are encoded and presents a smarter way to check if a number can be represented as one. In ARM (32-bit mode), an immediate is not a full 12-bit value, but an 8-bit number combined with a rotation, following the formula v = n ror (2r). Instead of brute forcing all possible combinations of 8-bit values and rotations, we can reverse the formula: rotate the target value to the left and check whether the result fits into 8 bits. If it does, the number is a valid ARM immediate. This approach is much simpler and more efficient, and the post concludes with a Python implementation of this optimized method.",
+            "name": "Immediate Values on ARM an clever way for finding valid values",
+            "date": "14/02/2026",
+            "tags": [
+                "reversing",
+                "ARM",
+                "inverse_function"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/HTB_Busqueda_Guide-26_11_2025.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/HTB_Busqueda_Guide-26_11_2025.html",
             "resume": "In this post, I document the full exploitation path of the Searcher machine. After finding a vulnerable web app running Searchor 2.4.0, we use a public exploit to gain a reverse shell and capture the user flag. The privilege escalation relies on leaked Git credentials that expose information about Docker containers, ultimately leading to a misconfigured sudo script that can be hijacked via a relative path. With that, we obtain the root flag.",

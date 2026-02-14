@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Immediate Values on ARM an clever way for finding valid values</title>
+    <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+    <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
+<body>
+  <div class="container">
+    <header class="post-header">
+      <h1>Immediate Values on ARM an clever way for finding valid values</h1>
+      <div class="post-meta">
+        <span class="date">2026-02-14</span> —
+        <span class="tags"><span class="tag">reversing</span><span class="tag">ARM</span><span class="tag">inverse_function</span></span>
+      </div>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_banner.png" alt="Imagem do post"/>
+    </header>
+    <article class="post-body">
+      <p>I have been studying some ARM assembly recently, in the <a href="https://azeria-labs.com/">azeria labs</a> (if you have any interest in it, you should check it out), however in the "Memory Instructions: Load and Store" section Maria Markstedter shows a python script for finding valid immediate values in ARM architecture:</p>
+<pre><code class="language-python">from __future__ import print_function   # PEP 3105
+import sys
+
+# Rotate right: 0b1001 --&gt; 0b1100
+ror = lambda val, r_bits, max_bits: \
+    ((val &amp; (2**max_bits-1)) &gt;&gt; r_bits%max_bits) | \
+    (val &lt;&lt; (max_bits-(r_bits%max_bits)) &amp; (2**max_bits-1))
+
+max_bits = 32
+
+input = int(raw_input("Enter the value you want to check: "))
+
+print()
+for n in xrange(1, 256):
+
+    for i in xrange(0, 31, 2):
+
+        rotated = ror(n, i, max_bits)
+
+        if(rotated == input):
+            print("The number %i can be used as a valid immediate number." % input)
+            print("%i ror %x --&gt; %s" % (n, int(str(i), 16), rotated))
+            print()
+            sys.exit()
+
+else:
+    print("Sorry, %i cannot be used as an immediate number and has to be split." % input)
+</code></pre>
+<p>This is script is perfectly valid, however, there is a clever way for finding this value (255 times better to be exact XD). </p>
+<h1>What is an Immediate value on ARM?</h1>
+<p>ARM instruction are 32bit long (Thumb mode is an alternative operating state and uses 16bit instructions, but I will not cover them here, because I didn't get to that part yet), those 32 bits are filled with the mnemonic, conditional, destination register, operands and other sort of necessaries parts, in the end, there are only 12 bits left for Immediate values, which are values that are going to be used be the actual instruction in some way.</p>
+<p>ARM architecture instead of making a 12bit long integer instead splits this number into a 8bit number(n) and a 4bit rotation filed(r).</p>
+<p>The actual Immediate value (v) is given by the formula: <code>v = n ror 2*r</code>.</p>
+<p>With this formula we know, for example, that 256 is a valid immediate because we can express 256 as the following expression: <code>256 = 1 ror 24</code>.</p>
+<p><img alt="AMR_immediate_binary.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_1.png"/></p>
+<h1>The Valid Candidate</h1>
+<p>The actual clever way for checking if a value is a valid immediate value for ARM is by doing a left rotation (yes a left rotation) to find a candidate, if this candidate can be represented in 8 bits then we have a match.</p>
+<p>This may sound confusing so let's break it down.</p>
+<p>Imagine that you have a function f like the one below:</p>
+<p><img alt="Function.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_2.png"/></p>
+<p>The question is: how can I find another function the reverts the process of the function f? In other words, how can I find the inverse function?</p>
+<p>To easy find this function we can consider f(x)=y and isolate the x on one of the sides of the equation:</p>
+<p><img alt="Fiding_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_3.png"/></p>
+<p>You might be questioning: <strong>how does that relate with the immediate value problem?</strong> Easy answer: Instead of brute forcing your way to the answer, we can find the inverse to get "directly" to the answer. Let's find the inverse:</p>
+<p><img alt="immediate_value_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_4.png"/></p>
+<p>Rotating to the right an x amount of times and following that with a left rotation by the same x amount we will be back at the start. (here I'm making a slight abuse of mathematics notation for the sake of clarity, but the calculation remains perfectly valid)</p>
+<p>In the end we get that n will be equal to v rotated to the left by 2r, but <strong>there is a catch!!</strong></p>
+<p>The number n have a hard constraint, it needs to be a 8bit number, so that n on the new expression <strong>it is not your final answer</strong>, it's just a candidate, it needs to be tested to ensure that it is a 8bit number!</p>
+<p>So your new optimized algorithm need to be a loop just on the values of 2r, generating candidates with a left rotation, if a given candidate is a 8bit number we have found a valid solution, if in the end of the loop we couldn't find a valid candidate that means that the immediate value (v) can't be represented as an ARM immediate value.</p>
+<p>Here is a python script for that algorithm:</p>
+<pre><code class="language-python">def rol(val, r_bits, max_bits=32):
+    r_bits %= max_bits
+    
+    return ((val &lt;&lt; r_bits) | (val &gt;&gt; (max_bits - r_bits))) &amp; (2**max_bits - 1)
+
+def is_arm_immediate(value):
+    for rot in range(0, 32, 2):
+        
+        candidate = rol(value, rot)
+        
+        if candidate &lt;= 0xFF:
+            return True, candidate, rot
+
+    return False, None, None
+
+if __name__ == "__main__":
+    value = int(input("Enter Value: "))
+
+    ok, candidate, rot = is_arm_immediate(value)
+
+    if ok:
+        print(f"{value} can be represented as: {candidate} ror {rot}")
+    else:
+        print(f"{value} can't be represented as an ARM immediate value.")
+</code></pre>
+<h1>References</h1>
+<p>https://azeria-labs.com/memory-instructions-load-and-store-part-4/
+https://www.sfu.ca/math-coursenotes/Math%20157%20Course%20Notes/sec_InverseFunctions.html
+https://www.sciencedirect.com/topics/computer-science/immediate-operand</p>
+    </article>
+  </div>
+  
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>
