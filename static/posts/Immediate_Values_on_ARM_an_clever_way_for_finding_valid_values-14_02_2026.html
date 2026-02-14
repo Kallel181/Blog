@@ -57,12 +57,12 @@ else:
 <p>The actual clever way for checking if a value is a valid immediate value for ARM is by doing a left rotation (yes a left rotation) to find a candidate, if this candidate can be represented in 8 bits then we have a match.</p>
 <p>This may sound confusing so let's break it down.</p>
 <p>Imagine that you have a function f like the one below:</p>
-<p><img width="300" alt="Function.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_2.png"/></p>
+<p><img width="200" alt="Function.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_2.png"/></p>
 <p>The question is: how can I find another function the reverts the process of the function f? In other words, how can I find the inverse function?</p>
 <p>To easy find this function we can consider f(x)=y and isolate the x on one of the sides of the equation:</p>
-<p><img width="300" alt="Fiding_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_3.png"/></p>
+<p><img width="200" alt="Fiding_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_3.png"/></p>
 <p>You might be questioning: <strong>how does that relate with the immediate value problem?</strong> Easy answer: Instead of brute forcing your way to the answer, we can find the inverse to get "directly" to the answer. Let's find the inverse:</p>
-<p><img width="300" alt="immediate_value_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_4.png"/></p>
+<p><img width="200" alt="immediate_value_inverse.png" src="https://kallel181.github.io/Blog/static/images/immediate_values_on_arm_an_clever_way_for_finding_valid_values_4.png"/></p>
 <p>Rotating to the right an x amount of times and following that with a left rotation by the same x amount we will be back at the start. (here I'm making a slight abuse of mathematics notation for the sake of clarity, but the calculation remains perfectly valid)</p>
 <p>In the end we get that n will be equal to v rotated to the left by 2r, but <strong>there is a catch!!</strong></p>
 <p>The number n have a hard constraint, it needs to be a 8bit number, so that n on the new expression <strong>it is not your final answer</strong>, it's just a candidate, it needs to be tested to ensure that it is a 8bit number!</p>
@@ -94,9 +94,9 @@ if __name__ == "__main__":
         print(f"{value} can't be represented as an ARM immediate value.")
 </code></pre>
 <h1>References</h1>
-<p>https://azeria-labs.com/memory-instructions-load-and-store-part-4/
-https://www.sfu.ca/math-coursenotes/Math%20157%20Course%20Notes/sec_InverseFunctions.html
-https://www.sciencedirect.com/topics/computer-science/immediate-operand</p>
+<a href="https://azeria-labs.com/memory-instructions-load-and-store-part-4/">Memory Instructions: Load and Store (Part 4) - Azeria Labs</a>
+<a href="https://www.sfu.ca/math-coursenotes/Math%20157%20Course%20Notes/sec_InverseFunctions.html">Inverse Functions - Math 157 Course Notes</a>
+<a href="https://www.sciencedirect.com/topics/computer-science/immediate-operand">Immediate Operand - ScienceDirect</a>
     </article>
   </div>
   
