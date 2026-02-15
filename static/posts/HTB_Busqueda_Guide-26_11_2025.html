@@ -22,7 +22,7 @@
     </header>
     <article class="post-body">
       <h1>Info</h1>
-<p><img alt="busqueda_info.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_1.png"/></p>
+<p><img width="100%" alt="busqueda_info.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_1.png"/></p>
 <h1>Enumeration</h1>
 <p>Fist let's start with a nmap scan as usual.</p>
 <h2>Nmap Scan</h2>
@@ -49,7 +49,7 @@ Nmap done: 1 IP address (1 host up) scanned in 44.42 seconds
 <pre><code class="language-bash">echo "10.10.11.208 searcher.htb"|sudo tee -a /etc/hosts
 </code></pre>
 <p>Nos going to http://searcher.htb/ we can see this:
-<img alt="busqueda_searcher.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_2.png"/></p>
+<img width="100%" alt="busqueda_searcher.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_2.png"/></p>
 <p>This is an interface for a search app, but the interesting part is on the bottom, <strong>Powered by Flask and Searchor 2.4.0</strong>, on a quick google search we can find that Searchor 2.4.0 is vulnerable to Arbitrary command injection. I as able to find this <a href="https://github.com/nikn0laty/Exploit-for-Searchor-2.4.0-Arbitrary-CMD-Injection">exploit</a> on GitHub made by <a href="https://github.com/nikn0laty">nikn0laty</a>:</p>
 <pre><code class="language-bash">#!/bin/bash -
 
@@ -173,7 +173,7 @@ svc@busqueda:~$
 └─$ echo "10.10.11.208 gitea.searcher.htb" | sudo tee -a /etc/hosts
 </code></pre>
 <p>Now let's try to access http://gitea.searcher.htb
-<img alt="busqueda_gitea.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_3.png"/></p>
+<img width="100%" alt="busqueda_gitea.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_3.png"/></p>
 <p>Ok, we have the credentials for cody, we can check for some other files, but those will probably be the app that on the machine. Now let's try to use <strong>sudo -l</strong> using <strong>jh1usoih2bkjaspwe92</strong> as password:</p>
 <pre><code>svc@busqueda:~$ sudo -l
 [sudo] password for svc: 
@@ -195,7 +195,7 @@ Usage: /opt/scripts/system-checkup.py &lt;action&gt; (arg1) (arg2)
 <p>Notice that on the <strong>sudo -l</strong> output, it shows a * in front of the script, this means that we need to provide some kind of argument to the script, so i just guessed the -h, but you could use anything to test it.</p>
 </blockquote>
 <p>Out of the bat, we see some docker references, so the apps(<strong>gitea</strong> and <strong>mysql</strong>) that are running on this machine are running on dockers. We can check on docker's status using systemctl:
-<img alt="busqueda_docker_systemctl.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_4.png"/></p>
+<img width="100%" alt="busqueda_docker_systemctl.png" src="https://kallel181.github.io/Blog/static/images/htb_busqueda_guide_4.png"/></p>
 <p>The script we have access we can use the argument <strong>docker-ps</strong>, let's see what it outputs:</p>
 <pre><code>svc@busqueda:~$ sudo /usr/bin/python3 /opt/scripts/system-checkup.py docker-ps
 CONTAINER ID   IMAGE                COMMAND                  CREATED        STATUS       PORTS                                             NAMES
