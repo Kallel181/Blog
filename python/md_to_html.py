@@ -97,6 +97,10 @@ def gerar_html_template(md_file_path,origem_imagem):
 <body>
   <div class="container">
     <header class="post-header">
+          <a href="https://kallel181.github.io/Blog/" 
+   style="color: #ff8c42; text-align: left; display: block;">
+   ← Início
+</a>
       <h1>{titulo}</h1>
       <div class="post-meta">
         <span class="date">{data}</span> —
