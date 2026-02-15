@@ -33,7 +33,7 @@
 <p>Vamos configurar um filtro que inclua um <code>Process Name</code> com <code>Dism.exe</code> e arquivos com a extensão <code>.dll</code>:</p>
 <p><img alt="proc_Mon_filter1.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_1.png"/></p>
 <p>Agora quando executarmos o programa <code>Dism.exe</code> teremos uma lista de DLLs que foram acessadas pelo programa:</p>
-<p><img alt="proc_mon_dll_access_list.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_2.png"/></p>
+<p><img width="100%" alt="proc_mon_dll_access_list.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_2.png"/></p>
 <p>A partir dessa busca podemos observar as DLLs usadas pelo <code>Dism.exe</code>, além disso, podemos observar se a DLL foi encontrada e onde o <code>Dism.exe</code> procurou as DLLs. Também podemos notar que nem todas as DLLs foram encontradas, algumas são marcadas com <code>NAME NOT FOUND</code> ou <code>PATH NOT FOUND</code> (Como a marcada em vermelho).</p>
 <blockquote>
 <p><strong>Por que fazer uma cópia local do Dism.exe e por que escolhemos o Dism.exe?</strong>
@@ -42,7 +42,7 @@ Primeiro, esse exemplo poderia funcionar com muitas outras opções de programas
 </blockquote>
 <h2>Ordem de carregamento de DLLs no Windows</h2>
 <p>A partir da verificação que fizemos no Process Monitor, podemos ver que o programa fez uma busca de diversas DLLs em diversos diretórios. Esses diretórios de busca são previstos na <a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order">documentação da Microsoft</a>, onde estão descritos os diretórios de busca padrão para as DLLs, a ordem geral de busca é mostrada na imagem abaixo:</p>
-<p><img alt="DLL_search_order.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_3.png"/>
+<p><img width="100%"  width="100%"  alt="DLL_search_order.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_3.png"/>
 Como podemos observar, programas possuem uma extensiva ordem de busca que envolvem uma série de mecanismos e etapas diferentes. </p>
 <p>Com isso podemos formular a seguinte pergunta: <strong>"E se substituirmos uma DLL legítima em uma dessas etapas de busca por uma DLL arbitraria?"</strong>. Isso é o que chamamos de DLL Hijacking.</p>
 <h1>O que é DLL Hijacking?</h1>
@@ -51,19 +51,19 @@ Como podemos observar, programas possuem uma extensiva ordem de busca que envolv
 <p>Uma aplicação Windows usa o protocolo de busca de DLLs para carregar uma DLL. Dessa forma, podemos tirar vantagem de diretórios onde temos acesso à escrita para inserir uma DLL ou modificar de alguma forma a busca para levar a uma DLL maliciosa. De acordo com <a href="https://attack.mitre.org/techniques/T1574/001/">MITRE ATT&amp;CK</a> existem as seguintes possibilidades para DLL Hijacking.</p>
 <h3>DLL Search Order Hijacking</h3>
 <p>Essa técnica consiste em criar uma DLL arbitraria em uma localização que seja carregada antes de uma DLL legitima, dessa forma, a DLL legitima é ignorada e a DLL arbitraria é executada. Isso se faz possível a partir do protocolo de <a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order">ordem de busca de DLLs do Windows</a>.</p>
-<p><img alt="DLL Search Order Hijacking - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_4.png"/></p>
+<p><img width="100%" alt="DLL Search Order Hijacking - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_4.png"/></p>
 <h3>DLL Redirection</h3>
 <p>Essa técnica consiste em mudar a ordem de busca a partir de uma DLL redirection. Pode ser feita a partir da criação de um arquivo de redirecionamento ou na alteração de parâmetros no Registro do Windows, essa mudança faz com que DLLs legitimas sejam ignoradas e DLLs arbitrarias em diretórios alternativos sejam executadas.</p>
-<p><img alt="DLL Redirection - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_5.png"/></p>
+<p><img width="100%" alt="DLL Redirection - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_5.png"/></p>
 <h3>Phantom DLL Hijacking</h3>
 <p>Essa técnica consiste em criar uma DLL arbitraria em no lugar de uma DLL que deveria ter sido carregada por algum programa, mas que não foi encontrada ou que não existia previamente.</p>
-<p><img alt="Phantom DLL Hijacking - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_6.png"/></p>
+<p><img width="100%" alt="Phantom DLL Hijacking - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_6.png"/></p>
 <h3>DLL Substitution</h3>
 <p>Assim como Phantom DLL, essa técnica consiste em colocar uma DLL arbitraria em lugar de uma DLL legitima, porem, nessa técnica, fazemos uma substituição de uma DLL legitima que de fato existia previamente.</p>
-<p><img alt="Substitution DLL Hijacking - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_7.png"/></p>
+<p><img width="100%" alt="Substitution DLL Hijacking - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_7.png"/></p>
 <h3>DLL Sideloading</h3>
 <p>Essa técnica consiste em forçar um programa a carregar uma DLL arbitraria que ele anteriormente não carregaria, alterando diretamente seu comportamento, dessa forma, é possível mascarar uma atividade suspeita com uma aplicação que poderia estar previamente instalada e considerada confiável. Ou ainda, e possível distribuir uma aplicação que pareça confiável mas que carrega com ela uma DLL maliciosa.</p>
-<p><img alt="DLL Sideloading - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_8.png"/></p>
+<p><img width="100%" alt="DLL Sideloading - visual selection.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_8.png"/></p>
 <h1>DLL Hijacking na prática</h1>
 <p>Vamos agora ver duas aplicações praticas de DLL Hijacking, uma delas usando <a href="https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/what-is-dism?view=windows-11">Dism.exe</a> e a última usando um aplicativo de update do Notepad++.</p>
 <h2>Phantom DLL Hijacking com Dism.exe e DismCore.dll</h2>
@@ -110,7 +110,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 - Path ends with .dll (Include)
 - Path contains C:\Windows (Exclude)</p>
 <p>Com esses filtros temos os seguintes eventos ao abrimos o <code>GUP.exe</code>:</p>
-<p><img alt="Process_Monitor_libcurl_dll.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_10.png"/></p>
+<p><img width="100%" alt="Process_Monitor_libcurl_dll.png" src="https://kallel181.github.io/Blog/static/images/introducao_a_dll_hijacking_10.png"/></p>
 <p>Podemos notar que a DLL que está presente na pasta do <code>GUP.exe</code> chamada <code>libcurl.dll</code> é usada pelo programa, algo que podemos fazer é sobrescrever essa DLL com uma DLL arbitraria, vamos usar o mesmo código anterior para substituir essa DLL:</p>
 <pre><code class="language-C">#include &lt;windows.h&gt;
 
