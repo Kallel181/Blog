@@ -163,7 +163,7 @@ Nmap done: 1 IP address (1 host up) scanned in 0.08 seconds
 <pre><code>(ip.src==192.168.0.58 and ip.dst==192.168.0.59) or (ip.src==192.168.0.59 and ip.dst==192.168.0.58)
 </code></pre>
 <p>Here we can see the Wireshark output when we capture the packages of a regular scan on Nmap:
-<img alt="wireshark_nmap_simple_scan.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_1.png"/>
+<img width="100%" alt="wireshark_nmap_simple_scan.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_1.png"/>
 Let's take the last 4 packages for example, there we can see that the connection starts with a SYN (Synchronize) flag, that indicates that a connection has been started, after that we can see another package with the flag ACK (Acknowledgment), and by the end we can see an RST (Reset) flag that is indicating the end of a connection, this shows the <a href="https://www.geeksforgeeks.org/tcp-3-way-handshake-process/">Three-way Handshake</a>.
 <img alt="3way_digram.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_2.png"/></p>
 <p>Now let's see how the argument <code>-sS</code> really impacts on the information send. First, let's start your Wireshark again and run the command:</p>
@@ -181,7 +181,7 @@ MAC Address: 08:00:27:45:94:8E (Oracle VirtualBox virtual NIC)
 Nmap done: 1 IP address (1 host up) scanned in 5.74 seconds
 </code></pre>
 <p>On the Wireshark, we can see this now (changing the filters just a bit as you can see):
-<img alt="wireshark_nmap_SYN_scan.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_3.png"/>
+<img width="100%" alt="wireshark_nmap_SYN_scan.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_3.png"/>
 Note that, just as in the previous example we have a SYN flag starting the connection, but soon after that we have an RST flag, terminating the connection, that means the <a href="https://www.geeksforgeeks.org/tcp-3-way-handshake-process/">Three-way Handshake</a> wasn't complete, so, less information was given to the target.
 <img alt="SYN_digram.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_4.png"/></p>
 <h4><strong>TCP connect scan</strong></h4>
@@ -201,7 +201,7 @@ MAC Address: 08:00:27:45:94:8E (Oracle VirtualBox virtual NIC)
 Nmap done: 1 IP address (1 host up) scanned in 5.94 seconds
 </code></pre>
 <p>When we run a Nmap scan on the port 80, that we know are running under the TCP protocol, we get back a STATE closed, we can see ICMP port unreachable error (type 3, code 3) on Wireshark: 
-<img alt="wireshark_icmp_error.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_5.png"/></p>
+<img width="100%" alt="wireshark_icmp_error.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_5.png"/></p>
 <h2>Service and Version Detection</h2>
 <p>The <code>-sV</code> argument allows us to get some more information about the service that is listening on a given scanned port. Knowing the service specifications can allow us to search for some exploits on that given service. We can see down below a version detection scanning:</p>
 <pre><code>┌──(kali㉿atropos)-[~]
@@ -218,9 +218,9 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 6.79 seconds
 </code></pre>
 <p>Since we ran the Nmap as <code>sudo</code> the scan technique used by default is a <strong>TCP SYN scan</strong>, as we can see by the incomplete 3-way handshake on the Wireshark:
-<img alt="wireshark_version_detection_1.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_6.png"/>
+<img width="100%" alt="wireshark_version_detection_1.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_6.png"/>
 Following down the packages, we can see a lot of TCP and HTTP requests, Nmap has a multitude of procedures that it will follow to get the services information based on a service type, in your case here we have a HTTP application, so, Nmap will make sires of HTTP requests to get as much information as it can. In some of those HTTP requests, we can see de Server information in an header:
-<img alt="wireshark_version_detection_2.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_7.png"/>
+<img width="100%" alt="wireshark_version_detection_2.png" src="https://kallel181.github.io/Blog/static/images/nmap_guide_7.png"/>
 Note that the <code>-sV</code> argument is not a subtle scan, as we saw on the Wireshark capture. In that specific case, we can make a GET request "by hand" using netcat and get the same result, and it would be a more stealth approach:</p>
 <pre><code>┌──(kali㉿atropos)-[~]
 └─$ nc 192.168.0.59 80
