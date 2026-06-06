@@ -18,12 +18,16 @@ JSON_PATH = BASE_DIR / "static" / "posts.json"
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
 IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-def selecionar_arquivo(titulo, tipos_arquivos):
+def selecionar_arquivo(titulo, tipos_arquivos, diretorio_inicial=None):
     """Abre uma caixa de diálogo do sistema para escolher arquivos."""
     root = tk.Tk()
     root.withdraw() # Esconde a janela principal do tkinter
     root.attributes('-topmost', True) # Traz a janela para frente
-    caminho = filedialog.askopenfilename(title=titulo, filetypes=tipos_arquivos)
+    caminho = filedialog.askopenfilename(
+        title=titulo, 
+        filetypes=tipos_arquivos, 
+        initialdir=diretorio_inicial
+    )
     return Path(caminho) if caminho else None
 
 def slugify(text):
@@ -33,7 +37,8 @@ def slugify(text):
     return re.sub(r'[\s-]+', '_', text).strip('_')
 
 def processar_imagens_obsidian(body_text, slug_titulo, md_dir):
-    """Encontra imagens no formato ![[imagem.png]], copia e renomeia para a pasta static."""
+    """Encontra imagens no formato ![[imagem.png]], copia e renomeia para a pasta static.
+       Se não achar localmente, pede para o usuário localizar o arquivo."""
     count = 1
     padrao_obsidian = r'!\[\[([^\]]+)\]\]'
     
@@ -46,11 +51,28 @@ def processar_imagens_obsidian(body_text, slug_titulo, md_dir):
         src_path = md_dir / nome_original
         dst_path = IMAGES_DIR / novo_nome_img
         
+        # 1. Tenta achar na mesma pasta do arquivo Markdown
         if src_path.exists():
             shutil.copyfile(src_path, dst_path)
             print(f"-> Imagem interna copiada: {novo_nome_img}")
         else:
-            print(f"[!] Aviso: Imagem interna não encontrada em: {src_path}")
+            # 2. Se não achar, abre a janela para o usuário buscar manualmente
+            print(f"[!] Imagem não encontrada em: {src_path}")
+            print(f"[Janela] Por favor, localize a imagem: '{nome_original}'")
+            
+            caminho_manual = selecionar_arquivo(
+                f"Localize a imagem: {nome_original}", 
+                [("Imagens", "*.png *.jpg *.jpeg *.webp *.gif")],
+                diretorio_inicial=md_dir
+            )
+            
+            if caminho_manual and caminho_manual.exists():
+                shutil.copyfile(caminho_manual, dst_path)
+                print(f"-> Imagem manual copiada e vinculada: {novo_nome_img}")
+            else:
+                print(f"[X] Erro: Imagem '{nome_original}' ignorada (não localizada).")
+                count += 1
+                return f''
             
         count += 1
         return f'<img src="https://kallel181.github.io/Blog/static/images/{novo_nome_img}" alt="{nome_original}"/>'
