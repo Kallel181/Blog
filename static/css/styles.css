@@ -45,9 +45,10 @@ header h1 {
 }
 
 .container {
-  max-width: 850px; /* Um pouco mais estreito melhora a leitura de textos longos */
+  max-width: 850px;
   margin: 2rem auto;
   padding: 0 1.5rem;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
 }
 
 /* Input de Busca */
@@ -65,6 +66,7 @@ header h1 {
   color: #fff;
   font-size: 1rem;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 #search-input:focus {
@@ -97,9 +99,10 @@ header h1 {
 .post-card img {
   width: 80px;
   height: 80px;
-  border-radius: 10px; /* Quadrado arredondado moderno em vez de círculo */
+  border-radius: 10px;
   border: 1px solid var(--border-color);
   object-fit: cover;
+  flex-shrink: 0; /* Impede a imagem de amassar em telas médias */
 }
 
 .post-card p {
@@ -135,7 +138,7 @@ header h1 {
   color: var(--highlight-color);
   padding: 0.15rem 0.6rem;
   margin-right: 0.4rem;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.4rem; /* Um pouco mais de espaço se quebrar linha */
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -219,7 +222,7 @@ header h1 {
 
 /* Blocos de Código e Inline */
 pre {
-  background: #111b27 !important; /* Cor combinando com o github-dark do hljs */
+  background: #111b27 !important;
   padding: 1.2rem;
   border-radius: 8px;
   overflow-x: auto;
@@ -239,6 +242,7 @@ code {
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-size: 0.9rem;
+  word-break: break-word; /* Evita que códigos longos no texto empurrem a tela */
 }
 
 blockquote {
@@ -261,4 +265,73 @@ img {
   border-radius: 8px;
   margin: 2rem auto;
   display: block;
+}
+
+/* ==========================================
+   MEDIA QUERIES (Foco em Smartphones)
+   ========================================== */
+@media (max-width: 768px) {
+  body {
+    font-size: 1rem; /* Fonte ligeiramente menor para telas pequenas */
+  }
+
+  header {
+    padding: 2rem 1rem;
+  }
+
+  header h1 {
+    font-size: 2.2rem; /* Evita h1 gigantes quebrando linha feio */
+  }
+
+  .container {
+    margin: 1rem auto;
+    padding: 0 1rem; /* Menos margem nas laterais para aproveitar espaço */
+  }
+
+  /* O Card vira vertical no celular */
+  .post-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .post-card img {
+    width: 100%; /* Imagem ganha destaque no topo do card */
+    height: 140px;
+    border-radius: 8px;
+  }
+
+  .post-info h3 {
+    font-size: 1.2rem;
+  }
+
+  /* Ajustes na visualização do Post interno */
+  .post-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .post-banner {
+    max-height: 200px; /* Banner mais baixo para não ocupar a tela toda */
+  }
+
+  .post-body {
+    font-size: 1.05rem;
+  }
+
+  /* Blocos de código ganham padding menor para não espremer o texto */
+  pre {
+    padding: 0.8rem;
+    margin: 1rem 0;
+  }
+  
+  code {
+    font-size: 0.85rem;
+  }
+
+  /* Botões de paginação ligeiramente menores */
+  .page-button {
+    padding: 0.4rem 0.8rem;
+    margin: 0 0.15rem;
+  }
 }
