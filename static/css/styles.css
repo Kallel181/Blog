@@ -335,3 +335,16 @@ img {
     margin: 0 0.15rem;
   }
 }
+
+
+/* Ajustes para o LaTeX do MathJax */
+.mjx-chtml {
+  font-size: 1.1rem !important;
+}
+
+/* Espaçamento extra para fórmulas centralizadas em blocos separados */
+mjx-container[display="true"] {
+  margin: 1.5rem 0 !important;
+  overflow-x: auto; /* Evita que fórmulas gigantes quebrem a tela no celular */
+  overflow-y: hidden;
+}
