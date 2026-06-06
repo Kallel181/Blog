@@ -3,56 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meu Blog</title>
+  <title>Kallel Fiori | Blog & Portfólio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
+
   <header>
     <h1>Kallel Fiori</h1>
+    <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">Matemática | Engenharia da Computação | Cibersegurança</p>
   </header>
-  <div class="container">
+
+  <main class="container">
+    
     <section class="about">
       <h2>Sobre mim</h2>
-        <p>
-    Meu nome é <strong>Kallel Fiori</strong>. Sou graduado em Matemática pela 
-    Universidade Federal de São Carlos (UFSCar), com especialização em Tecnologias Educacionais 
-    e graduação em andamento em Engenharia da Computação.
-  </p>
+      <p>
+        Meu nome é <strong>Kallel Fiori</strong>. Sou graduado em Matemática pela 
+        Universidade Federal de São Carlos (UFSCar), com especialização em Tecnologias Educacionais 
+        e graduação em andamento em Engenharia da Computação.
+      </p>
 
-  <p>
-    Atuo na interseção entre <strong>programação, matemática e cibersegurança</strong>, 
-    produzindo conteúdos técnicos, tutoriais, guias de CTF e pesquisas na area de tecnologia e segurança.
-    Desenvolvo objetos de aprendizagem digitais e publiquei pesquisa sobre o uso do Manim 
-    como ferramenta didática para o ensino de matemática.
-  </p>
+      <p>
+        Atuo na interseção entre <strong>programação, matemática e cibersegurança</strong>, 
+        produindo conteúdos técnicos, tutoriais, guias de CTF e pesquisas na área de tecnologia e segurança.
+        Desenvolvo objetos de aprendizagem digitais e publiquei pesquisa sobre o uso do Manim 
+        como ferramenta didática para o ensino de matemática.
+      </p>
 
-  <p>
-    Tenho especial interesse em <strong>cibersegurança, engenharia reversa e Assembly</strong>, 
-    além de experiência com Python (especialmente com Manim), JavaScript, C, C++, Rust, C# 
-    e desenvolvimento com Godot (GDScript).
-  </p>
+      <p>
+        Tenho especial interesse em <strong>cibersegurança, engenharia reversa e Assembly</strong>, 
+        além de experiência com Python (especialmente com Manim), JavaScript, C, C++, Rust, C# 
+        e desenvolvimento com Godot (GDScript).
+      </p>
 
-  <p>
-    Acredito na tecnologia como instrumento de transformação e na divulgação técnica 
-    como forma de tornar conhecimentos complexos mais acessíveis, visuais e aplicáveis.
-  </p>
+      <p>
+        Acredito na tecnologia como instrumento de transformação e na divulgação técnica 
+        como forma de tornar conhecimentos complexos mais acessíveis, visuais e aplicáveis.
+      </p>
+      
+      <div class="social-links" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+        <a href="https://github.com/Kallel181" target="_blank" style="color: var(--highlight-color); text-decoration: none; font-weight: bold;">
+          <i class="fab fa-github"></i> GitHub
+        </a>
+        <a href="#" target="_blank" style="color: var(--highlight-color); text-decoration: none; font-weight: bold;">
+          <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+      </div>
+    </section> <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 3rem 0;">
 
     <section class="posts">
       <h2>Postagens Recentes</h2>
       
       <div class="search-container">
-        <input type="text" id="search-input" placeholder="Buscar por título ou tag..." />
+        <input type="text" id="search-input" placeholder="Buscar por título ou tag..." aria-label="Buscar postagens" />
       </div>
 
       <div id="posts-list"></div>
 
-      <div id="pagination"></div>
-
-      
+      <nav id="pagination" aria-label="Navegação de páginas"></nav>
     </section>
-  </div>
 
+  </main>
 
-<script src="static/js/main.js"></script>
+  <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border-color); margin-top: 4rem;">
+    <p>&copy; 2026 Kallel Fiori. Desenvolvido com Python & Markdown.</p>
+  </footer>
+
+  <script src="static/js/main.js"></script>
 </body>
 </html>
