@@ -83,6 +83,17 @@ def gerar_html_final(titulo, data_str, tags, html_conteudo, slug_titulo):
   <title>{titulo}</title>
   <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
   <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
+  
+  <script>
+    window.MathJax = {{
+      tex: {{
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      }}
+    }};
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <div class="container">
