@@ -1,6 +1,18 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/htb_babyencryption-06_06_2026.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/htb_babyencryption-06_06_2026.html",
+            "resume": "In this post, I document the full resolution of a Python-based crypto challenge. After analyzing an encryption script that uses a linear function combined with a modulo operation, I present two ways to recover the original message. First, I demonstrate a simple brute-force approach to crack the ASCII characters. Then, I show a much cleaner mathematical approach, leveraging the Modular Multiplicative Inverse to reverse the equation and decrypt the payload in constant time.",
+            "name": "HTB BabyEncryption",
+            "date": "06/06/2026",
+            "tags": [
+                "mathematics",
+                "HTB",
+                "cryptography"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/Immediate_Values_on_ARM_an_clever_way_for_finding_valid_values-14_02_2026.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/Immediate_Values_on_ARM_an_clever_way_for_finding_valid_values-14_02_2026.html",
             "resume": "This post explains how ARM immediate values are encoded and presents a smarter way to check if a number can be represented as one. In ARM (32-bit mode), an immediate is not a full 12-bit value, but an 8-bit number combined with a rotation, following the formula v = n ror (2r). Instead of brute forcing all possible combinations of 8-bit values and rotations, we can reverse the formula: rotate the target value to the left and check whether the result fits into 8 bits. If it does, the number is a valid ARM immediate. This approach is much simpler and more efficient, and the post concludes with a Python implementation of this optimized method.",
@@ -25,10 +37,10 @@
             ]
         },
         {
-            "icon_location": "https://kallel181.github.io/Blog/static/images/Introdu\u00e7\u00e3o_ao_Manim-15_09_2025.html_icon.png",
-            "file_location": "https://kallel181.github.io/Blog/static/posts/Introdu\u00e7\u00e3o_ao_Manim-15_09_2025.html",
-            "resume": "O Manim \u00e9 uma biblioteca do Python criada para produzir anima\u00e7\u00f5es program\u00e1ticas, com foco especial em conte\u00fados matem\u00e1ticos. Diferente de programas tradicionais de edi\u00e7\u00e3o, ele permite criar anima\u00e7\u00f5es por meio de c\u00f3digo, o que possibilita automatizar tarefas complexas, como gerar diversas formas ou escrever express\u00f5es matem\u00e1ticas de maneira precisa e organizada. No guia, \u00e9 mostrado como instalar o Python, o Manim e suas depend\u00eancias, al\u00e9m de indicar o uso de uma IDE, como o Visual Studio Code, para facilitar a escrita dos c\u00f3digos. A partir da\u00ed, \u00e9 poss\u00edvel dar os primeiros passos criando anima\u00e7\u00f5es simples com figuras geom\u00e9tricas e textos em LaTeX. Dessa forma, o Manim se apresenta como uma ferramenta vers\u00e1til para quem deseja produzir v\u00eddeos did\u00e1ticos, apresenta\u00e7\u00f5es e materiais visuais voltados para ensino e pesquisa.",
-            "name": "Introdu\u00e7\u00e3o ao Manim",
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Introdução_ao_Manim-15_09_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Introdução_ao_Manim-15_09_2025.html",
+            "resume": "O Manim é uma biblioteca do Python criada para produzir animações programáticas, com foco especial em conteúdos matemáticos. Diferente de programas tradicionais de edição, ele permite criar animações por meio de código, o que possibilita automatizar tarefas complexas, como gerar diversas formas ou escrever expressões matemáticas de maneira precisa e organizada. No guia, é mostrado como instalar o Python, o Manim e suas dependências, além de indicar o uso de uma IDE, como o Visual Studio Code, para facilitar a escrita dos códigos. A partir daí, é possível dar os primeiros passos criando animações simples com figuras geométricas e textos em LaTeX. Dessa forma, o Manim se apresenta como uma ferramenta versátil para quem deseja produzir vídeos didáticos, apresentações e materiais visuais voltados para ensino e pesquisa.",
+            "name": "Introdução ao Manim",
             "date": "15/09/2025",
             "tags": [
                 "Math",
@@ -37,10 +49,10 @@
             ]
         },
         {
-            "icon_location": "https://kallel181.github.io/Blog/static/images/Introdu\u00e7\u00e3o_a_DLL_Hijacking-07_09_2025.html_icon.png",
-            "file_location": "https://kallel181.github.io/Blog/static/posts/Introdu\u00e7\u00e3o_a_DLL_Hijacking-07_09_2025.html",
-            "resume": "DLL Hijacking consiste em criar DLLs arbitrarias e posicion\u00e1-las de forma que essas DLL sejam executadas no lugar de DLLs legitimas. Essa t\u00e9cnica pode ser usada por agentes mal-intencionados para escalar privil\u00e9gios ou ainda criar uma persist\u00eancia em um sistema. No artigo \u00e9 detalhada a defini\u00e7\u00e3o dos m\u00e9todos de DLL Hijacking e tamb\u00e9m e mostrado alguns exemplos pr\u00e1ticos de duas t\u00e9cnicas.",
-            "name": "Introdu\u00e7\u00e3o a DLL Hijacking",
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Introdução_a_DLL_Hijacking-07_09_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Introdução_a_DLL_Hijacking-07_09_2025.html",
+            "resume": "DLL Hijacking consiste em criar DLLs arbitrarias e posicioná-las de forma que essas DLL sejam executadas no lugar de DLLs legitimas. Essa técnica pode ser usada por agentes mal-intencionados para escalar privilégios ou ainda criar uma persistência em um sistema. No artigo é detalhada a definição dos métodos de DLL Hijacking e também e mostrado alguns exemplos práticos de duas técnicas.",
+            "name": "Introdução a DLL Hijacking",
             "date": "07/09/2025",
             "tags": [
                 "privilege_escalation",
@@ -63,10 +75,10 @@
             ]
         },
         {
-            "icon_location": "https://kallel181.github.io/Blog/static/images/T\u00e9cnicas_de_diversifica\u00e7\u00e3o_e_ofusca\u00e7\u00e3o_para_seguran\u00e7a_de_software_e_DRM_-_Uma_introdu\u00e7\u00e3o_pr\u00e1tica-17_06_2025.html_icon.png",
-            "file_location": "https://kallel181.github.io/Blog/static/posts/T\u00e9cnicas_de_diversifica\u00e7\u00e3o_e_ofusca\u00e7\u00e3o_para_seguran\u00e7a_de_software_e_DRM_-_Uma_introdu\u00e7\u00e3o_pr\u00e1tica-17_06_2025.html",
-            "resume": "Este trabalho aborda as t\u00e9cnicas de prote\u00e7\u00e3o de software por meio da ofusca\u00e7\u00e3o e diversifica\u00e7\u00e3o, com foco na sua efic\u00e1cia contra a engenharia reversa. Iniciamos com uma introdu\u00e7\u00e3o \u00e0 engenharia reversa, destacando sua import\u00e2ncia na an\u00e1lise de seguran\u00e7a, no controle de propriedade intelectual e na implementa\u00e7\u00e3o de sistemas de DRM. Em seguida, s\u00e3o apresentadas as principais t\u00e9cnicas de ofusca\u00e7\u00e3o e diversifica\u00e7\u00e3o. O trabalho tamb\u00e9m inclui uma an\u00e1lise pr\u00e1tica utilizando programas ofuscados em linguagem Javascript e C, explorando o uso do Ghidra para entender o impacto real dessas t\u00e9cnicas no processo de engenharia reversa. Durante a an\u00e1lise, observam-se obst\u00e1culos significativos introduzidos pelas t\u00e9cnicas aplicadas, como dificuldade de rastreamento de fluxo e oculta\u00e7\u00e3o de valores cr\u00edticos. Por fim, discute-se o papel emergente da Intelig\u00eancia Artificial na engenharia reversa, ressaltando sua capacidade de reconhecer padr\u00f5es e sua amea\u00e7a crescente \u00e0 efic\u00e1cia das defesas tradicionais. O estudo evidencia como a combina\u00e7\u00e3o de t\u00e9cnicas bem aplicadas pode aumentar substancialmente o custo da engenharia reversa, mas tamb\u00e9m destaca a necessidade constante de evolu\u00e7\u00e3o frente \u00e0s novas ferramentas automatizadas.",
-            "name": "T\u00e9cnicas de diversifica\u00e7\u00e3o e ofusca\u00e7\u00e3o para seguran\u00e7a de software e DRM - Uma introdu\u00e7\u00e3o pr\u00e1tica",
+            "icon_location": "https://kallel181.github.io/Blog/static/images/Técnicas_de_diversificação_e_ofuscação_para_segurança_de_software_e_DRM_-_Uma_introdução_prática-17_06_2025.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/Técnicas_de_diversificação_e_ofuscação_para_segurança_de_software_e_DRM_-_Uma_introdução_prática-17_06_2025.html",
+            "resume": "Este trabalho aborda as técnicas de proteção de software por meio da ofuscação e diversificação, com foco na sua eficácia contra a engenharia reversa. Iniciamos com uma introdução à engenharia reversa, destacando sua importância na análise de segurança, no controle de propriedade intelectual e na implementação de sistemas de DRM. Em seguida, são apresentadas as principais técnicas de ofuscação e diversificação. O trabalho também inclui uma análise prática utilizando programas ofuscados em linguagem Javascript e C, explorando o uso do Ghidra para entender o impacto real dessas técnicas no processo de engenharia reversa. Durante a análise, observam-se obstáculos significativos introduzidos pelas técnicas aplicadas, como dificuldade de rastreamento de fluxo e ocultação de valores críticos. Por fim, discute-se o papel emergente da Inteligência Artificial na engenharia reversa, ressaltando sua capacidade de reconhecer padrões e sua ameaça crescente à eficácia das defesas tradicionais. O estudo evidencia como a combinação de técnicas bem aplicadas pode aumentar substancialmente o custo da engenharia reversa, mas também destaca a necessidade constante de evolução frente às novas ferramentas automatizadas.",
+            "name": "Técnicas de diversificação e ofuscação para segurança de software e DRM - Uma introdução prática",
             "date": "17/06/2025",
             "tags": [
                 "reversing",

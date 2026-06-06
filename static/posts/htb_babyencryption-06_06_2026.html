@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTB BabyEncryption</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
+      <h1>HTB BabyEncryption</h1>
+      <div class="post-meta">
+        <span class="date">06/06/2026</span> —
+        <span class="tags"><span class="tag">mathematics</span><span class="tag">HTB</span><span class="tag">cryptography</span></span>
+      </div>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/htb_babyencryption_banner.png" alt="Banner do post"/>
+    </header>
+    <article class="post-body">
+      <h1>BabyEncryption</h1>
+<p>In this challenge we have 2 main files, a python script(<em>chall.py</em>) and a text file(<em>msg.enc</em>). The python script has the following content:</p>
+<pre class="codehilite"><code class="language-python">import string
+from secret import MSG  
+
+def encryption(msg):
+    ct = []
+    for char in msg:
+        ct.append((123 * char + 18) % 256)
+    return bytes(ct)  
+
+ct = encryption(MSG)
+f = open('./msg.enc','w')
+f.write(ct.hex())
+f.close()
+</code></pre>
+
+<p>This script encrypts a variable called MSG that's being imported from secret, which we don't have access to.</p>
+<h2>Brute Force Approach</h2>
+<p>The easiest way to solve it (my opinion), is to just brute force all the characters.</p>
+<pre class="codehilite"><code class="language-python">hex_txt = &quot;6e0a9372ec49a3f6930ed8723f9df6f6720ed8d89dc4937222ec7214d89d1e0e352ce0aa6ec82bf622227bb70e7fb7352249b7d893c493d8539dec8fb7935d490e7f9d22ec89b7a322ec8fd80e7f8921&quot;  
+result = &quot;&quot;  
+
+cyp_txt = bytes.fromhex(hex_txt)  
+
+for char in cyp_txt:  
+    for asc in range(33, 126):  
+        if ((123 * asc + 18) % 256) == char:  
+            result += chr(asc)  
+            break  
+
+print(result)
+</code></pre>
+
+<p>Although this way is really simple to understand, this has a problem, the more characters we have more time we will consume to decrypt it. In that challenges this is not a problem but we have a more smarter approach, a mathematical approach.</p>
+<h2>Mathematical Approach</h2>
+<p>First let's simplify the problem, assume we have the following function:
+$$f(x) = 2x +1$$
+Taking a x=1 we will have the corresponding f(x):
+$$f(1)=2.1+1=3$$
+If we want to reverse this process we just need to find the $f^{-1}(x)$ , which in this case is a really simple process:
+$$f^{-1}(x)=(x-1)/2$$
+So we can do a similar process to the function that is being used to encrypt the message. But there is as problem, the modulo. Let's first return to the original encryption script and analyse why the modulo is being used in the first place.</p>
+<pre class="codehilite"><code class="language-python">import string
+from secret import MSG  
+
+def encryption(msg):
+    ct = []
+    for char in msg:
+        ct.append((123 * char + 18) % 256) #modulo
+    return bytes(ct)  
+
+ct = encryption(MSG)
+f = open('./msg.enc','w')
+f.write(ct.hex())
+f.close()
+</code></pre>
+
+<p>So we have this operation:
+$$(123\;.\; char + 18)$$
+There, <em>char</em> is the number that represents a ascii character, so <em>char</em> is a number between 0 and 255, we multiply this number by 123 and then we sum 18 to it, but, the result of all this operations needs to be a number between 0 and 255 also, to ensure this we use the modulo operation. 
+Ok, now your goal is just to reverse the equation, but, how can we reverse the modulo ?</p>
+<h2>What is Modulo actually?</h2>
+<blockquote>
+<p>“In <a href="https://en.wikipedia.org/wiki/Computing">computing</a>, the <strong>modulo operation</strong> returns the <a href="https://en.wikipedia.org/wiki/Remainder">remainder</a> or signed remainder of a <a href="https://en.wikipedia.org/wiki/Division_(mathematics)">division</a>, after one number is divided by another”<br />
+<a href="https://en.wikipedia.org/wiki/Modulo">https://en.wikipedia.org/wiki/Modulo</a></p>
+</blockquote>
+<p>So, modulo returns to us the remainder of a certain division. But how can we reverse it ?</p>
+<p>To do that we can use the Modular multiplicative inverse, this gives us the following, The modular multiplicative inverse of an integer <strong>a</strong> modulo <strong>m</strong> is an integer <strong>b</strong> such that:</p>
+<p>$$ab≡1  (mod  x)ab≡1(modx)$$</p>
+<p>So in our case, we have:</p>
+<p>$$123  .  b≡1  (mod  256)123.b≡1(mod256)$$</p>
+<p>We can simplify that concept:</p>
+<p>$$123.b=(n.256)+1\;\;\;n,b∈N$$</p>
+<p>That way we are trying to find <em>b</em>, a natural number in a way that <em>n</em> is a natural number also.</p>
+<blockquote>
+<p>Note: You can find a really good explanation of why that works here: <a href="https://planetcalc.com/3311/">https://planetcalc.com/3311/</a> and also, there is a calculator we can use to find the answer we need.</p>
+</blockquote>
+<p>Using the calculator we find the modular multiplicative inverse of 123 modulo 256 is 179, so we can create a simple script to reverse the encrypted text:</p>
+<pre class="codehilite"><code class="language-python">hex_txt = &quot;6e0a9372ec49a3f6930ed8723f9df6f6720ed8d89dc4937222ec7214d89d1e0e352ce0aa6ec82bf622227bb70e7fb7352249b7d893c493d8539dec8fb7935d490e7f9d22ec89b7a322ec8fd80e7f8921&quot;
+
+def decript(msg):
+    cyp_txt = []
+    for char in msg:
+        char = char - 18
+        char = 179 * char % 256
+        cyp_txt.append(char)      
+
+    return bytes(cyp_txt)
+
+cyp_txt = bytes.fromhex(hex_txt)
+result = decript(cyp_txt)
+print(result)
+</code></pre>
+    </article>
+  </div>
+  
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>
