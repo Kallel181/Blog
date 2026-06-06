@@ -108,7 +108,7 @@ header h1 {
 .post-card p {
   color: var(--text-muted);
   margin: 0.5rem 0 0 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .post-info h3 {
