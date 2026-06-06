@@ -30,6 +30,7 @@
       <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/htb_babyencryption_banner.png" alt="Banner do post"/>
     </header>
     <article class="post-body">
+    <p>n this post, I document the full resolution of a Python-based crypto challenge. After analyzing an encryption script that uses a linear function combined with a modulo operation, I present two ways to recover the original message. First, I demonstrate a simple brute-force approach to crack the ASCII characters. Then, I show a much cleaner mathematical approach, leveraging the Modular Multiplicative Inverse to reverse the equation and decrypt the payload in constant time.</p>
       <h1>BabyEncryption</h1>
 <p>In this challenge we have 2 main files, a python script(<em>chall.py</em>) and a text file(<em>msg.enc</em>). The python script has the following content:</p>
 <pre class="codehilite"><code class="language-python">import string
