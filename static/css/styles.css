@@ -358,13 +358,15 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Expande o container apenas na página com menu */
 .post-layout {
+  /* Substituído largura fixa por max 100% para evitar scroll horizontal */
+  width: 100%;
   max-width: 1150px;
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 2.5rem;
   align-items: start;
+  box-sizing: border-box;
 }
 
 .toc-sidebar {
@@ -372,6 +374,7 @@ html {
   top: 2rem;
   max-height: calc(100vh - 4rem);
   overflow-y: auto;
+  overflow-x: hidden; /* Garante que nada transborde na lateral */
 }
 
 .toc-container {
@@ -379,6 +382,7 @@ html {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 1.2rem;
+  box-sizing: border-box;
 }
 
 .toc-container h3 {
@@ -401,22 +405,37 @@ html {
   line-height: 1.3;
 }
 
+/* Indentações hierárquicas para H1, H2 e H3 */
+.toc-container li.toc-h1 {
+  font-weight: 600;
+  padding-left: 0;
+}
+
+.toc-container li.toc-h2 {
+  padding-left: 0.6rem;
+}
+
 .toc-container li.toc-h3 {
-  padding-left: 0.8rem;
+  padding-left: 1.2rem;
 }
 
 .toc-container a {
   color: var(--text-color);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   text-decoration: none;
   transition: color 0.2s ease;
+  
+  /* Força a quebra de texto longo sem empurrar a largura */
+  display: block;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .toc-container a:hover {
   color: var(--highlight-color);
 }
 
-/* Oculta a barra em telas pequenas/médias para preservar responsividade */
+/* Ajuste no breakpoint: transição suave para layouts de 1 coluna */
 @media (max-width: 1100px) {
   .post-layout {
     display: block;
