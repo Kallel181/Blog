@@ -17,20 +17,32 @@
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Import do script externo do sumário -->
+  <script src="https://kallel181.github.io/Blog/static/js/toc.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <header class="post-header">
-      <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
-      <h1>Uma (outra) introdução ao Manim</h1>
-      <div class="post-meta">
-        <span class="date">01/09/2026</span> —
-        <span class="tags"><span class="tag">Manim</span><span class="tag">Python</span><span class="tag">Animações</span><span class="tag">Matemmatica</span><span class="tag">REA</span><span class="tag">STEM</span></span>
+  <div class="container post-layout">
+    
+    <aside class="toc-sidebar">
+      <div class="toc-container">
+        <h3>Neste artigo</h3>
+        <nav id="toc"></nav>
       </div>
-      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_banner.png" alt="Banner do post"/>
-    </header>
-    <article class="post-body">
-      <h1>O que é Manim</h1>
+    </aside>
+
+    <main class="post-content">
+      <header class="post-header">
+        <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
+        <h1>Uma (outra) introdução ao Manim</h1>
+        <div class="post-meta">
+          <span class="date">01/09/2026</span> —
+          <span class="tags"><span class="tag">Manim</span><span class="tag">Matemática</span><span class="tag">Animações</span><span class="tag">REA</span><span class="tag">STEM</span></span>
+        </div>
+        <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_banner.png" alt="Banner do post"/>
+      </header>
+      <article class="post-body">
+        <h1>O que é Manim</h1>
 <p>Manim é uma biblioteca Python, feita para animações programáticas com foco em conteúdos matemáticos, essa biblioteca possui todas a ferramentas que precisamos para gerar gráficos, textos Latex e figuras geométricas, e ainda animar a posição, cor, tamanho e muitas outras coisas.</p>
 <h1>O que são animações programáticas</h1>
 <p>Animações programáticas são uma forma de criarmos animações usando programação, ou seja, nosso código é uma sequência de eventos que devem acontecer em uma dada animação.</p>
@@ -1344,7 +1356,9 @@ O parâmetro é repassado via <code>**kwargs</code> através da <strong>Herança
 
 <p>Podemos ver a seguinte animação após renderizar:</p>
 <video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_29.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
-    </article>
+      </article>
+    </main>
+
   </div>
 
   <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
