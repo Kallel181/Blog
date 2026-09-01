@@ -348,3 +348,82 @@ mjx-container[display="true"] {
   overflow-x: auto; /* Evita que fórmulas gigantes quebrem a tela no celular */
   overflow-y: hidden;
 }
+
+
+
+/* ==========================================
+   LAYOUT COM SUMÁRIO LATERAL (TOC)
+   ========================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Expande o container apenas na página com menu */
+.post-layout {
+  max-width: 1150px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.toc-sidebar {
+  position: sticky;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.toc-container {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.2rem;
+}
+
+.toc-container h3 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.toc-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-container li {
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.toc-container li.toc-h3 {
+  padding-left: 0.8rem;
+}
+
+.toc-container a {
+  color: var(--text-color);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.toc-container a:hover {
+  color: var(--highlight-color);
+}
+
+/* Oculta a barra em telas pequenas/médias para preservar responsividade */
+@media (max-width: 1100px) {
+  .post-layout {
+    display: block;
+    max-width: 850px;
+  }
+
+  .toc-sidebar {
+    display: none;
+  }
+}

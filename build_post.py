@@ -149,21 +149,35 @@ def gerar_html_final(titulo, data_str, tags, html_conteudo, slug_titulo):
     }};
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Import do script externo do sumário -->
+  <script src="https://kallel181.github.io/Blog/static/js/toc.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <header class="post-header">
-      <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
-      <h1>{titulo}</h1>
-      <div class="post-meta">
-        <span class="date">{data_str}</span> —
-        <span class="tags">{tags_html}</span>
+  <div class="container post-layout">
+    
+    <aside class="toc-sidebar">
+      <div class="toc-container">
+        <h3>Neste artigo</h3>
+        <nav id="toc"></nav>
       </div>
-      <img class="post-banner" src="{banner_url}" alt="Banner do post"/>
-    </header>
-    <article class="post-body">
-      {html_conteudo}
-    </article>
+    </aside>
+
+    <main class="post-content">
+      <header class="post-header">
+        <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
+        <h1>{titulo}</h1>
+        <div class="post-meta">
+          <span class="date">{data_str}</span> —
+          <span class="tags">{tags_html}</span>
+        </div>
+        <img class="post-banner" src="{banner_url}" alt="Banner do post"/>
+      </header>
+      <article class="post-body">
+        {html_conteudo}
+      </article>
+    </main>
+
   </div>
 
   <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
