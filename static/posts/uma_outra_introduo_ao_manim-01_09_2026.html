@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uma (outra) introdução ao Manim</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="post-header">
+      <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
+      <h1>Uma (outra) introdução ao Manim</h1>
+      <div class="post-meta">
+        <span class="date">01/09/2026</span> —
+        <span class="tags"><span class="tag">Manim</span><span class="tag">Python</span><span class="tag">Animações</span><span class="tag">Matemmatica</span><span class="tag">REA</span><span class="tag">STEM</span></span>
+      </div>
+      <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_banner.png" alt="Banner do post"/>
+    </header>
+    <article class="post-body">
+      <h1>O que é Manim</h1>
+<p>Manim é uma biblioteca Python, feita para animações programáticas com foco em conteúdos matemáticos, essa biblioteca possui todas a ferramentas que precisamos para gerar gráficos, textos Latex e figuras geométricas, e ainda animar a posição, cor, tamanho e muitas outras coisas.</p>
+<h1>O que são animações programáticas</h1>
+<p>Animações programáticas são uma forma de criarmos animações usando programação, ou seja, nosso código é uma sequência de eventos que devem acontecer em uma dada animação.</p>
+<h1>Por que usar animações programáticas?</h1>
+<p>Imagine que você quer animar 100 retângulos para demonstrar a <strong>Soma de Riemann</strong> (aproximando a área sob a curva $y = \sin(x)$). Em software tradicional você precisaria calcular manualmente a altura de cada um dos 100 retângulos com base na função e redimensioná-los individualmente toda vez que quisesse testar um intervalo diferente. No Manim você escreve uma função que calcula a altura do retângulo $i$ como $f(x_i)$. Se quiser mudar de 10 para 1000 retângulos ou trocar a função para $y = x^2 \cos(x)$, é só alterar uma variável no código.</p>
+<h1>Começando</h1>
+<p>O assistente de instalação tem o objetivo de automatizar:
+- Instalação do Python
+- Instalação do Manim
+- Instalação do FFMPEG
+- Instalação do MikTex
+- Instalação do VsCode
+- Criação do diretório dos projetos
+    - Arquivo Manim com estrutura básica
+    - Arquivo render.bat com o comando de renderização do manim em 1080p 60fps</p>
+<p>Ao fim da sua execução, teremos um diretório com essa estrutura:</p>
+<div class="codehilite"><pre><span></span><code>/Projetos Manim
+├── Projeto 1
+│   ├── Manim.py
+│   └── render.bat
+├── Projeto 2
+│   ├── Manim.py
+│   └── render.bat
+├── Projeto 3
+│   ├── Manim.py
+│   └── render.bat
+├── Projeto 4
+│   ├── Manim.py
+│   └── render.bat
+└── Projeto 5
+    ├── Manim.py
+    └── render.bat
+...
+</code></pre></div>
+
+<p>A primeira etapa é testarmos nosso ambiente, o projeto 1 já conta com um código pronto para fazer esse teste:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Exemplo basico de animacao Manim</span>
+        <span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Create</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">circulo</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">FadeOut</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+        
+        <span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
+        <span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
+            <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+            <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>O script acima contem os principais objetos Manim para testarmos o render, em especial LaTeX que precisa de pacotes LaTeX instalados para serem adicionados de maneira correta na animação.</p>
+<h1>Projeto 1 - Entendo a estrutura de uma animação Manim</h1>
+<p>Vamos voltar para nosso código de teste e entender cada parte dele:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Exemplo basico de animacao Manim</span>
+        <span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Create</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">circulo</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">FadeOut</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+        
+        <span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
+        <span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
+            <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+            <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_1.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>A primeira parte da animação Manim sempre segue a seguinte estrutura:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></pre></div>
+
+<p>A primeira linha é um <code>import</code>, isso sinaliza para o Python que vamos usar uma biblioteca que já possui funcionalidades prontas, ou seja, toda vez que criamos um quadrado, escrevemos um texto LaTeX ou usamos um método de animação, essas funcionalidades veem todas dessa biblioteca.</p>
+<p>Seria perfeitamente possível acessar esse código para descobrir todos os objetos e animações que o Manim nos fornece, porem, olhar para o código-fonte diretamente para encontrar funcionalidades específicas pode ser (e acredite em mim, realmente vai ser) uma tarefa tediosa e trabalhosa, por isso, sempre que estivermos em dúvida sobre alguma funcionalidade ou quisermos descobrir o que mais há na ferramenta nós podemos olhar a <a href="https://docs.manim.community/en/stable/index.html">documentação</a>. </p>
+<p>Na documentação são só temos acesso a todas as funcionalidades da ferramenta, mas também temos acesso a <a href="https://docs.manim.community/en/stable/installation.html">guia de instalação</a> e a uma <a href="https://docs.manim.community/en/stable/examples.html">galeria de exemplos</a>.</p>
+<p>As próximas duas linhas são definições de uma <code>class</code> e uma função usando <code>def</code>, existe um porquê dessas linhas existirem ali, porem para entendermos porque essas linhas estão ali precisamos mergulhar mais a fundo no funcionamento da ferramenta, e isso não seria muito produtivo. Algo que podemos fazer é usar o <strong>método da caixa preta</strong>, existe um porquê daquelas linhas, porem, vamos assumir que o Manim funciona assim e que essas linhas são necessárias sem nos preocuparmos no que essas linhas serão usadas e, porque elas existem.</p>
+<p>Essas linhas definem uma cena, normalmente podemos alterar o nome da cena:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Calculo_da_area</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></pre></div>
+
+<p>Ou outro exemplo:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Desenvolvimento_da_conta_latex</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></pre></div>
+
+<p>Para nossa aula, peço para <strong>não</strong> mudarem o nome da cena, o nome da cena é necessário para a criação do vídeo, o script que está localizado em cada uma das pastas do projeto precisa do nome da cena para saber qual vídeo criar:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@echo</span><span class="w"> </span><span class="k">off</span>
+<span class="n">echo</span><span class="w"> </span><span class="n">Renderizando</span><span class="w"> </span><span class="n">cena</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">Manim</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">diretorio</span><span class="w"> </span><span class="n">atual</span><span class="p">...</span>
+<span class="n">manim</span><span class="w"> </span><span class="o">-</span><span class="n">pqh</span><span class="w"> </span><span class="n">Manim</span><span class="p">.</span><span class="n">py</span><span class="w"> </span><span class="n">Cena</span>
+<span class="n">pause</span>
+</code></pre></div>
+
+<p>Alternativamente poderíamos só abrir um terminal no mesmo diretório de onde está nosso script <code>.py</code> e rodar o comando:</p>
+<div class="codehilite"><pre><span></span><code>manim -pqh Manim.py Cena
+</code></pre></div>
+
+<p>Sempre alterando o nome da <strong>Cena</strong> para o nome correto.</p>
+<p>Mais a baixo temos o corpo da nossa animação:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+<span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Create</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">circulo</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">FadeOut</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+
+<span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
+<span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+    <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Vamos linha a linha para entender o que está acontecendo. Duas primeiras linhas definem objeto Manim:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+<span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Nesse caso estamos criando duas variáveis, uma chamada <code>circulo</code> e outra chamada <code>quadrado</code>, nessa variáveis estamos guardando objetos Manim que são criados usando as funções <code>Circle()</code> e <code>Square()</code> que como o nome sugere, são usados para criar círculos e quadrados respectivamente.</p>
+<p>Dentro dessas funções estamos passando um atributo, nesse caso o atributo <code>color</code>, o círculo recebe a cor <code>BLUE</code> e o quadrado a cor <code>RED</code>. Já existe uma série de cores predefinidas dentro do Manim, na <a href="https://docs.manim.community/en/stable/reference/manim.utils.color.manim_colors.html">documentação</a> podemos encontrar uma tabela com todas as cores disponíveis.</p>
+<p>Toda criação de um objeto Manim segue esse padrão, vamos criar uma variável para armazenar o objeto, vamos usar uma função para criar o objeto e vamos passar atributos específicos para customizar os objetos.</p>
+<p>As próximas quatro linhas é onde definimos a animação de fato:</p>
+<div class="codehilite"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Create</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">circulo</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">FadeOut</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Todo método de animação é passado em um <code>self.play()</code>, novamente, isso tem um porquê, porem não vamos nos preocupar com isso agora, vamos assumir que isso precisa ser feito e seguir em frente. A primeira animação que usamos é a <code>Create()</code> perceba que criar um objeto Manim, ou seja, definir uma variável para armazenar um objeto Manim não significa que esse objeto está em cena, para colocar algo em cena precisamos especificar que algo deve ser mostrado.</p>
+<p>Vamos analisar mais de perto, nas primeiras linhas definimos um quadrado e um círculo, porem, se observamos no começo da animação não temos os dois em cena, o primeiro a aparece é o círculo, o círculo só aparece quando definimos uma forma para que ele possa aparecer, nesse caso usamos o método <code>Create()</code> para indicar que o círculo deve ser criado dentro da cena.</p>
+<p>O método <code>Create()</code> possui uma forma característica de anima objetos, e existem muitas outras formas de se colocar objetos em cena, como, por exemplo, <code>FadeIn()</code>, <code>Write()</code>, <code>GrowFromCenter()</code> ...</p>
+<p>Logo em seguida usamos o método <code>Transform(A,B)</code> esse método sempre recebe ao menos dois atributos, que nesse caso, são dois objetos Manim, e ele faz o que o nome sugere, ele vai transformas o objeto A no objeto B, por isso que logo após o círculo ser criado na tela, ele é transformado em um quadrado.</p>
+<p>Mais a frente, o método <code>self.wait()</code> é inserido, esse método adiciona uma pausa na animação, por padrão essa pausa é de um segundo, porem podemos especificar a pausa sem segundo dentro dos parênteses com, por exemplo: 
+<code>self.wait(2)</code> para esperar 2 segundos ou <code>self.wait(20)</code> para esperar 20 segundos ou ainda <code>self.wait(0.5)</code> para esperar meio segundo.</p>
+<p>Por último, usamos o método <code>FadeOut()</code> para remover a figura da tela, porem, se está prestando atenção talvez tenha percebido algo estranho, na tela temos o <code>quadrado</code> e não o <code>circulo</code> <strong>porque escrevemos <code>FadeOut(circulo)</code> e não <code>FadeOut(quadrado)</code> ?</strong></p>
+<p>A reposta é simples, quando usamos o método <code>self.play(Transform(circulo, quadrado))</code> nós não substituirmos o círculo pelo quadrado, nós transformamos o círculo em um quadrado. Por isso, para tirar o quadrado da tela, precisamos usar <code>FadeOut(circulo)</code>.</p>
+<p>Se isso for um comportamento confuso (e acredite, normalmente é e gera muitos problemas e dor de cabeça), podemos usar o <code>self.play(ReplacementTransform(circulo, quadrado))</code>, dessa forma teremos a mesma animação, porem o quadrado tomara o lugar do círculo, e quando quisermos removê-lo de cena podemos usar o <code>FadeOut(quadrado)</code>.</p>
+<p>O fim da animação temos uma última parte:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
+<span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+    <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Essa parte segue o mesmo padrão que estávamos usando anteriormente, as duas primeiras linhas definem dois objetos Manim:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
+<span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Nesse caso usamos os métodos <code>Tex()</code> e <code>MathTex()</code>. O método <code>Tex()</code> é usado para escrever texto, e o método <code>MathTex()</code> é usado para escrever formulas. Como argumento dessas funções precisamos passar uma string com um texto LaTeX.</p>
+<p>Uma string nada mais é que um nome alternativo para texto, nesse caso, uma string sempre é escrita entre aspas "", mas especificamente para o Python e especialmente para strings com comando LaTeX precisamos colocar um <code>r</code> na frente (novamente, isso tem um porquê, mas não vamos nos preocupar com isso agora).</p>
+<p>O primeiro objeto definimos um texto comum, porem usamos o comando <code>\LaTeX</code>, que basicamente coloca a logo do LaTeX ajustada.</p>
+<p>O segundo objeto é a série infinita de basel uma série famosa resolvida por Euler em 1735.</p>
+<p>$$\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}$$</p>
+<p>Logo abaixo disso temos algo novo:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>VGroup()</code> é uma função extremamente útil dentro do Manim, talvez uma das mais uteis, tudo que ela faz é agrupar objetos, porem existe uma série de funcionalidades associadas a esses grupos, uma delas é o <code>arrange()</code>.</p>
+<p>Até agora fizemos a criação de dois objetos, <code>title</code> e <code>basel</code>, ambos são textos em LaTeX, porem por padrão o Manim cria todos os objeto no centro da tela, nesse caso, não seria interessante deixar dois textos sobrepostos (certamente não seria muito fácil ler eles), por isso precisamos arrumar os textos de forma que eles não fiquem sobrepostos.</p>
+<p>Uma das maneiras de se fazer isso é usando a função <code>arrange()</code>, essa função recebe um atributo de direção, por padrão Manim possui uma série de vetores pré-configurados, segue alguns exemplos:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">ORIGIN</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="sd">"""The center of the coordinate system."""</span>  
+
+<span class="n">UP</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="sd">"""One unit step in the positive Y direction."""</span>  
+
+<span class="n">DOWN</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="sd">"""One unit step in the negative Y direction."""</span>  
+
+<span class="n">RIGHT</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="sd">"""One unit step in the positive X direction."""</span>  
+
+<span class="n">LEFT</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="sd">"""One unit step in the negative X direction."""</span>  
+
+<span class="n">IN</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">))</span>
+<span class="sd">"""One unit step in the negative Z direction."""</span>  
+
+<span class="n">OUT</span><span class="p">:</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="sd">"""One unit step in the positive Z direction."""</span>
+</code></pre></div>
+
+<p>Nesse caso estamos passando para a função <code>arrange()</code> o atributo <code>DOWN</code>, dessa forma, todos os elementos do nosso <code>VGroup()</code> serão alinhados um abaixo do outro.</p>
+<p>Perceba também que os elementos estarão dispostos na ordem em que aparecem dentro do <code>VGroup()</code>.</p>
+<p>Poderíamos passar qualquer outra direção dentro do <code>arrange()</code> como <code>UP</code>, <code>LEFT</code> ou <code>RIGHT</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">UP</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Ou ainda criar um vetor qualquer usando o <code>np.array()</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">vetor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+
+<span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">vetor</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Ou ainda poderíamos fazer uma combinação linear entre os vetores padrão do Manim:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">RIGHT</span> <span class="o">+</span> <span class="n">UP</span><span class="p">)</span>
+<span class="c1">#Essa combinação linear tem o mesmo efeito do vetor feito no exemplo acima</span>
+</code></pre></div>
+
+<p>Por último na nossa animação temos:</p>
+<div class="codehilite"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+    <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Essa seção apresenta poucas coisas novas, porem tem alguns detalhes interessantes.</p>
+<p>Primeiro, o método <code>self.play()</code> agora possui dois atributos, um <code>Write(title)</code> e <code>FadeIn(basel, shift=DOWN)</code>. Quando passamos mais de uma animação dentro do <code>self.play()</code> teremos que ambas as animações irão começar ao mesmo tempo, ou seja, elas irão acontecer em paralelo.</p>
+<p>Essa é uma funcionalidade que precisa ser usadas com cautela dentro do Manim, uma vez que, ter coisas de mais acontecendo ao mesmo tempo, na tela pode ser distrativo.</p>
+<p>Por último, a outra funcionalidade nova está na animação do basel, <code>FadeIn(basel, shift=DOWN)</code>, aqui usamos o método <code>FadeIn()</code> para criar nossa fórmula na tela, porem usamos um atributo extra chamado <code>shift</code>, esse atributo indica a direção da animação, nesse caso ao invés de simplesmente aparecer na tela, a fórmula irá aparecer na tela enquanto faz um leve movimento de cima para baixo.</p>
+<p>A última linha da animação é novamente um <code>self.wait()</code>, que irá esperar 1 segundo antes de acabar a animação.</p>
+<h1>Projeto 2 - A área de um quadrado</h1>
+<p>Vamos agora aplicar o que aprendemos até agora para fazer uma animação que poderíamos usar em sala de aula.</p>
+<p>Nossa animação precisa representar o cálculo da área de um quadrado de lado $n$, mostrando um exemplo de cálculo para um quadrado de lado $n=2$. </p>
+<p>Provavelmente está pensando: "Isso não parece muito emocionante" e talvez realmente não seja, mas a ideia central desse exercício é entender o que nos realmente precisamos fazer para finalizar uma animação Manim, porque esse é um processo nada trivial.</p>
+<p>Pode ser que você já tenha algo em mente para essa animação, e é quase instintivo querer começar a programar a animação logo de cara, mas acredite, essa <strong>não é uma boa ideia</strong>.</p>
+<p>Existem diversas formas (ou até infinitas formas) de se fazer uma mesma animação, partir logo de cara para a programação é uma ideia ruim, pois sem uma visão muito clara de onde queremos chegar podemos passar um tempo desnecessariamente grande olhando para uma tela de código sem saber como prosseguir.</p>
+<p>Por isso o primeiro passo de <strong>toda</strong> animação Manim é <strong>planejamento</strong>. Vamos começar nossa animação com um papel e uma caneta (ou um lápis) e desenhar e escrever o que queremos fazer.</p>
+<p>Nesse caso sabemos que nosso objetivo principal é fazer uma animação para mostrar o desenvolvimento de uma conta para area de um quadrado. Vamos então fazer um desenho do que poderia ser um frame da nossa animação (não julguem a minha letra):</p>
+<p><img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_2.png" alt="Exemplo_frame_1.png"/></p>
+<p>Aqui temos um exemplo de uma das telas da nossa animação, mais precisamente a tela final da animação. </p>
+<p>Temos uma boa ideia agora de quais elementos precisamos, a esquerda temos uma figura com alguns labels, um $A$ para representar a área de figura e $n$ para representar o lado da figura. Do lado direito temos o desenvolvimento da conta usando LaTeX.</p>
+<p>Durante essa etapa de planejamento podemos ainda ver com mais clareza funcionalidades que precisamos, mas ainda não sabemos como elas funcionam, por exemplo, para essa animação precisamos que o quadrado tenha um preenchimento, porem não sabemos como fazer isso, além disso, precisamos mover o quadrado mais para a esquerda e as contas mais a direita, e ainda, colocar um título no topo do da animação.</p>
+<p>Vamos então ver como podemos mover figuras na tela de forma mais individual.</p>
+<h2>Movendo elementos e o sistema de coordenadas do Manim</h2>
+<p>Antes de falarmos sobre como mover figuras dentro do Manim precisamos investigar com mais detalhes o sistema de coordenadas do Manim, para isso, vamos usar um objeto muito útil, o <code>NumberPlane()</code>, vamos usar o seguinte código:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.6</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Perceba que nessa "animação" não temos animação, só usamos o método <code>self.add()</code> para colocar nosso objeto na tela, dessa forma, quando renderizarmos esse projeto temos apenas uma imagem, no caso, essa imagem:</p>
+<p><img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_3.png" alt="Pasted image 20260828100959.png"/></p>
+<p>O <code>NumberPlane()</code> possui uma série de atributos para podermos configurar sua aparência, caso tenha curiosidade ver todos pode ver sua página na <a href="https://docs.manim.community/en/stable/reference/manim.mobject.graphing.coordinate_systems.NumberPlane.html">documentação</a>.</p>
+<p>Podemos notar que o <code>NumberPlane()</code> desenha na tela um plano cartesiano onde as coordenadas $(0,0)$ estão no centro da imagem.</p>
+<p>Vamos fazer uma adição a imagem, vamos usar o objeto <code>Dot()</code> que desenha um ponto na tela:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.6</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">dot</span> <span class="o">=</span> <span class="n">Dot</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte imagem após renderizar:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_4.png" alt="NumberPlaneExample_ManimCE_v0.21.0.png"/></p>
+<p>Podemos notar que sem alterar nada nos objeto eles são criados ao centro, mas como podemos movê-los?</p>
+<p>Bem isso vai depender do objeto e do objetivo. Por exemplo, e se quisermos mudar o nosso ponto (ou <code>dot</code>) para as coordenadas $(2,2)$ ?</p>
+<h3>Objetos com atributos de posição</h3>
+<p>No caso do objeto <code>Dot()</code> podemos passar um atributo <code>point</code> (podem checar isso na <a href="https://docs.manim.community/en/stable/reference/manim.mobject.geometry.arc.Dot.html">documentação</a>):</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.6</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">dot</span> <span class="o">=</span> <span class="n">Dot</span><span class="p">(</span><span class="n">point</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">+</span><span class="n">UP</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte imagem após renderizar:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_5.png" alt="NumberPlaneExample2_ManimCE_v0.21.0.png"/></p>
+<h3>Função <code>shift()</code></h3>
+<p>Porem nem todos os objetos Manim possuem o atributo <code>point</code>, nesses casos podemos usar o método <code>shift()</code>.</p>
+<p>Para demonstrar como o <code>shift()</code> funciona vamos usar um quadrado:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.6</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">square</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+        <span class="n">square</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">square</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Para essa cena fizemos uma alteração no <code>stroke_opacity</code> do <code>NumberPlane()</code> para que o quadrado ficasse mais fácil de ver, ao renderizar teremos a seguinte figura:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_6.png" alt="NumberPlaneExample3_ManimCE_v0.21.0.png"/></p>
+<p>Podemos ver que o centro do quadrado foi deslocado 3 unidades para a esquerda. Algo importante de notarmos é que a função <code>shift()</code> move o objeto conforme o vetor que passamos para ela como parâmetro, nesse caso passamos o vetor $(-3,0)$, como o objeto estava no centro da tela, ou seja, no ponto $(0,0)$ ele foi movido para o ponto $(-3,0)$, porem se ele estivesse em $(2,2)$ para onde ele iria?</p>
+<p>Com uma conta simples podemos prever que ele seria movido para $(-1,2)$, podemos testar isso com o seguinte código:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberPlaneExample</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.1</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">square</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+
+        <span class="n">square</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="n">UP</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">square</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">square</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte imagem após renderizar:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_7.png" alt="NumberPlaneExample5_ManimCE_v0.21.0.png"/></p>
+<h3>Animando movimento</h3>
+<p><strong>Mas e se quisermos animar o objeto saindo de um ponto A para um ponto B?</strong></p>
+<p>Nesse caso temos algumas formas diferentes de fazer isso, vamos ver quais são elas. Grande parte dessas formas usam algo chamado <code>animate</code>, essa funcionalidade faz com que qualquer método de um objeto possa ser animado. Mas o que isso quer fizer?</p>
+<p>Vamos pegar um exemplo:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberPlaneExample</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">square</span> <span class="o">=</span> <span class="n">Square</span><span class="p">()</span>
+        <span class="n">square</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">BLUE</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">square</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Perceba que no código acima nós alteramos a cor do quadrado usando algo diferente, nesse caso o <code>square.set_color(BLUE)</code>, isso tem o mesmo efeito de colocarmos o atributo <code>color=blue</code> na criação do objeto, a diferença é que em <code>square.set_color(BLUE)</code> nós estamos usando a função <code>set_color()</code> do objeto <code>Square()</code> para mudar a cor dele.</p>
+<p>Todas essas funções podem ser usadas junto do <code>animate</code> para criar animações, vamos ver algumas que mudam a posição do objeto:</p>
+<p>A primeira que vamos ver é a função <code>shift()</code> que nós já usamos antes, já vimos que a função <code>shift()</code> faz o movimento de um objeto seguindo um vetor, vamos implementar o código de exemplo que apresentamos naquela seção, mas agora mostrando o movimento do quadrado:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberPlaneExample</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">square</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">square</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">square</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">UP</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">square</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_8.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>Podemos alternativamente usar a função <code>move_to()</code>, diferente da função <code>shift()</code> a função <code>move_to()</code> recebe as coordenadas finais do objeto e não um vetor, dessa forma, pode ser mais fácil de controlar a posição do objeto:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberPlaneExample</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.1</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">square</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">square</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="c1">#Ou (RIGHT*4 + UP*2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">square</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="c1">#(-4,-2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">square</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">DOWN</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_9.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<h3>Alinhando objetos com <code>arrange()</code>, <code>next_to()</code> e <code>to_edge()</code></h3>
+<p>Vamos agora ver como podemos alinhar objetos. Por alinhamento vamos entender a posição de objetos relativos a outra coisa, seja a outro(s) objeto(s) ou seja, em relação às bordas da tela.</p>
+<h4>Função <code>arrange()</code></h4>
+<p>Um método de alinhamento que já vimos é o método <code>arrange()</code> esse método é acessado dentro de grupos de objetos feitos usando <code>VGroup()</code>, vamos fazer um exemplo prático para entender seu funcionamento:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Equations</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">eq1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f(x) = 2x^4 + 2x^2 + 2"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = \frac</span><span class="si">{d}{dx}</span><span class="s2">(2x^4) + \frac</span><span class="si">{d}{dx}</span><span class="s2">(2x^2) + \frac</span><span class="si">{d}{dx}</span><span class="s2">(2)"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq3</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = 2 \cdot (4x^3) + 2 \cdot (2x^1) + 0"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq4</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = 8x^3 + 4x"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>       
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">eq1</span><span class="p">,</span><span class="n">eq2</span><span class="p">,</span><span class="n">eq3</span><span class="p">,</span><span class="n">eq4</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grupo</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Aqui temos o desenvolvimento de uma derivada, no caso para a função $f(x) = 2x^4 + 2x^2 + 2$:</p>
+<p>$$f(x) = 2x^4 + 2x^2 + 2$$
+$$f'(x) = \frac{d}{dx}(2x^4) + \frac{d}{dx}(2x^2) + \frac{d}{dx}(2)$$
+$$f'(x) = 2 \cdot (4x^3) + 2 \cdot (2x^1) + 0$$
+$$f'(x) = 8x^3 + 4x$$</p>
+<p>Se renderizarmos o código teremos a seguinte imagem:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_10.png" alt="Equations_ManimCE_v0.21.0.png"/></p>
+<p>O que certamente não está certo, por padrão o método <code>arrange()</code> sempre vai dispor os elementos um à direita do outro, porem não é isso que queremos, precisamos que um esteja abaixo do outro, para isso podemos usar o parâmetro <code>direction=DOWN</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Equations2</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">eq1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f(x) = 2x^4 + 2x^2 + 2"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = \frac</span><span class="si">{d}{dx}</span><span class="s2">(2x^4) + \frac</span><span class="si">{d}{dx}</span><span class="s2">(2x^2) + \frac</span><span class="si">{d}{dx}</span><span class="s2">(2)"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq3</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = 2 \cdot (4x^3) + 2 \cdot (2x^1) + 0"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq4</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = 8x^3 + 4x"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>       
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">eq1</span><span class="p">,</span><span class="n">eq2</span><span class="p">,</span><span class="n">eq3</span><span class="p">,</span><span class="n">eq4</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grupo</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Se renderizarmos o código teremos a seguinte imagem:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_11.png" alt="Equations_ManimCE_v0.21.0 1.png"/></p>
+<p>Esse é justamente o resultado que queríamos. Podemos ver a <a href="https://docs.manim.community/en/stable/reference/manim.mobject.mobject.Mobject.html#manim.mobject.mobject.Mobject.arrange">documentação</a> do <code>arrange()</code> para obter mais detalhes, por exemplo, podemos usar o parâmetro, <code>buff</code> para aumentar a distância entre os objetos do grupo.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Equations3</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">eq1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f(x) = 2x^4 + 2x^2 + 2"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = \frac</span><span class="si">{d}{dx}</span><span class="s2">(2x^4) + \frac</span><span class="si">{d}{dx}</span><span class="s2">(2x^2) + \frac</span><span class="si">{d}{dx}</span><span class="s2">(2)"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq3</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = 2 \cdot (4x^3) + 2 \cdot (2x^1) + 0"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">eq4</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f'(x) = 8x^3 + 4x"</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>       
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">eq1</span><span class="p">,</span><span class="n">eq2</span><span class="p">,</span><span class="n">eq3</span><span class="p">,</span><span class="n">eq4</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grupo</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Se renderizarmos o código teremos a seguinte imagem:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_12.png" alt="Equations3_ManimCE_v0.21.0.png"/></p>
+<h4>Função <code>next_to()</code></h4>
+<p>A função <code>next_to()</code> é usada para posicionar elementos próximos de outros elementos, por exemplo, para nossa animação do cálculo da área de um quadrado precisamos como um $n$ ao lado do quadrado e outro logo acima dele.</p>
+<p>Vamos analisar o funcionamento do <code>next_to()</code> com o seguinte código:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Proximo1</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+
+        <span class="n">latex_n1</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">)</span>
+        <span class="n">latex_n2</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">)</span>
+
+        <span class="n">latex_n1</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">RIGHT</span><span class="p">)</span>
+        <span class="n">latex_n2</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span> <span class="n">latex_n1</span><span class="p">,</span> <span class="n">latex_n2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grupo</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Se renderizarmos o código teremos a seguinte imagem:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_13.png" alt="Proximo1_ManimCE_v0.21.0.png"/></p>
+<p>Se observamos a <a href="https://docs.manim.community/en/stable/reference/manim.mobject.mobject.Mobject.html#manim.mobject.mobject.Mobject.next_to">documentação</a> da função <code>next_to()</code> temos que definir algum outro objeto, assim, temos que o objeto a esquerda, que no nosso exemplo são <code>latex_n1</code> e <code>latex_n2</code> devem ficar próximos do objeto <code>quadrado</code>, porem <code>latex_n1</code> precisa ficar a direita (<code>RIGHT</code>) e <code>latex_n2</code> precisa ficar acima (<code>UP</code>).</p>
+<p>Assim como no <code>arrange()</code> também podemos definir uma distância extra entre os elementos usando o parâmetro <code>buff</code>.</p>
+<h4>Função <code>to_edge()</code></h4>
+<p>A função <code>to_edge()</code> tem um funcionamento parecido com da função <code>next_to()</code>, porem a função <code>to_edge()</code> posiciona o elemento para uma borda da tela, vamos ver um exemplo:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Borda</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">texto</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Essa função é boa para fazer títulos"</span><span class="p">)</span>
+
+        <span class="n">texto</span><span class="o">.</span><span class="n">to_edge</span><span class="p">(</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Se renderizarmos o código teremos a seguinte imagem:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_14.png" alt="Borda_ManimCE_v0.21.0.png"/></p>
+<p>Na <a href="https://docs.manim.community/en/stable/reference/manim.mobject.mobject.Mobject.html#manim.mobject.mobject.Mobject.to_edge">documentação</a> da função podemos ver que tudo que ela precisa para ajustar a posição do objeto é um vetor que indique a direção, e assim como as outras funções também podemos definir um <code>buff</code>.</p>
+<h4>Função <code>get_center()</code></h4>
+<p>A função <code>get_center()</code> nos retorna o centro de um objeto, o que pode ser particularmente útil quando precisamos mudar a posição de outro objeto para ser o centro de um segundo objeto, vamos ver um exemplo de aplicação:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Center</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">texto</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A"</span><span class="p">)</span>
+
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span><span class="n">side_length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">fill_opacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+        <span class="n">quadrado</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="n">texto</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">quadrado</span><span class="o">.</span><span class="n">get_center</span><span class="p">())</span>
+        <span class="n">texto</span><span class="o">.</span><span class="n">set_z_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>        
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">texto</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grupo</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Se renderizarmos o código teremos a seguinte imagem:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_15.png" alt="Center_ManimCE_v0.21.0.png"/></p>
+<p>Perceba que nosso objetivo era deixar o $A$ no centro do quadrado, porem nos deslocamos ele para a direita, dessa forma, precisamos da nova posição do quadrado para que o $A$ fique ao centro, a forma que fizemos faz uso da função <code>get_center()</code>, porem, poderíamos mover alternativamente o $A$ para a direita na mesma quantidade que movemos o quadrado, mas usar a posição absoluta do objeto é muito menos suscetível a erros.</p>
+<p>Podemos ver mais detalhes da função <code>get_center()</code> na <a href="https://docs.manim.community/en/stable/reference/manim.mobject.mobject.Mobject.html#manim.mobject.mobject.Mobject.get_center">documentação</a>, mas seu funcionamento é simples, ele não recebe nenhum parâmetro e retorna o centro (no caso as coordenadas) do objeto.</p>
+<p>Além disso, para esse exemplo fizemos o uso da função <code>set_z_index()</code>, isso porque estamos colocando dos objetos um sobre o outro, por isso precisamos definir quem está na frente.
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_16.png" alt="LayerPerspective_white_ManimCE_v0.21.0.png"/></p>
+<h2>Alterando objetos visualmente</h2>
+<p>Agora sabemos o básico sobre posicionamento de objetos na tela, mas como podemos alterar o visual desses objetos? </p>
+<p>Essa não é uma pergunta difícil, nós já estamos até agora alterando o visual de objetos, sabemos que existem atributos nos objetos que, quando alterados, mudam o visual dos objetos, mas as perguntas que ainda ficam são: como eu descubro o nome desses atributos? Como descubro o que colocar em cada um deles? E como eu descubro quais são os atributos?</p>
+<p>Para isso podemos observar a <a href="https://docs.manim.community/en/stable/reference/manim.mobject.geometry.polygram.Square.html">documentação</a>, mais especificamente precisamos olhar a documentação do objeto <code>Square()</code>.</p>
+<p>Na página podemos encontrar informações uteis do objeto, exemplos de uso e o que estamos procurando, os atributos:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_17.png" alt="Pasted image 20260828103556.png"/></p>
+<p>Nesse caso, para nossa animação nos interessa os atributos: <code>color</code>, <code>side_length</code>, <code>fill_color</code> e <code>fill_opacity</code>.</p>
+<p>Algo que pode estar te incomodando é que o <code>fill_opacity</code> não aparece na lista, e realmente isso é um problema, principalmente para iniciantes, mas isso é algo comum, isso acontece porque o objeto <code>Square()</code> herda propriedade de outro objeto, dessa forma essa propriedade só pode ser vista nesse objeto.</p>
+<blockquote>
+<p><strong>Por que <code>fill_opacity</code> funciona no <code>Square()</code>?</strong>
+O parâmetro é repassado via <code>**kwargs</code> através da <strong>Herança de Classes (POO)</strong>.</p>
+<p><code>Square</code> $\rightarrow$ <code>Rectangle</code> $\rightarrow$ <code>Polygon</code> $\rightarrow$ <code>Polygram</code> $\rightarrow$ <strong><code>VMobject</code></strong> $\rightarrow$ <strong><code>Mobject</code></strong></p>
+<p>Ele é originalmente definido na classe base <strong><code>VMobject</code></strong>, que gerencia o preenchimento e os atributos vetoriais no Manim.</p>
+</blockquote>
+<p>Com isso podemos testar esses atributos para ver como eles alteram a objeto final:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>  
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberPlaneExample</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">number_plane</span> <span class="o">=</span> <span class="n">NumberPlane</span><span class="p">(</span>
+            <span class="n">background_line_style</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">"stroke_color"</span><span class="p">:</span> <span class="n">TEAL</span><span class="p">,</span>
+                <span class="s2">"stroke_width"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"stroke_opacity"</span><span class="p">:</span> <span class="mf">0.1</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">number_plane</span><span class="p">)</span>
+
+        <span class="n">square</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">side_length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">fill_opacity</span><span class="o">=</span><span class="mf">0.4</span>
+        <span class="p">)</span>
+
+        <span class="n">square</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">square</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte imagem após renderizar:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_18.png" alt="NumberPlaneExample4_ManimCE_v0.21.0.png"/></p>
+<p>Alternativamente podemos usar a função <code>scale()</code> para alterar o tamanho de objetos, na <a href="https://docs.manim.community/en/stable/reference/manim.mobject.mobject.Mobject.html#manim.mobject.mobject.Mobject.scale">documentação</a> da função podemos ver um exemplo.</p>
+<p><strong>Agora que já sabemos todas as funcionalidades que precisamos vamos tentar implementar nosso projeto inicial.</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">titulo</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Área de um quadrado"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">titulo</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">titulo</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">to_edge</span><span class="p">(</span><span class="n">UP</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_opacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+            <span class="n">side_length</span><span class="o">=</span><span class="mi">4</span>
+            <span class="p">)</span>
+
+        <span class="n">latex_n1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">latex_n2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">latex_n1</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">RIGHT</span><span class="p">)</span>
+        <span class="n">latex_n2</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">quadrado</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_n1</span><span class="p">),</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_n2</span><span class="p">))</span>
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">latex_n1</span><span class="p">,</span><span class="n">latex_n2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">grupo</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">4</span><span class="p">))</span>
+
+        <span class="n">latex_area</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A=n^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">latex_A</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span> 
+
+        <span class="n">latex_area</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="n">UP</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_area</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="n">latex_A</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">quadrado</span><span class="o">.</span><span class="n">get_center</span><span class="p">())</span>
+        <span class="n">latex_A</span><span class="o">.</span><span class="n">set_z_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_A</span><span class="p">))</span>
+
+        <span class="n">valor_n</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n=2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">conta1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A=2^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">conta2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A=4"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">grupo_conta</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">conta1</span><span class="p">,</span><span class="n">conta2</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="n">valor_n</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">latex_area</span><span class="p">,</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">valor_n</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="n">grupo_conta</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">valor_n</span><span class="p">,</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">grupo_conta</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">valor_n</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">conta1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">conta2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_19.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<h1>Projeto 3 - Animações inteligentes</h1>
+<p>Nosso projeto para mostrar o cálculo da área de um quadrado parece bom, porem o que acontece se quisermos mudar o valor de $n$?</p>
+<p>Nesse caso podemos alterar todas as linhas que contem o LaTeX que contem de algumas forma o valor de $n$, e essa é uma solução perfeitamente valida, mas isso pode acabar se tornando um problema rapidamente se nossa animação, por exemplo, conter diversas linhas para o desenvolvimento de uma conta.</p>
+<h2>Então como podemos resolver esse problema?</h2>
+<p>Nesse caso podemos usar uma variável para armazenar o valor de $n$ e usar uma função para calcular o valor da área. Vamos ver um exemplo simples:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="n">lado</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">lado</span> <span class="o">**</span> <span class="mi">2</span>
+</code></pre></div>
+
+<p>Até agora estamos usando variáveis do Python para armazenar objetos Manim, agora estamos usando uma variável <code>n</code> para armazenar um valor, nesse caso <code>2</code>.</p>
+<p>Na linha abaixo definimos uma função chamada <code>area()</code> essa função recebe um valor <code>lado</code> e retorna o lado elevado ao quadrado.</p>
+<h2>Mas como podemos usar isso na nossa animação?</h2>
+<p>Para usar essa estrutura na nossa animação podemos fazer da seguinte forma:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">titulo</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Área de um quadrado"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">titulo</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">titulo</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">to_edge</span><span class="p">(</span><span class="n">UP</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_opacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+            <span class="n">side_length</span><span class="o">=</span><span class="mi">4</span>
+            <span class="p">)</span>
+
+        <span class="n">latex_n1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">latex_n2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">latex_n1</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">RIGHT</span><span class="p">)</span>
+        <span class="n">latex_n2</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">quadrado</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_n1</span><span class="p">),</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_n2</span><span class="p">))</span>
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">latex_n1</span><span class="p">,</span><span class="n">latex_n2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">grupo</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">4</span><span class="p">))</span>
+
+        <span class="n">latex_area</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A=n^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">latex_A</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span> 
+
+        <span class="n">latex_area</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="n">UP</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_area</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="n">latex_A</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">quadrado</span><span class="o">.</span><span class="n">get_center</span><span class="p">())</span>
+        <span class="n">latex_A</span><span class="o">.</span><span class="n">set_z_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_A</span><span class="p">))</span>
+
+        <span class="c1"># Definição do lado e area</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="n">lado</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">lado</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="n">valor_n</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">conta1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="sa">r</span><span class="s2">"^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">conta2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">grupo_conta</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">conta1</span><span class="p">,</span><span class="n">conta2</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="n">valor_n</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">latex_area</span><span class="p">,</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">valor_n</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="n">grupo_conta</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">valor_n</span><span class="p">,</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">grupo_conta</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">valor_n</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">conta1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">conta2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_20.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>Vamos ver a linhas que alteramos para entender o que está acontecendo. Primeiro fizemos a inserção da estrutura que discutimos anteriormente:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="n">lado</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">lado</span> <span class="o">**</span> <span class="mi">2</span>
+</code></pre></div>
+
+<p>Logo abaixo fizemos uma alteração nas definições dos objetos <code>MathTex()</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">valor_n</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="n">conta1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="sa">r</span><span class="s2">"^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="n">conta2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Perceba que tudo que fizemos foi alterar o texto de entrada para o LaTeX, porem, estamos fazendo uso da variável <code>n</code> e da função <code>area()</code> que definimos anteriormente, vamos ver o que esta acontecendo de fato nessas linhas, vamos tomar de exemplo a primeira linha:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">valor_n</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Aqui podemos ver que definimos uma variável chamada <code>valor_n</code>, essa variável armazena o objeto Manim <code>MathTex()</code>, como vimos anteriormente, o objeto <code>MathTex()</code> precisa de uma <code>string</code> (ou um texto) para definir o que será escrito, nesse caso estamos passando duas <code>strings</code>, a primeira é <code>r"n="</code> e a segunda fazemos uso da função <code>str()</code> para transformar <code>n</code>, que atualmente é um número, em uma <code>string</code>, nesse caso, o objeto <code>MathTex()</code> irá juntar as duas strings em uma, como definimos n=2 vamos ter que a string final para esse objeto <code>MathTex()</code> será: <code>r"n=2"</code> que é justamente o que queremos.</p>
+<p>Os outros dois objetos <code>MathTex()</code> seguem o mesmo principio:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">conta1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="sa">r</span><span class="s2">"^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="n">conta2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Nesse caso temos que <code>conta1</code> terá o LaTeX correspondente a: <code>r"A=2^2"</code> e <code>conta2</code> terá o LaTeX correspondente a: <code>r"A=4^2"</code>.</p>
+<p>Tente alterar o valor de n para 5, por exemplo, e renderize a animação para ver o resultado. Tente colocar outros valores arbitrários e veja o que acontece.</p>
+<h2>Por que isso é relevante?</h2>
+<p>O grande ponto de se usar uma linguagem de programação para se criar animações é poder usar toda a lógica de programação e ferramentas dessas linguagens para criar animações que sejam inteligentes, ou seja, animações que fazem alterações seguindo regras específicas sem que o animador (ou nesse caso, o professor) se preocupe em checar todos os objetos da sua animação.</p>
+<p>Nesse caso fizemos o uso de uma variável e uma função do Python para criar uma animação extremamente fácil de ser adaptada para valores diferentes de $n$.</p>
+<p>Vamos mudar o valor de <code>n</code> no código para 8 por exemplo:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">titulo</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Área de um quadrado"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">titulo</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">titulo</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">to_edge</span><span class="p">(</span><span class="n">UP</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span>
+            <span class="n">fill_opacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+            <span class="n">side_length</span><span class="o">=</span><span class="mi">4</span>
+            <span class="p">)</span>
+
+        <span class="n">latex_n1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">latex_n2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">latex_n1</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">RIGHT</span><span class="p">)</span>
+        <span class="n">latex_n2</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">quadrado</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_n1</span><span class="p">),</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_n2</span><span class="p">))</span>
+
+        <span class="n">grupo</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">quadrado</span><span class="p">,</span><span class="n">latex_n1</span><span class="p">,</span><span class="n">latex_n2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">grupo</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">4</span><span class="p">))</span>
+
+        <span class="n">latex_area</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A=n^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">latex_A</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span> 
+
+        <span class="n">latex_area</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="n">UP</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_area</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="n">latex_A</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">quadrado</span><span class="o">.</span><span class="n">get_center</span><span class="p">())</span>
+        <span class="n">latex_A</span><span class="o">.</span><span class="n">set_z_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">latex_A</span><span class="p">))</span>
+
+        <span class="c1"># Definição do lado e area</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span> 
+        <span class="k">def</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="n">lado</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">lado</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="n">valor_n</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"n="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">conta1</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="sa">r</span><span class="s2">"^2"</span><span class="p">,</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+        <span class="n">conta2</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"A="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span><span class="n">font_size</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">grupo_conta</span> <span class="o">=</span> <span class="n">VGroup</span><span class="p">(</span><span class="n">conta1</span><span class="p">,</span><span class="n">conta2</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="n">valor_n</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">latex_area</span><span class="p">,</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">valor_n</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="n">grupo_conta</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">valor_n</span><span class="p">,</span><span class="n">DOWN</span><span class="p">,</span><span class="n">buff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">grupo_conta</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">valor_n</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">conta1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">conta2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_21.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>Esse é apenas um exemplo simples, porem existem muitas outras formas e muitas outras ferramentas de se deixar as animações Manim inteligentes, vamos ver mais uma no próximo projeto.</p>
+<h1>Projeto 4 - Gráficos</h1>
+<p>Vamos agora partir para um projeto mais complexo, vamos criar uma animação que desenhe um a curva de uma função qualquer em um plano cartesiano, um ponto que caminhe sobre essa curva e, mais ao lado, escrever a posição desse ponto atualizando em tempo real enquanto ele caminha sobre a curva.</p>
+<p>Novamente, vamos fazer um esboço de como gostaríamos que nossa animação antes de partir diretamente para o código.
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_22.png" alt="Pasted image 20260901084637.png"/></p>
+<p>Assim como no projeto 2 identificamos almas coisas que ainda não sabemos como criar:
+- Planos cartesianos
+- Gráficos
+- Valores que se alteram de forma dinâmica 
+- Objetos que se movem e se atualizam seguindo valores </p>
+<p>Como isso vamos ver cada um desses para podermos criar nossa animação.</p>
+<h2>Planos cartesianos e gráficos</h2>
+<p>A melhor forma de entendermos como criar planos cartesianos e gráficos é com um exemplo, vamos ver um a seguir:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plano_catesiano</span> <span class="o">=</span> <span class="n">Axes</span><span class="p">(</span>
+            <span class="n">x_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">y_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">x_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">axis_config</span><span class="o">=</span><span class="p">{</span><span class="s2">"color"</span><span class="p">:</span> <span class="n">WHITE</span><span class="p">},</span>
+        <span class="p">)</span>
+        
+        <span class="n">legenda_plano_cartesiano</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">get_axis_labels</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  
+
+        <span class="n">curva</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>  
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plano_catesiano</span><span class="p">,</span><span class="n">legenda_plano_cartesiano</span><span class="p">,</span><span class="n">curva</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte imagem após renderizar:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_23.png" alt="PlanoCartesiano_ManimCE_v0.21.0.png"/></p>
+<p>Nesse ponto já temos alguma familiaridade com a Manim e talvez o código não parece tão estranho, porem, vamos linha a linha analisar o que está acontecendo.</p>
+<p>Primeiro temos o uso de um objeto novo, o <code>Axes()</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">plano_catesiano</span> <span class="o">=</span> <span class="n">Axes</span><span class="p">(</span>
+    <span class="n">x_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">y_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">x_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">axis_config</span><span class="o">=</span><span class="p">{</span><span class="s2">"color"</span><span class="p">:</span> <span class="n">WHITE</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Assim como todo objeto Manim na sua criação podemos passar alguns atributos para definir como ele irá se parecer, nesse caso, fizemos um exemplo simples, porem o objeto <code>Axes()</code> é um dos objetos com a maior quantidade de atributos para serem alterados, recomendo fortemente checar a <a href="https://docs.manim.community/en/stable/reference/manim.mobject.graphing.coordinate_systems.Axes.html">documentação</a> tanto do objeto <code>Axes()</code> quanto a <a href="https://docs.manim.community/en/stable/reference/manim.mobject.graphing.coordinate_systems.CoordinateSystem.html#manim.mobject.graphing.coordinate_systems.CoordinateSystem">documentação</a> do objeto <code>CoordinateSystem()</code> para checar quais atributos podem ser alterados.</p>
+<p>Além disso, na documentação é possível encontrar diversos exemplos de uso, o que definitivamente ajuda bastante.</p>
+<p>Os atributos mais importantes são o <code>x_range</code> e <code>y_range</code> esses atributos recebem uma lista de valores onde respectivamente temos, valor inicial, valor final e valor de incremento, por exemplo, para o <code>x_range</code> temos a lista <code>[-2, 2, 1]</code> o que significa que o eixo x irá variar de $-2$ até $2$ com incrementos a cada $1$.</p>
+<p>Se quiséssemos colocar os números logo abaixo das marcações, por exemplo, poderíamos usar o parâmetro <code>axis_config</code> e adicionar um sub parâmetro <code>"include_numbers": True</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">grafico2</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plano_catesiano</span> <span class="o">=</span> <span class="n">Axes</span><span class="p">(</span>
+            <span class="n">x_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">y_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">x_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">axis_config</span><span class="o">=</span><span class="p">{</span><span class="s2">"color"</span><span class="p">:</span> <span class="n">WHITE</span><span class="p">,</span> <span class="s2">"include_numbers"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">)</span>  
+
+        <span class="n">legenda_plano_cartesiano</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">get_axis_labels</span><span class="p">()</span>  
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  
+
+        <span class="n">curva</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>  
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plano_catesiano</span><span class="p">,</span><span class="n">legenda_plano_cartesiano</span><span class="p">,</span><span class="n">curva</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte imagem após renderizar:
+<img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_24.png" alt="grafico2_ManimCE_v0.21.0.png"/></p>
+<p><strong>Tente alterar a função e os parâmetros do gráfico para criar outras curvas.</strong></p>
+<h2>Valores que se alteram de forma dinâmica e atualizando objetos</h2>
+<p>Essa é uma das maiores funcionalidades do Manim e talvez uma das mais interessantes e mais versáteis, porem, é certamente a mais complicada de se entender; </p>
+<h3>Exemplo 1</h3>
+<p>Vamos ver um primeiro exemplo de como aplicar esse conceito:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExemploValueTracker</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">linha_numerica</span> <span class="o">=</span> <span class="n">NumberLine</span><span class="p">()</span>
+        <span class="n">seta</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+        <span class="n">rotulo</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+
+        <span class="n">seta</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">linha_numerica</span><span class="o">.</span><span class="n">n2p</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">UP</span><span class="p">)</span>
+        <span class="n">rotulo</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">seta</span><span class="p">,</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">ValueTracker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_pointer</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+            <span class="n">posicao</span> <span class="o">=</span> <span class="n">linha_numerica</span><span class="o">.</span><span class="n">n2p</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">posicao</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+            <span class="n">rotulo</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">objeto</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+
+        <span class="n">seta</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_pointer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">linha_numerica</span><span class="p">,</span> <span class="n">seta</span><span class="p">,</span> <span class="n">rotulo</span><span class="p">)</span>        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">increment_value</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_25.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>Vamos linha a linha para entendermos o que está acontecendo:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExemploValueTracker</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">linha_numerica</span> <span class="o">=</span> <span class="n">NumberLine</span><span class="p">()</span>
+        <span class="n">seta</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+        <span class="n">rotulo</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+
+        <span class="n">seta</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">linha_numerica</span><span class="o">.</span><span class="n">n2p</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">UP</span><span class="p">)</span>
+        <span class="n">rotulo</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">seta</span><span class="p">,</span><span class="n">UP</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Nessa seção não temos muita coisa nova, temos 3 objetos sendo definidos, <code>NumberLine()</code>, <code>Vector(DOWN)</code> e <code>MathTex("x")</code>, muito embora 2 deles ainda não foram utilizados eles são bem intuitivos, <code>NumberLine()</code> faz uma reta numérica simples e <code>Vector(DOWN)</code> faz a representação de um vetor na direção inserida como parâmetro.</p>
+<p>Logo abaixo fazemos uso de algo novo <code>seta.next_to(linha_numerica.n2p(0),UP)</code> o método <code>n2p()</code> é um método do <code>NumberLine()</code> que retorna as coordenadas de um ponto da reta, convertendo um número para um ponto (por isso n2p $\rightarrow$ number to point), nesse caso estamos posicionando a seta logo acima de um ponto específico (no caso do ponto $0$) e movemos o rotulo para cima da seta.</p>
+<p>Abaixo temos algumas coisas novas:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">tracker</span> <span class="o">=</span> <span class="n">ValueTracker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_pointer</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+    <span class="n">posicao</span> <span class="o">=</span> <span class="n">linha_numerica</span><span class="o">.</span><span class="n">n2p</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+    <span class="n">objeto</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">posicao</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+    <span class="n">rotulo</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">objeto</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+
+<span class="n">seta</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_pointer</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">linha_numerica</span><span class="p">,</span> <span class="n">seta</span><span class="p">,</span> <span class="n">rotulo</span><span class="p">)</span>        
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Primeiro criamos um novo objeto Manim, o <code>ValueTracker()</code>, esse objeto nada mais é que uma forma de armazenar valores, a diferença desse objeto para algo como <code>tracker=0</code> é que com o <code>ValueTracker()</code> temos diversas funcionalidades do Manim que são interessantes, vamos ver algumas mais a frente.</p>
+<p>Além do <code>ValueTracker()</code> nos definimos uma função chamada <code>update_pointer</code>, essa função descreve quais alterações nosso objeto precisa seguir, nesse caso nossa função faz 3 coisas diferentes:</p>
+<p>1) Primeiro nos criamos uma variável chamada <code>posicao</code> que recebe o valor <code>linha_numerica.n2p(tracker.get_value())</code> a função <code>n2p</code> nos já analisamos antes, porem agora usamos a função <code>get_value()</code> no objeto <code>tracker</code>, ela é bem intuitiva, tudo que ela faz é retornar o valor que está armazenado atualmente no <code>tracker</code>.
+2) Depois disso configuramos nosso objeto para ficar próximo da posição indicada deslocado para cima.
+3) Por último fazemos o mesmo com o rótulo, mas ele deve ficar acima do objeto também deslocado para cima.</p>
+<p><strong>Mas quem é esse objeto?</strong></p>
+<p>Essa função recebe um <code>objeto</code> genérico e descreve um padrão de organização para o <code>objeto</code> e para outros objetos seguindo uma regra específica, nesse caso, toda vez que o valor do <code>tracker</code> mudar esse objeto será posicionado acima de um ponto correspondente ao <code>tracker</code> na <code>NumberLine</code>, e da mesma forma o <code>rotulo</code> será ajustado de acordo.</p>
+<p><strong>Por que fazer tudo isso se eu posso simplesmente mover a seta com um <code>shift()</code> ou com um <code>move_to()</code>?</strong></p>
+<p>Existe um motivo extremamente interessante do porquê fazer isso. Vamos continuar a analisar nosso código:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">seta</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_pointer</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">linha_numerica</span><span class="p">,</span> <span class="n">seta</span><span class="p">,</span> <span class="n">rotulo</span><span class="p">)</span>        
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Na primeira linha indicamos para o objeto <code>seta</code> através do método <code>add_updater()</code> que o padrão de organização definido na função <code>update_pointer</code>, que nos criamos anteriormente, deve ser adicionado a ele.</p>
+<p>Na linha abaixo inserimos todos os nossos objetos em cena com o <code>self.add()</code>, porem a animação que fazemos é a alteração do valor do <code>tracker</code>.</p>
+<p>Esse é o porquê de fazemos tudo isso, agora, sempre que quisermos mover a seta a única coisa que precisamos fazer é animar a mudança de valor do <code>tracker</code>!</p>
+<p>Perceba que o resto das animações são apenas alterações no valor do <code>tracker</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">increment_value</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Isso facilita imensamente a logística da nossa animação, agora não precisamos nos preocupar com a seta e com o rótulo de forma individual, seus comportamentos dentro da animação agora estão fixos com o valor do <code>tracker</code>.</p>
+<p>Esses tipos de comportamentos de animações Manim são chamados <strong>updaters</strong>.</p>
+<p>Vamos fazer uma adição a esse exemplo, vamos adicionar um texto LaTeX com um <code>x=</code> com o valor do <code>tracker</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExemploValueTracker</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">linha_numerica</span> <span class="o">=</span> <span class="n">NumberLine</span><span class="p">()</span>
+        <span class="n">seta</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+        <span class="n">rotulo</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+
+        <span class="n">seta</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">linha_numerica</span><span class="o">.</span><span class="n">n2p</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">UP</span><span class="p">)</span>
+        <span class="n">rotulo</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">seta</span><span class="p">,</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">ValueTracker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_pointer</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+            <span class="n">posicao</span> <span class="o">=</span> <span class="n">linha_numerica</span><span class="o">.</span><span class="n">n2p</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">posicao</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+            <span class="n">rotulo</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">objeto</span><span class="p">,</span> <span class="n">UP</span><span class="p">)</span>
+
+        <span class="n">seta</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_pointer</span><span class="p">)</span>
+
+        <span class="n">texto</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"x=0.0"</span><span class="p">)</span>
+        <span class="n">texto</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">UP</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_texto</span><span class="p">(</span><span class="n">objeto</span><span class="p">:</span><span class="n">Tex</span><span class="p">):</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+            <span class="n">novo_objeto</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x = </span><span class="si">{</span><span class="n">valor</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">UP</span><span class="p">)</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_objeto</span><span class="p">)</span>
+
+        <span class="n">texto</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_texto</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">linha_numerica</span><span class="p">,</span> <span class="n">seta</span><span class="p">,</span> <span class="n">rotulo</span><span class="p">,</span><span class="n">texto</span><span class="p">)</span>        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">increment_value</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_26.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>Perceba que quase tudo permanece igual, porem fizemos a adição da seguinte parte:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">texto</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"x=0.0"</span><span class="p">)</span>
+<span class="n">texto</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">UP</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_texto</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+    <span class="n">valor</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+    <span class="n">novo_objeto</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x = </span><span class="si">{</span><span class="n">valor</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">UP</span><span class="p">)</span>
+    <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_objeto</span><span class="p">)</span>
+
+<span class="n">texto</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_texto</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">linha_numerica</span><span class="p">,</span> <span class="n">seta</span><span class="p">,</span> <span class="n">rotulo</span><span class="p">,</span><span class="n">texto</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Criamos um objeto <code>Tex()</code> e posicionamos ele mais acima, até esse ponto nada de novo, porem logo a baixo criamos uma função para mudar o comportamento de um <code>objeto</code>, nesse caso estamos armazenando o valor do nosso <code>tracker</code> usando a função <code>get_value()</code>.</p>
+<p>Logo abaixo estamos criando um novo objeto <code>Tex()</code> esse objeto é exatamente igual ao nosso objeto original, porem o texto é igual a <code>f"x = {valor:.1f}"</code> esse é um tipo de string python onde podemos inserir valores usando <code>{}</code> nesse caso estamos inserindo o valor da variável <code>valor</code>, o <code>:.1f</code> indica que queremos com apenas 1 casa decimal de precisão (caso contrario teríamos um número desnecessariamente grande de casas na tela).</p>
+<p>Por último estamos dizendo que o <code>objeto</code> precisa ser substituindo pelo <code>novo_objeto</code> usando o método <code>become()</code>.</p>
+<p>Adicionamos esse comportamento ao texto usando o método <code>add_updater()</code> e adicionamos o texto a cena dentro do método <code>add()</code>.</p>
+<p>Quando renderizarmos a animação teremos a indicação do valor de x na tela. Perceba que para isso não precisamos alterar mais nada na parte onde fazemos as animações de fato, tudo nessa animação é dependente do valor do <code>tracker</code> e os elementos se organizam e se alteram automaticamente quando o <code>tracker</code> é alterado.</p>
+<p>Esse tipo de comportamento é o que deixa as animações Manim extremamente versáteis e inteligentes. Se quiser ver mais sobre esses tipos de animação segue algumas recomendações de exemplos na documentação do Manim:</p>
+<ul>
+<li><a href="https://docs.manim.community/en/stable/reference/manim.mobject.value_tracker.ValueTracker.html">ValueTracker</a></li>
+<li><a href="https://docs.manim.community/en/stable/reference/manim.mobject.mobject.Mobject.html#manim.mobject.mobject.Mobject.add_updater">add_updater</a></li>
+</ul>
+<h3>Exemplo 2</h3>
+<p>Vamos tentar aplicar o conceito de <code>updaters</code> em uma animação simples com um gráfico. Vamos desenhar uma curva na tela com um ponto, e variar a posição desse ponto sobre a curva:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Grafico</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plano_catesiano</span> <span class="o">=</span> <span class="n">Axes</span><span class="p">(</span>
+            <span class="n">x_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">y_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">x_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">axis_config</span><span class="o">=</span><span class="p">{</span><span class="s2">"color"</span><span class="p">:</span> <span class="n">WHITE</span><span class="p">,</span> <span class="s2">"include_numbers"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="n">legenda_plano_cartesiano</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">get_axis_labels</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="n">curva</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">ValueTracker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ponto</span> <span class="o">=</span> <span class="n">Dot</span><span class="p">(</span>
+            <span class="n">point</span><span class="o">=</span><span class="n">plano_catesiano</span><span class="o">.</span><span class="n">c2p</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">()))</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_ponto</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+            <span class="n">novo_ponto</span> <span class="o">=</span> <span class="n">Dot</span><span class="p">(</span>
+                <span class="n">point</span><span class="o">=</span><span class="n">plano_catesiano</span><span class="o">.</span><span class="n">c2p</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">()))</span>
+            <span class="p">)</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_ponto</span><span class="p">)</span>
+
+        <span class="n">ponto</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_ponto</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plano_catesiano</span><span class="p">,</span> <span class="n">legenda_plano_cartesiano</span><span class="p">,</span> <span class="n">curva</span><span class="p">,</span> <span class="n">ponto</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_27.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+
+<p>O começo do nosso código não possui nada muito novo, apenas replicamos o mesmo gráfico que fizemos anteriormente.</p>
+<p>Depois disso criamos um <code>Dot()</code> com um atributo <code>point</code> que pode parecer estranho em um primeiro momento: <code>plano_catesiano.c2p(x.get_value(), func(x.get_value()))</code>. O método <code>c2p()</code> está associado ao objeto <code>Axes()</code>, precisamos usar ele pois existe uma diferença entre as coordenadas do <code>plano_cartesiano</code> com as coordenadas da cena dentro do Manim, podemos observar essa diferença quando criamos um objeto <code>Axes()</code> com um <code>NumberPlane()</code>:</p>
+<p><img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_28.png" alt="Pasted image 20260901163410.png"/></p>
+<p>Embora ambos os pontos utilizem as coordenadas $(2,2)$, eles estão em sistemas de referência diferentes. O <strong>ponto vermelho</strong> está posicionado no sistema de coordenadas globais do Manim (coincidindo com o <code>NumberPlane</code>), enquanto o <strong>ponto verde</strong> está nas coordenadas do próprio gráfico (<code>Axes</code>). Para posicionar um elemento corretamente no gráfico, usamos o método <code>.c2p()</code> (<em>coords to point</em>), que converte as coordenadas do plano cartesiano na posição exata da tela do Manim.</p>
+<p>Nesse caso estamos definindo as coordenadas do nosso ponto (<code>Dot</code>) para as coordenadas <code>(x.get_value(), func(x.get_value())</code> se analisarmos rapidamente o que isso faz podemos perceber que estamos colocando ponto nas coordenadas $(x,f(x))$ o que é justamente o que precisamos.</p>
+<p>Logo abaixo podemos ver a função que vamos adicionar posteriormente como <code>updater</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_ponto</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+    <span class="n">novo_ponto</span> <span class="o">=</span> <span class="n">Dot</span><span class="p">(</span>
+        <span class="n">point</span><span class="o">=</span><span class="n">plano_catesiano</span><span class="o">.</span><span class="n">c2p</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">()))</span>
+    <span class="p">)</span>
+    <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_ponto</span><span class="p">)</span>
+
+<span class="n">ponto</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_ponto</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Tudo que a função faz é a atualizar as coordenadas do ponto para o valor de <code>x</code> que é nosso <code>ValueTracker</code> e substituir o objeto pelo novo ponto usando o método <code>become()</code>.</p>
+<p>Por fim tudo que temos que fazer é mudar o valor do <code>ValueTracker</code> para termos nossa animação.</p>
+<p><strong>Agora que já sabemos todas as funcionalidades que precisamos vamos tentar implementar nosso projeto inicial.</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Projeto4</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plano_catesiano</span> <span class="o">=</span> <span class="n">Axes</span><span class="p">(</span>
+            <span class="n">x_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">y_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">x_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+            <span class="n">axis_config</span><span class="o">=</span><span class="p">{</span><span class="s2">"color"</span><span class="p">:</span> <span class="n">WHITE</span><span class="p">,</span> <span class="s2">"include_numbers"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">LEFT</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">legenda_plano_cartesiano</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">get_axis_labels</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="n">curva</span> <span class="o">=</span> <span class="n">plano_catesiano</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">ValueTracker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ponto</span> <span class="o">=</span> <span class="n">Dot</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">plano_catesiano</span><span class="o">.</span><span class="n">c2p</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">())))</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_ponto</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+            <span class="n">novo_ponto</span> <span class="o">=</span>
+                <span class="n">Dot</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">plano_catesiano</span><span class="o">.</span><span class="n">c2p</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">()))</span>
+                <span class="p">)</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_ponto</span><span class="p">)</span>
+
+        <span class="n">ponto</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">update_ponto</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plano_catesiano</span><span class="p">,</span> <span class="n">legenda_plano_cartesiano</span><span class="p">,</span> <span class="n">curva</span><span class="p">,</span> <span class="n">ponto</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="n">valor_f_latex</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"f(x)="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">())))</span>
+        <span class="n">valor_x_latex</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"x="</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">()))</span>
+
+        <span class="n">valor_x_latex</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">UP</span><span class="p">)</span>
+        <span class="n">valor_f_latex</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">valor_x_latex</span><span class="p">,</span><span class="n">DOWN</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">valor_f_latex_update</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+            <span class="n">novo_texto</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">f</span><span class="s2">"f(x)=</span><span class="si">{</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">novo_texto</span><span class="o">.</span><span class="n">next_to</span><span class="p">(</span><span class="n">valor_x_latex</span><span class="p">,</span><span class="n">DOWN</span><span class="p">)</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_texto</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">valor_x_latex_update</span><span class="p">(</span><span class="n">objeto</span><span class="p">):</span>
+            <span class="n">novo_texto</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">novo_texto</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">RIGHT</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">UP</span><span class="p">)</span>
+            <span class="n">objeto</span><span class="o">.</span><span class="n">become</span><span class="p">(</span><span class="n">novo_texto</span><span class="p">)</span>
+
+        <span class="n">valor_x_latex</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">valor_x_latex_update</span><span class="p">)</span>
+        <span class="n">valor_f_latex</span><span class="o">.</span><span class="n">add_updater</span><span class="p">(</span><span class="n">valor_f_latex_update</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Write</span><span class="p">(</span><span class="n">valor_x_latex</span><span class="p">),</span><span class="n">Write</span><span class="p">(</span><span class="n">valor_f_latex</span><span class="p">))</span>        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">animate</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Podemos ver a seguinte animação após renderizar:</p>
+<video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_29.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
+    </article>
+  </div>
+
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

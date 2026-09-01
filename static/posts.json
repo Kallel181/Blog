@@ -1,6 +1,21 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim-01_09_2026.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/uma_outra_introduo_ao_manim-01_09_2026.html",
+            "resume": "Neste post, discutimos o que é o Manim e como utilizar a programação em Python para criar animações matemáticas precisas e profissionais, detalhando, passo a passo, a estrutura de código, o sistema de coordenadas e a lógica necessária para construir e renderizar suas primeiras cenas.",
+            "name": "Uma (outra) introdução ao Manim",
+            "date": "01/09/2026",
+            "tags": [
+                "Manim",
+                "Python",
+                "Animações",
+                "Matemmatica",
+                "REA",
+                "STEM"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/htb_babyencryption-06_06_2026.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/htb_babyencryption-06_06_2026.html",
             "resume": "In this post, I document the full resolution of a Python-based crypto challenge. After analyzing an encryption script that uses a linear function combined with a modulo operation, I present two ways to recover the original message. First, I demonstrate a simple brute-force approach to crack the ASCII characters. Then, I show a much cleaner mathematical approach, leveraging the Modular Multiplicative Inverse to reverse the equation and decrypt the payload in constant time.",
