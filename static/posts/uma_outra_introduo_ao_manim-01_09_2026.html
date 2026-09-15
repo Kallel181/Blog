@@ -153,18 +153,20 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </code></pre></div>
 
-<p>Para nossa aula, peço para <strong>não</strong> mudarem o nome da cena, o nome da cena é necessário para a criação do vídeo, o script que está localizado em cada uma das pastas do projeto precisa do nome da cena para saber qual vídeo criar:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@echo</span><span class="w"> </span><span class="k">off</span>
-<span class="n">echo</span><span class="w"> </span><span class="n">Renderizando</span><span class="w"> </span><span class="n">cena</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">Manim</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">diretorio</span><span class="w"> </span><span class="n">atual</span><span class="p">...</span>
-<span class="n">manim</span><span class="w"> </span><span class="o">-</span><span class="n">pqh</span><span class="w"> </span><span class="n">Manim</span><span class="p">.</span><span class="n">py</span><span class="w"> </span><span class="n">Cena</span>
-<span class="n">pause</span>
-</code></pre></div>
+<p>No <strong>JupyterLab</strong> executamos a renderização diretamente no próprio notebook utilizando a <em>magic cell</em> no topo da célula do código:</p>
 
-<p>Alternativamente poderíamos só abrir um terminal no mesmo diretório de onde está nosso script <code>.py</code> e rodar o comando:</p>
-<div class="codehilite"><pre><span></span><code>manim -pqh Manim.py Cena
-</code></pre></div>
+<pre><code class="language-python">%%manim -qm -v WARNING Cena</code></pre>
 
-<p>Sempre alterando o nome da <strong>Cena</strong> para o nome correto.</p>
+<p><strong>Atenção ao alterar a cena:</strong> Ao contrário de antes, a palavra <code>Cena</code> no final do comando deve ser alterada sempre que você mudar o nome da classe no seu código Python. O Manim precisa que o nome no topo seja exatamente igual ao nome da classe definida na linha <code>class ...</code>.</p>
+
+<pre><code class="language-python">%%manim -qm -v WARNING MinhaAnimacao
+
+class MinhaAnimacao(Scene):
+    def construct(self):
+        circle = Circle()
+        self.play(Create(circle))</code></pre>
+
+<p>Se você renomear a classe para <code>ExemploCalculo</code>, a primeira linha deve ser atualizada para <code>%%manim -qm -v WARNING ExemploCalculo</code>.</p>
 <p>Mais a baixo temos o corpo da nossa animação:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
 <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
