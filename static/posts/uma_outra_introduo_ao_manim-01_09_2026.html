@@ -49,66 +49,51 @@
 <h1>Por que usar animações programáticas?</h1>
 <p>Imagine que você quer animar 100 retângulos para demonstrar a <strong>Soma de Riemann</strong> (aproximando a área sob a curva $y = \sin(x)$). Em software tradicional você precisaria calcular manualmente a altura de cada um dos 100 retângulos com base na função e redimensioná-los individualmente toda vez que quisesse testar um intervalo diferente. No Manim você escreve uma função que calcula a altura do retângulo $i$ como $f(x_i)$. Se quiser mudar de 10 para 1000 retângulos ou trocar a função para $y = x^2 \cos(x)$, é só alterar uma variável no código.</p>
 <h1>Começando</h1>
-<p>O assistente de instalação tem o objetivo de automatizar:
-- Instalação do Python
-- Instalação do Manim
-- Instalação do FFMPEG
-- Instalação do MikTex
-- Instalação do VsCode
-- Criação do diretório dos projetos
-    - Arquivo Manim com estrutura básica
-    - Arquivo render.bat com o comando de renderização do manim em 1080p 60fps</p>
-<p>Ao fim da sua execução, teremos um diretório com essa estrutura:</p>
-<div class="codehilite"><pre><span></span><code>/Projetos Manim
-├── Projeto 1
-│   ├── Manim.py
-│   └── render.bat
-├── Projeto 2
-│   ├── Manim.py
-│   └── render.bat
-├── Projeto 3
-│   ├── Manim.py
-│   └── render.bat
-├── Projeto 4
-│   ├── Manim.py
-│   └── render.bat
-└── Projeto 5
-    ├── Manim.py
-    └── render.bat
-...
-</code></pre></div>
+<p>A instalação do Manim requer uma série de outros programas para funcionar, o que pode ser um processo um pouco complicado e fácil de errar certas etapas. Por isso, a forma mais fácil de instalá-lo e interagir com ele é usando o Docker.</p>
+<p>A solução mais eficiente é o uso do Docker, uma ferramenta que executa ambientes pré-configurados sem a necessidade de ajustes manuais. O método mais simples para adquiri-lo é instalando o Docker Desktop via Microsoft Store.</p>
+<p>Depois disso, vamos abrir um terminal (ou CMD) e digitar:</p>
+<div class="codehilite"><pre><span></span><code>docker run -it -p 8888:8888 manimcommunity/manim jupyter lab --ip=0.0.0.0</code></pre></div>
 
-<p>A primeira etapa é testarmos nosso ambiente, o projeto 1 já conta com um código pronto para fazer esse teste:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<p>Dois links vão aparecer no final do processo; clicando no mais acima, ele nos levará a uma página local do JupyterLab. Vamos criar um novo notebook e, na primeira linha, digitar:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span></code></pre></div>
+
+<p>Após isso já podemos começar a usar o Manim. Vamos testar usando a seguinte animação:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">%%</span><span class="n">manim</span> <span class="o">-</span><span class="n">qm</span> <span class="o">-</span><span class="n">v</span> <span class="n">WARNING</span> <span class="n">Cena</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Cena</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Exemplo basico de animacao Manim</span>
-        <span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
-        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Create</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">circulo</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">))</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Exemplo basico de animacao Manim</span>
+        <span class="n">circulo</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">)</span>
+        <span class="n">quadrado</span> <span class="o">=</span> <span class="n">Square</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">RED</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Create</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">circulo</span><span class="p">,</span> <span class="n">quadrado</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">FadeOut</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
-        
-        <span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
-        <span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">FadeOut</span><span class="p">(</span><span class="n">circulo</span><span class="p">))</span>
+        
+        <span class="n">title</span> <span class="o">=</span> <span class="n">Tex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Isso e um texto \LaTeX"</span><span class="p">)</span>
+        <span class="n">basel</span> <span class="o">=</span> <span class="n">MathTex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{n=1}^\infty \frac</span><span class="si">{1}</span><span class="s2">{n^2} = \frac{\pi^2}</span><span class="si">{6}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
+        <span class="n">VGroup</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">basel</span><span class="p">)</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="n">DOWN</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
-            <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
-            <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">play</span><span class="p">(</span>
+            <span class="n">Write</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+            <span class="n">FadeIn</span><span class="p">(</span><span class="n">basel</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">DOWN</span><span class="p">),</span>
+        <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</code></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></code></pre></div>
 
-<p>O script acima contem os principais objetos Manim para testarmos o render, em especial LaTeX que precisa de pacotes LaTeX instalados para serem adicionados de maneira correta na animação.</p>
+<p>Perceba que temos na primeira linha:</p>
+<div class="codehilite"><pre><span></span><code>%%manim -qm -v WARNING Cena</code></pre></div>
+
+<p>Essa linha só é necessária dentro do JupyterLab, ela serve para indicar ao JupyterLab que vamos executar esse comando para o arquivo referente ao código. Vamos entrar em mais detalhes mais à frente.</p>
+
+
 <h1>Projeto 1 - Entendo a estrutura de uma animação Manim</h1>
 <p>Vamos voltar para nosso código de teste e entender cada parte dele:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
