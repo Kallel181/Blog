@@ -95,6 +95,11 @@
 
 
 <h1>Projeto 1 - Entendo a estrutura de uma animação Manim</h1>
+<a href="./static/other/Projeto%201.ipynb" download="Projeto_1.ipynb" class="download-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+  <span>Baixar Notebook</span>
+  <span class="file-info">IPYNB</span>
+</a>
 <p>Vamos voltar para nosso código de teste e entender cada parte dele:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">manim</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
@@ -298,6 +303,11 @@ class MinhaAnimacao(Scene):
 <p>Por último, a outra funcionalidade nova está na animação do basel, <code>FadeIn(basel, shift=DOWN)</code>, aqui usamos o método <code>FadeIn()</code> para criar nossa fórmula na tela, porem usamos um atributo extra chamado <code>shift</code>, esse atributo indica a direção da animação, nesse caso ao invés de simplesmente aparecer na tela, a fórmula irá aparecer na tela enquanto faz um leve movimento de cima para baixo.</p>
 <p>A última linha da animação é novamente um <code>self.wait()</code>, que irá esperar 1 segundo antes de acabar a animação.</p>
 <h1>Projeto 2 - A área de um quadrado</h1>
+<a href="./static/other/Projeto%202.ipynb" download="Projeto_2.ipynb" class="download-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+  <span>Baixar Notebook</span>
+  <span class="file-info">IPYNB</span>
+</a>
 <p>Vamos agora aplicar o que aprendemos até agora para fazer uma animação que poderíamos usar em sala de aula.</p>
 <p>Nossa animação precisa representar o cálculo da área de um quadrado de lado $n$, mostrando um exemplo de cálculo para um quadrado de lado $n=2$. </p>
 <p>Provavelmente está pensando: "Isso não parece muito emocionante" e talvez realmente não seja, mas a ideia central desse exercício é entender o que nos realmente precisamos fazer para finalizar uma animação Manim, porque esse é um processo nada trivial.</p>
@@ -751,6 +761,11 @@ O parâmetro é repassado via <code>**kwargs</code> através da <strong>Herança
 <video controls width="100%"><source src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_19.mp4" type="video/mp4">Seu navegador não suporta a tag de vídeo.</video>
 
 <h1>Projeto 3 - Animações inteligentes</h1>
+<a href="./static/other/Projeto%203.ipynb" download="Projeto_3.ipynb" class="download-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+  <span>Baixar Notebook</span>
+  <span class="file-info">IPYNB</span>
+</a>
 <p>Nosso projeto para mostrar o cálculo da área de um quadrado parece bom, porem o que acontece se quisermos mudar o valor de $n$?</p>
 <p>Nesse caso podemos alterar todas as linhas que contem o LaTeX que contem de algumas forma o valor de $n$, e essa é uma solução perfeitamente valida, mas isso pode acabar se tornando um problema rapidamente se nossa animação, por exemplo, conter diversas linhas para o desenvolvimento de uma conta.</p>
 <h2>Então como podemos resolver esse problema?</h2>
@@ -956,6 +971,11 @@ O parâmetro é repassado via <code>**kwargs</code> através da <strong>Herança
 
 <p>Esse é apenas um exemplo simples, porem existem muitas outras formas e muitas outras ferramentas de se deixar as animações Manim inteligentes, vamos ver mais uma no próximo projeto.</p>
 <h1>Projeto 4 - Gráficos</h1>
+<a href="./static/other/Projeto%204.ipynb" download="Projeto_4.ipynb" class="download-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+  <span>Baixar Notebook</span>
+  <span class="file-info">IPYNB</span>
+</a>
 <p>Vamos agora partir para um projeto mais complexo, vamos criar uma animação que desenhe um a curva de uma função qualquer em um plano cartesiano, um ponto que caminhe sobre essa curva e, mais ao lado, escrever a posição desse ponto atualizando em tempo real enquanto ele caminha sobre a curva.</p>
 <p>Novamente, vamos fazer um esboço de como gostaríamos que nossa animação antes de partir diretamente para o código.
 <img src="https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim_22.png" alt="Pasted image 20260901084637.png"/></p>
