@@ -447,7 +447,7 @@ html {
 .post-layout {
   /* Substituído largura fixa por max 100% para evitar scroll horizontal */
   width: 100%;
-  max-width: 1150px;
+  max-width: 1650px;
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 2.5rem;
