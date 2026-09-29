@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mastering XSS: A Hands-On Guide to PortSwigger’s Web Security Labs</title>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/css/styles.css"/>
+  <link rel="stylesheet" href="https://kallel181.github.io/Blog/static/js/hljs/styles/github-dark.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Import do script externo do sumário -->
+  <script src="https://kallel181.github.io/Blog/static/js/toc.js" defer></script>
+</head>
+<body>
+  <div class="container post-layout">
+    
+    <aside class="toc-sidebar">
+      <div class="toc-container">
+        <h3>Neste artigo</h3>
+        <nav id="toc"></nav>
+      </div>
+    </aside>
+
+    <main class="post-content">
+      <header class="post-header">
+        <a href="https://kallel181.github.io/Blog/" style="color: #ff8c42; text-align: left; display: block; text-decoration: none;">← Início</a>
+        <h1>Mastering XSS: A Hands-On Guide to PortSwigger’s Web Security Labs</h1>
+        <div class="post-meta">
+          <span class="date">29/09/2026</span> —
+          <span class="tags"><span class="tag">xss</span><span class="tag">cross-site scripting</span><span class="tag">web-security</span><span class="tag">portswigger</span><span class="tag">burp-suite</span><span class="tag">cybersecurity</span><span class="tag">ethical-hacking</span><span class="tag">reflected-xss</span><span class="tag">stored-xss</span><span class="tag">dom-xss</span><span class="tag">javascript</span><span class="tag">html-injection</span><span class="tag">angularjs</span><span class="tag">jquery</span><span class="tag">appsec</span><span class="tag">pentest</span><span class="tag">web-vulnerabilities</span></span>
+        </div>
+        <img class="post-banner" src="https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs_banner.png" alt="Banner do post"/>
+      </header>
+      <article class="post-body">
+        <h1>What is Cross-Site Scripting (XSS)?</h1>
+<p>Cross-Site Scripting (XSS) is a type of security vulnerability typically found in web applications. It allows attackers to inject malicious scripts into content from otherwise trusted websites. These scripts can be executed in the context of the user's browser, leading to potential consequences like stealing cookies, session tokens, or other sensitive information, defacing websites, or redirecting users to malicious sites.</p>
+<p>XSS attacks exploit the trust that users have in a particular website. They are classified into three main types: </p>
+<ol>
+<li><strong>Stored XSS (Persistent XSS):</strong> The malicious script is permanently stored on the target server, such as in a database, comment field, or forum post. When a user retrieves the stored information, the script is delivered to their browser and executed.    </li>
+<li><strong>Reflected XSS (Non-Persistent XSS):</strong> The malicious script is reflected off a web server, such as in an error message or search result. The script is then sent to the victim's browser, where it is executed. This type of XSS is often delivered through phishing emails or other social engineering techniques.   </li>
+<li><strong>DOM-based XSS:</strong> This occurs when the vulnerability exists in the client-side code rather than the server-side code. The malicious script is executed as a result of modifying the DOM environment in the victim's browser.</li>
+</ol>
+<p>Basically with XSS the thing we want to find is an input we can control and somehow will be inserted somewhere on the page, with this we can insert some malicious code that will then be executed in some part of the page.</p>
+<h2>PortSwigger's XSS Labs</h2>
+<p>PortSwigger, the creators of the popular web vulnerability scanner Burp Suite, offer a comprehensive range of labs specifically designed to help security enthusiasts and professionals understand and mitigate XSS vulnerabilities. These labs cover various aspects of XSS, from basic to advanced levels, and provide hands-on experience in a controlled and educational environment.</p>
+<p>In this blog post, we will guide you through the various XSS labs offered by PortSwigger, providing an overview of each lab, tips for solving them, and key takeaways to enhance your web security expertise. Let's dive in and explore the fascinating world of Cross-Site Scripting through the lens of PortSwigger's interactive labs.</p>
+<h3>Reflected XSS into HTML context with nothing encoded</h3>
+<p><strong>Lab Access:</strong> https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded
+In this lab we have a simple XSS case, here your input is unsanitized and directly placed on the website code, so to complete the lab we just need to pop an alert, to do this we can use this simple payload: <code>&lt;script&gt;alert(1);&lt;/script&gt;</code>:
+<img src="https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs_1.png" alt="XSS_lab_1.png"/></p>
+<hr />
+<h3>Stored XSS into HTML context with nothing encoded</h3>
+<p><strong>Lab Access:</strong> https://portswigger.net/web-security/cross-site-scripting/stored/lab-html-context-nothing-encoded
+In this lab we have a stored XSS, this means we can insert some malicious code in some portion of the site where it will be stores in a database, and then replicated when any user accesses the page where we left the malicious code. In this case we need to access any post on the blog and try to place the Javascript alert on a comment, that way the code will be stored in a database, and then replicated when the comment is loaded in the page:
+<img src="https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs_2.png" alt="XSS_lab_2.png"/>
+Again, we need to use a simple payload to finish the lab: <code>&lt;script&gt;alert(1);&lt;/script&gt;</code></p>
+<hr />
+<h3>DOM XSS in <code>document.write</code> sink using source <code>location.search</code></h3>
+<p><strong>Lab Access:</strong> https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-document-write-sink
+Here we can just place a random string on the search bar and check where does this string appears on the page, in that case we can find it on a path to a <code>img</code> HTML tag:
+<img src="https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs_3.png" alt="XSS-lab_3_1.png"/>
+That way we can use a payload that closes the tag and start a new one, in this case we can open an <code>svg</code> tag and use the <code>onload</code> parameter to make your XSS, like the following payload <code>"&gt;&lt;svg onload=alert(1)&gt;</code>.</p>
+<hr />
+<h3>DOM XSS in <code>innerHTML</code> sink using source <code>location.search</code></h3>
+<p><strong>Lab Access:</strong> https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-innerhtml-sink
+In this lab, we can use a similar payload as the previous one, <code>&lt;img src=1 onerror=alert(1)&gt;</code>, we can insert this one on the search bar or on the parameter inside the URL, since this is a DOM XSS.</p>
+<hr />
+<h3>DOM XSS in jQuery anchor <code>href</code> attribute sink using <code>location.search</code> source</h3>
+<p><strong>Lab Access:</strong> https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-jquery-href-attribute-sink
+In this lab on the submit feedback page we can see a parameter on the URL called <code>returnPath</code>, this parameter is used on the back link on this same page, that means, if this parameter is being reflected to the page we can insert some JavaScript there and complete this lab.
+<img src="https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs_4.png" alt="XSS_jQuery_href.png"/>
+Here we can use this simple payload <code>javascript:alert(document.cookie)</code>, and place this on the <code>returnPath</code> parameter on the URL, once we refresh the page, the back link on the page have our code.</p>
+<hr />
+<h3>DOM XSS in jQuery selector sink using a hashchange event</h3>
+<p><strong>Lab Access:</strong> https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-jquery-selector-hash-change-event
+Here we need to first understand what is a hashchange event, using the tips provided we can find this piece of code in the page source:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'hashchange'</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s1">'section.blog-list h2:contains('</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">1</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">')'</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">post</span><span class="p">)</span><span class="w"> </span><span class="nx">post</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span><span class="nx">scrollIntoView</span><span class="p">();</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>We have here a JavaScript code that gets executed when the hashchange event is fired.</p>
+<blockquote>
+<p>The <strong><code>hashchange</code></strong> event is fired when the fragment identifier of the URL has changed (the part of the URL beginning with and following the <code>#</code> symbol).
+https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event</p>
+</blockquote>
+<p>Basically when we insert a <code>#</code> followed by a blog title on the page, this function will scroll the view to the post, we can check this by inserting a <code>#BLOG-POST-TITLE</code>, in my case I have a post called "Finding Inspiration", so I can try this link: <code>https://0a89004e03d4e96182c70b2700ff0027.web-security-academy.net/#Finding%20Inspiration</code>, when we press enter the page will be automatically scrolled to the post.</p>
+<p>This is being accomplished by storing an JQuery post search on the variable post, but there is a problem, the logic below that query is checking if the post is true to then use the <code>scrollIntoView()</code> function, but, we can manually check what happens when we insert manually an HTML tag on query. For that we can use this payload, <code>#&lt;img src=0 onerror=alert()&gt;</code>, we can see that the <code>alert()</code> was executed, that means that the <code>&lt;img&gt;</code> was inserted, but this was place on a JQuery, <strong>how exactly was this inserted on the page?</strong></p>
+<p>That happened because this is a vulnerable JQuery version, when we pass an object that doesn't exist on the page, instead of returning nothing the query is returning the object we passed to it. But this is not enough, this code is only going to be executed on a hashchange event, that means we need a way to craft an exploit the will set the hash to something, and then reload the page to include our payload.</p>
+<p>We can do this by using a <code>&lt;iframe&gt;</code> element:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">iframe</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://0ad900ff04b36a2781117a22006a006e.web-security-academy.net/#"</span> <span class="na">onload</span><span class="o">=</span><span class="s">"this.src+='&lt;img src=1 onerror=print()&gt;'"</span><span class="p">&gt;&lt;/</span><span class="nt">iframe</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>We can use this on the exploit server to deliver this exploit to the victim, basically this will simulate an "external" server that will have our <code>iframe</code>, once the page is loaded we will add our payload with the <code>onload</code> functionality of the <code>iframe</code>.</p>
+<hr />
+<h3>Reflected XSS into attribute with angle brackets HTML-encoded</h3>
+<p>Lab Access: https://portswigger.net/web-security/cross-site-scripting/contexts/lab-attribute-angle-brackets-html-encoded
+In this lab we can see a search bar on the home page, immediately we can check if the input of that bar ins being reflected somewhere on the page source, in this case, on a <code>form</code> tag we can see our input on a <code>value</code> attribute of the <code>input</code> tag:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">[/](view-source:https://0aca00b70451c670803f71d000c10053.web-security-academy.net/)</span> <span class="na">method</span><span class="o">=</span><span class="s">GET</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">text</span> <span class="na">placeholder</span><span class="o">=</span><span class="s">'Search the blog...'</span> <span class="na">name</span><span class="o">=</span><span class="s">search</span> <span class="na">value</span><span class="o">=</span><span class="s">"test"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">submit</span> <span class="na">class</span><span class="o">=</span><span class="s">button</span><span class="p">&gt;</span>Search<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>Our input is being placed inside double quotation marks on the code, that means we can create a XSS payload to escape those quotations marks as follows: <code>"onmouseover="alert(1)</code>. In this lab we need to make more than just finding one payload that works, in this case we can use other payloads to trigger the lab completion, like:
+- <code>test" onmouseover="alert(1)</code>: This will make the <code>value</code> attribute not empty, therefore, the actual payload will not be shown in the search bar.
+- <code>test" onclick="alert(1)</code>: This will make the <code>value</code> attribute not empty, and the <code>alert()</code> function will be triggered on a click on the search bar.</p>
+<p>There are a lot of <a href="https://www.w3schools.com/tags/ref_eventattributes.asp">HTML events</a> we can use to trigger the XSS in this case.</p>
+<hr />
+<h3>Stored XSS into anchor <code>href</code> attribute with double quotes HTML-encoded</h3>
+<p>Lab Access: https://portswigger.net/web-security/cross-site-scripting/contexts/lab-href-attribute-double-quotes-html-encoded
+Here in this lab, our input is being reflected on a <code>href</code> attribute on the page source code, on the comment section. We can try to input a comment and see how the site will handle it, down below we can see an example of a comment:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">"comment"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">"/resources/images/avatarDefault.svg"</span> <span class="na">class</span><span class="o">=</span><span class="s">"avatar"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">id</span><span class="o">=</span><span class="s">"author"</span> <span class="na">href</span><span class="o">=</span><span class="s">"site.com"</span><span class="p">&gt;</span>name1234<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> 
+    | 17 June 2024
+    <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>comment1234<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>With this we can use this payload: <code>javascript:alert()</code> on the Website input, once we click on the comment the <code>alert()</code> function will be executed</p>
+<hr />
+<h3>Reflected XSS into a JavaScript string with angle brackets HTML encoded</h3>
+<p>Lab Access: https://portswigger.net/web-security/cross-site-scripting/contexts/lab-javascript-string-angle-brackets-html-encoded
+As the other labs, we can start by placing a random string on the input and analyzing where the site will place it, in this case we can find our string (in this case it is <code>test1234</code>) on an inline script:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">searchTerms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'test1234'</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">qdocument</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'&lt;img src="/resources/images/tracker.gif?searchTerms='</span><span class="o">+</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">searchTerms</span><span class="p">)</span><span class="o">+</span><span class="s1">'"&gt;'</span><span class="p">);</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>Here our string is placed on a JavaScript variable, so, we can craft a payload to exit out of this variable and execute an <code>alert()</code> function. To do this, we need to understand that the payload will be place as follows: <code>var searchTerms = 'PAYLOAD';</code>. So, we first need to use single quote to get out of the string declaration, than we use a semicolon to pass another JavaScript function, like <code>alert()</code> than we can create another empty variable to use to finish the closing single quote. That will give us a payload that looks like this: <code>test1234'; alert(); var str ='</code>, that way we will have a script section that will look like this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">searchTerms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'test1234'</span><span class="p">;</span><span class="w"> </span><span class="nx">alert</span><span class="p">();</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nx">str</span><span class="w"> </span><span class="o">=</span><span class="s1">''</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">qdocument</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'&lt;img src="/resources/images/tracker.gif?searchTerms='</span><span class="o">+</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">searchTerms</span><span class="p">)</span><span class="o">+</span><span class="s1">'"&gt;'</span><span class="p">);</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>That will break out of the original variable, then execute another function and then create another variable just to use the last single quote.</p>
+<hr />
+<h3>DOM XSS in <code>document.write</code> sink using source <code>location.search</code> inside a select element</h3>
+<p>Lab Access: https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-document-write-sink-inside-select-element
+Inside this lab we can find an interesting script section within the code:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">form</span> <span class="na">id</span><span class="o">=</span><span class="s">"stockCheckForm"</span> <span class="na">action</span><span class="o">=</span><span class="s">"/product/stock"</span> <span class="na">method</span><span class="o">=</span><span class="s">"POST"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">required</span> <span class="na">type</span><span class="o">=</span><span class="s">"hidden"</span> <span class="na">name</span><span class="o">=</span><span class="s">"productId"</span> <span class="na">value</span><span class="o">=</span><span class="s">"3"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">stores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"London"</span><span class="p">,</span><span class="s2">"Paris"</span><span class="p">,</span><span class="s2">"Milan"</span><span class="p">];</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">)).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'storeId'</span><span class="p">);</span>
+<span class="w">        </span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'&lt;select name="storeId"&gt;'</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">store</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'&lt;option selected&gt;'</span><span class="o">+</span><span class="nx">store</span><span class="o">+</span><span class="s1">'&lt;/option&gt;'</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="nx">i</span><span class="o">=</span><span class="mf">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">stores</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">stores</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">store</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'&lt;option&gt;'</span><span class="o">+</span><span class="nx">stores</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="o">+</span><span class="s1">'&lt;/option&gt;'</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'&lt;/select&gt;'</span><span class="p">);</span>
+<span class="w">    </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">"submit"</span> <span class="na">class</span><span class="o">=</span><span class="s">"button"</span><span class="p">&gt;</span>Check stock<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>This code is responsible to add the options to the select HTML tag, but there is a bonus feature, on the top of the code we can see the declaration of the variable <code>store</code> this variable is looking to a URL parameter called <code>storeId</code>, this parameter is not present at the moment we enter on the page, but, just looking on the code we can predict what will happen when we place it. As we can see, if the <code>storeId</code> parameter is available, it will be added directly added to a <code>document.write()</code> function. This means we can use this to insert an arbitrary piece of code to the page using a parameter on the DOM.</p>
+<p>So to start our payload we need to add another parameter to the URL, in this case the <code>storeId</code> parameter, to do this we can simply write <code>&amp;storeId=</code>, then we will take advantage of the document.write() function, in this case we will first close the select tag with a <code>&lt;/select&gt;</code> and the last part we can add a standard <code>&lt;img&gt;</code> tag with an invalid source to trigger an error. We will end up with a payload that looks like this: <code>&amp;storeId=&lt;/select&gt;&lt;img src=1 onerror=alert(1)&gt;</code>.</p>
+<hr />
+<h3>DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded</h3>
+<p>Lab Access: https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-angularjs-expression
+The description of this lab, as well as the head portion of the HTML code in the page, tells us that the page is using AngularJS.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">/resources/labheader/css/academyLabHeader.css</span> <span class="na">rel</span><span class="o">=</span><span class="s">stylesheet</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">/resources/css/labsBlog.css</span> <span class="na">rel</span><span class="o">=</span><span class="s">stylesheet</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">"text/javascript"</span> <span class="na">src</span><span class="o">=</span><span class="s">"/resources/js/angular_1-7-7.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>AngularJS is a JavaScript framework used on web development. Usually, in this kind of scenario, we can use double curly brackets to insert JavaScript code, so, we can try a basic payload and see if it works. We can try <code>{{alert()}}</code>, but this will not work by default, I'm no AngularJS expert, but, I guess this doesn't work because of SCE.</p>
+<blockquote>
+<p>Strict Contextual Escaping (SCE) is a mode in which AngularJS requires bindings in certain contexts to require a value that is marked as safe to use for that context.
+https://docs.angularjs.org/guide/security</p>
+</blockquote>
+<p>So we will need to use some kind o "evasion" to make this work. A very popular technique to dealing with those cases is using a constructor. A constructor is used to create functions, in this case we can also create and call those functions dynamically. So, the payload we can use to execute an <code>alert()</code> here is  <code>{{constructor.constructor('alert(1)')()}}</code>, with this payload we are creating a new function that simply executes the alert() function from JavaScript, after that we call that just create function (with the pretenses on the end). This payload and other similar ones can be found on this <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS%20Injection/XSS%20in%20Angular.md">GitHub repository</a>.</p>
+<p>A more detailed explanation of this payload can be found on this video: https://www.youtube.com/watch?v=QpQp2JLn6JA. In this video, <strong>z3nsh3ll</strong> will recreate from scratch the command we used and explain in more details how and why it works. But in other terms, this XSS is similar to template injection like in Jinja, of course, the difference would be the core programming language, but the process is very similar. Another thing we can use to test if this type of payload will work is by using a simple math operation like <code>{{1+1}}</code>, if the result of the operation is returned to the page this will be an indicator that there is a payload that might work.</p>
+      </article>
+    </main>
+
+  </div>
+
+  <script src="https://kallel181.github.io/Blog/static/js/hljs/highlight.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>
