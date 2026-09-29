@@ -276,7 +276,8 @@ header h1 {
 
 .post-banner {
   width: 100%;
-  height: auto;
+  max-width: 400px;
+  height: 100%;
   max-height: 400px;
   object-fit: cover;
   border-radius: 12px;
