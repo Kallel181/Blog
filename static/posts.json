@@ -1,6 +1,32 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs-29_09_2026.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs-29_09_2026.html",
+            "resume": "n this post, we explore Cross-Site Scripting (XSS) through a series of hands-on PortSwigger Web Security Academy labs. We cover the core mechanics of Reflected, Stored, and DOM-based XSS, demonstrating how attackers inject malicious JavaScript into web applications. Through step-by-step walkthroughs, we break down real-world attack contexts—including HTML tags, href attributes, inline JavaScript strings, jQuery sinks, and AngularJS expressions—and explain the practical payloads needed to exploit them effectively.",
+            "name": "Mastering XSS: A Hands-On Guide to PortSwigger’s Web Security Labs",
+            "date": "29/09/2026",
+            "tags": [
+                "xss",
+                "cross-site scripting",
+                "web-security",
+                "portswigger",
+                "burp-suite",
+                "cybersecurity",
+                "ethical-hacking",
+                "reflected-xss",
+                "stored-xss",
+                "dom-xss",
+                "javascript",
+                "html-injection",
+                "angularjs",
+                "jquery",
+                "appsec",
+                "pentest",
+                "web-vulnerabilities"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/uma_outra_introduo_ao_manim-01_09_2026.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/uma_outra_introduo_ao_manim-01_09_2026.html",
             "resume": "Neste post, discutimos o que é o Manim e como utilizar a programação em Python para criar animações matemáticas precisas e profissionais, detalhando, passo a passo, a estrutura de código, o sistema de coordenadas e a lógica necessária para construir e renderizar suas primeiras cenas.",
