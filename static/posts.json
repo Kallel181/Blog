@@ -1,6 +1,23 @@
 {
     "posts": [
         {
+            "icon_location": "https://kallel181.github.io/Blog/static/images/interpretabilidade_de_mtricas_de_redes_complexas_em_grafos_de_dependncia_de_microservios-18_10_2026.html_icon.png",
+            "file_location": "https://kallel181.github.io/Blog/static/posts/interpretabilidade_de_mtricas_de_redes_complexas_em_grafos_de_dependncia_de_microservios-18_10_2026.html",
+            "resume": "Nesse post, apresentamos uma abordagem prática e analítica baseada na Teoria dos Grafos e na biblioteca NetworkX em Python para solucionar desafios estratégicos de arquitetura de sistemas distribuídos, alocação de cargas de trabalho (service placement) e resiliência no contínuo Cloud-Edge. A partir da análise de conjuntos de dados reais (email-Eu-core, Aarnet e Belnet), exploramos como métricas topológicas — como Centralidade de Intermediação, Perda de Acessibilidade, Pontos de Articulação, detecção de comunidades por Louvain e decomposição por k-core — fornecem diretrizes matemáticas diretas para mitigar pontos únicos de falha (SPOFs), prevenir gargalos de comunicação e estruturar o posicionamento ideal de microsserviços entre dispositivos de borda e a nuvem centralizada.",
+            "name": "Interpretabilidade de Métricas de Redes Complexas em Grafos de Dependência de Microserviços",
+            "date": "18/10/2026",
+            "tags": [
+                "redes-complexas",
+                "sistemas-distribuidos",
+                "edge-computing",
+                "cloud-computing",
+                "microsservicos",
+                "teoria-dos-grafos",
+                "arquitetura-de-software",
+                "engenharia-de-software"
+            ]
+        },
+        {
             "icon_location": "https://kallel181.github.io/Blog/static/images/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs-29_09_2026.html_icon.png",
             "file_location": "https://kallel181.github.io/Blog/static/posts/mastering_xss_a_hands_on_guide_to_portswiggers_web_security_labs-29_09_2026.html",
             "resume": "n this post, we explore Cross-Site Scripting (XSS) through a series of hands-on PortSwigger Web Security Academy labs. We cover the core mechanics of Reflected, Stored, and DOM-based XSS, demonstrating how attackers inject malicious JavaScript into web applications. Through step-by-step walkthroughs, we break down real-world attack contexts—including HTML tags, href attributes, inline JavaScript strings, jQuery sinks, and AngularJS expressions—and explain the practical payloads needed to exploit them effectively.",
