@@ -95,36 +95,124 @@ o desbalanceamento de carga em lei de potência (<em>Power-Law</em>) (Meng et al
 <p>Este capítulo apresenta a análise analítica e a discussão crítica dos resultados obtidos na execução dos experimentos topológicos. Os dados empíricos são avaliados sob a perspectiva de arquiteturas distribuídas modernas, correlacionando métricas de redes complexas com desafios operacionais reais de microsserviços, plataformas de borda (<em>Edge Computing</em>) e infraestruturas em nuvem (<em>Cloud Computing</em>).</p>
 <h2>Caracterização Topológica dos Ecossistemas Distribuídos</h2>
 <p>A Tabela 1 sintetiza as propriedades topológicas fundamentais dos três conjuntos de dados analisados, revelando perfis estruturais heterogêneos e complementares para a modelagem do contínuo <em>cloud-edge</em>.</p>
-<p>|<strong>Dataset / Grafo</strong>|<strong>Tipo</strong>|<strong>Nós (∣V∣)</strong>|<strong>Arestas (∣E∣)</strong>|<strong>Grau Médio</strong>|<strong>Densidade</strong>|
-|---|---|---|---|---|---|
-|email-Eu-core|Direcionado|1.005|25.571|50,89|0,0253|
-|Aarnet|Não-Direcionado|19|24|2,53|0,1404|
-|Belnet|Não-Direcionado|22|33|3,00|0,1429|</p>
+<table>
+  <thead>
+    <tr>
+      <th>Dataset / Grafo</th>
+      <th>Tipo</th>
+      <th>Nós (∣V∣)</th>
+      <th>Arestas (∣E∣)</th>
+      <th>Grau Médio</th>
+      <th>Densidade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>email-Eu-core</td>
+      <td>Direcionado</td>
+      <td>1.005</td>
+      <td>25.571</td>
+      <td>50,89</td>
+      <td>0,0253</td>
+    </tr>
+    <tr>
+      <td>Aarnet</td>
+      <td>Não-Direcionado</td>
+      <td>19</td>
+      <td>24</td>
+      <td>2,53</td>
+      <td>0,1404</td>
+    </tr>
+    <tr>
+      <td>Belnet</td>
+      <td>Não-Direcionado</td>
+      <td>22</td>
+      <td>33</td>
+      <td>3,00</td>
+      <td>0,1429</td>
+    </tr>
+  </tbody>
+</table>
 <p>A rede de mensageria <code>email-Eu-core</code> apresenta um elevado grau médio ($\approx 50,89$) combinado com baixa densidade global ($0,0253$). No contexto de microsserviços e <em>Edge Computing</em>, esse comportamento é típico de malhas de comunicação assíncrona, onde um conjunto reduzido de serviços atua como <em>brokers</em> de alto tráfego enviando e recebendo requisições para múltiplos consumidores periféricos.</p>
 <p>Por outro lado, as topologias físicas <code>Aarnet</code> e <code>Belnet</code> exibem baixos graus médios ($2,53$ e $3,00$), refletindo restrições de custo e viabilidade física no cabeamento de redes regionalizadas e de <em>backbone</em>. A densidade ligeiramente superior ($0,14$) decorre do menor tamanho absoluto do grafo ($\vert{}V\vert{} \le 22$).</p>
 <h2>Diagnóstico de Criticidade e Pontos Únicos de Falha (SPOFs)</h2>
 <p>Em arquiteturas distribuídas, nem todos os componentes possuem o mesmo impacto na operação do sistema. Imagine um sistema de microsserviços ou uma rede de borda como uma malha rodoviária: alguns nós funcionam como grandes cruzamentos por onde passa a maior parte do tráfego, enquanto outros atuam como pontes únicas que conectam um bairro inteiro ao restante da cidade. Se um cruzamento fica congestionado, o trânsito desacelera; porém, se uma ponte única desmorona, bairros inteiros ficam completamente isolados. No contexto de software e infraestrutura, identificar esses dois perfis de componentes é fundamental para responder a duas perguntas operacionais críticas: qual serviço pode causar um gargalo de desempenho se ficar sobrecarregado e qual serviço pode derrubar partes inteiras do sistema se sofrer uma falha total?</p>
 <p>Para diagnosticar gargalos operacionais e vulnerabilidades estruturais no roteamento de mensagens, avaliou-se a Centralidade de Intermediação ($C_B$), a Perda de Acessibilidade (<em>Reachability Loss</em> -- $RL$) e a identificação de Pontos de Articulação. A Tabela 2 apresenta os 10 microsserviços/nós mais críticos do grafo <code>email-Eu-core</code>.</p>
-<p>|<strong>Rank</strong>|<strong>Microsserviço / Nó</strong>|<strong>Betweenness Centrality (CB​)</strong>|<strong>Reachability Loss (RL)</strong>|
-|---|---|---|---|
-|1|160|0,07212|0,00746|
-|2|86|0,03743|0,00249|
-|3|5|0,02698|0,01242|
-|4|121|0,02453|0,00498|
-|5|62|0,02451|0,00249|
-|6|107|0,02186|0,00498|
-|7|64|0,01867|0,00249|
-|8|82|0,01823|0,00249|
-|9|377|0,01622|0,00746|
-|10|129|0,01557|0,00249|</p>
+<table>
+  <thead>
+    <tr>
+      <th>Dataset / Grafo</th>
+      <th>Tipo</th>
+      <th>Nós (∣V∣)</th>
+      <th>Arestas (∣E∣)</th>
+      <th>Grau Médio</th>
+      <th>Densidade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>email-Eu-core</td>
+      <td>Direcionado</td>
+      <td>1.005</td>
+      <td>25.571</td>
+      <td>50,89</td>
+      <td>0,0253</td>
+    </tr>
+    <tr>
+      <td>Aarnet</td>
+      <td>Não-Direcionado</td>
+      <td>19</td>
+      <td>24</td>
+      <td>2,53</td>
+      <td>0,1404</td>
+    </tr>
+    <tr>
+      <td>Belnet</td>
+      <td>Não-Direcionado</td>
+      <td>22</td>
+      <td>33</td>
+      <td>3,00</td>
+      <td>0,1429</td>
+    </tr>
+  </tbody>
+</table>
 <p>Os resultados demonstram que o nó $160$ lidera a intermediação do tráfego ($C_B = 0,07212$), funcionando como um <em>gateway</em> principal ou barramento central de comunicação. Contudo, nota-se uma discrepância relevante ao observar o nó $5$: apesar de possuir $C_B = 0,02698$ (3º no rank), sua falha gera a maior Perda de Acessibilidade isolada ($RL = 0,01242$), desconectando o maior volume relativo de rotas comunicantes.</p>
 <p><strong>Relevância para a Engenharia de Software e Borda:</strong> A métrica $C_B$ identifica componentes que requerem balanceamento de carga e réplicas de leitura para evitar gargalos de latência. Já a métrica $RL$ aponta nós cuja falha fragmenta o ecossistema, exigindo mecanismos de tolerância a falhas (<em>circuit breakers</em>, <em>failover</em> imediato e migração de estado).</p>
 <p>Em complemento, a Tabela 3 apresenta o diagnóstico de Pontos de Articulação (<em>Single Points of Failure</em> -- SPOFs) e o agrupamento em comunidades via algoritmo de Louvain.</p>
-<p>|<strong>Dataset</strong>|<strong>SPOFs</strong>|<strong>Exemplos de SPOFs</strong>|<strong>Comunidades (Q)</strong>|<strong>Modularidade (Q)</strong>|
-|---|---|---|---|---|
-|email-Eu-core|73|['380', '521', '777', '605', '748']|28|0,4130|
-|Aarnet|4|['4', '7', '6', '3']|4|0,5009|
-|Belnet|0|[]|5|0,5271|</p>
+<table>
+  <thead>
+    <tr>
+      <th>Dataset</th>
+      <th>SPOFs</th>
+      <th>Exemplos de SPOFs</th>
+      <th>Comunidades (Q)</th>
+      <th>Modularidade (Q)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>email-Eu-core</td>
+      <td>73</td>
+      <td>['380', '521', '777', '605', '748']</td>
+      <td>28</td>
+      <td>0,4130</td>
+    </tr>
+    <tr>
+      <td>Aarnet</td>
+      <td>4</td>
+      <td>['4', '7', '6', '3']</td>
+      <td>4</td>
+      <td>0,5009</td>
+    </tr>
+    <tr>
+      <td>Belnet</td>
+      <td>0</td>
+      <td>[]</td>
+      <td>5</td>
+      <td>0,5271</td>
+    </tr>
+  </tbody>
+</table>
 <p>A infraestrutura <code>Aarnet</code> possui 4 Pontos de Articulação (ex.: nós 4, 7, 6 e 3). A desconexão física de qualquer um desses pontos divide a rede regional de borda em subgrafos isolados, impedindo a comunicação entre servidores periféricos e a nuvem. Em contrapartida, a rede de <em>backbone</em> <code>Belnet</code> apresenta 0 pontos de articulação, evidenciando uma topologia biconectada projetada para garantir rotas alternativas de comunicação em nível de nuvem centralizada.</p>
 <h2>Particionamento de Serviços e Alocação na Borda</h2>
 <p>Em ecossistemas de microsserviços e computação em borda, alocar recursos de maneira eficiente exige decidir onde cada serviço deve rodar fisicamente. Imagine uma equipe de trabalho em que certas pessoas precisam conversar constantemente para concluir suas tarefas: mantê-las em salas separadas ou em prédios distantes causará atrasos constantes no deslocamento. No contexto de software e infraestrutura, se dois microsserviços trocam requisições o tempo todo, deixá-los em servidores fisicamente separados gera alto tempo de resposta (latência) e consome banda da rede externa desnecessariamente. A detecção de comunidades busca justamente identificar esses "grupos de conversa frequente" para que possam ser hospedados juntos no mesmo servidor ou servidor de borda próximo.</p>
@@ -144,11 +232,32 @@ o desbalanceamento de carga em lei de potência (<em>Power-Law</em>) (Meng et al
 <h2>Decomposição $k$-Core para Posicionamento Hierárquico</h2>
 <p>Nem todas as tarefas em um sistema distribuído exigem o mesmo poder de processamento ou o mesmo nível de conectividade. Imagine uma organização corporativa dividida em camadas: no centro, há uma diretoria altamente integrada que toma decisões estratégicas e troca informações constantemente; nas pontas, há representantes de campo que coletam dados e realizam tarefas locais de forma mais autônoma. A decomposição em $k$-core funciona como um "escâner" que descasca a rede em camadas, separando o seu núcleo denso e ultra-conectado das camadas mais externas. Em arquiteturas de computação em nuvem e borda, essa separação hierárquica é essencial para decidir o destino de cada carga de trabalho: o que deve rodar nos servidores robustos do centro (<em>Cloud</em>) e o que pode ser processado diretamente na periferia (<em>Edge</em>).</p>
 <p>A análise da estrutura núcleo-periferia foi conduzida via decomposição de $k$-core, conforme resumido na Tabela 4.</p>
-<p>|<strong>Dataset</strong>|<strong>Núcleo Máximo (kmax​)</strong>|<strong>Nós no Núcleo Máximo</strong>|
-|---|---|---|
-|email-Eu-core (Mensageria/Borda)|34|79|
-|Aarnet (Infraestrutura Borda)|2|15|
-|Belnet (Backbone Nuvem)|2|22|</p>
+<table>
+  <thead>
+    <tr>
+      <th>Dataset</th>
+      <th>Núcleo Máximo (kmax)</th>
+      <th>Nós no Núcleo Máximo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>email-Eu-core (Mensageria/Borda)</td>
+      <td>34</td>
+      <td>79</td>
+    </tr>
+    <tr>
+      <td>Aarnet (Infraestrutura Borda)</td>
+      <td>2</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>Belnet (Backbone Nuvem)</td>
+      <td>2</td>
+      <td>22</td>
+    </tr>
+  </tbody>
+</table>
 <p><img src="https://kallel181.github.io/Blog/static/images/interpretabilidade_de_mtricas_de_redes_complexas_em_grafos_de_dependncia_de_microservios_3.png" alt="grafico_2_distribuicao_kcore.png"/></p>
 <p>Na rede de mensageria <code>email-Eu-core</code>, identificou-se um núcleo denso com $k_{max} = 34$, composto por 79 nós (aproximadamente $7,8\%$ do total de vértices). No <code>Belnet</code>, $100\%$ dos nós ($22$ vértices) pertencem ao núcleo $k=2$, confirmando a alta coesão e redundância da malha centralizada de nuvem.</p>
 <p><strong>Diretrizes de Alocação de Cargas de Trabalho (<em>Workload Placement</em>):</strong></p>
